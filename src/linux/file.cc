@@ -1,3 +1,21 @@
+/*
+ * The ckCore library provides core software functionality.
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <unistd.h>
 #include <fcntl.h>
 #include "file.hh"
@@ -41,7 +59,7 @@ namespace ckCore
                 break;
 
             case OPEN_WRITE:
-                m_iHandle = open(m_FilePath.c_str(),O_CREAT,O_WRONLY);
+                m_iHandle = open(m_FilePath.c_str(),O_CREAT | O_WRONLY,S_IRUSR | S_IWUSR);
                 break;
         }
 
@@ -123,25 +141,51 @@ namespace ckCore
     }
 
     /**
+     * Reads raw data from the current file.
+     * @param [out] pBuffer A pointer to the beginning of a buffer in which to
+     *                      put the data.
+     * @param [in] ulCount The number of bytes to read from the file.
+     * @return If the operation failed -1 is returned, otherwise the function
+     *         returns the number of bytes read (this may be zero when the end
+     *         of the file has been reached).
+     */
+    TInt64 CFile::Read(void *pBuffer,unsigned long ulCount)
+    {
+        if (m_iHandle == -1)
+            return -1;
+
+        return read(m_iHandle,pBuffer,ulCount);
+    }
+
+    /**
+     * Writes raw data to the current file.
+     * @param [in] pBuffer A pointer to the beginning of a buffer from which to
+     *                     read data to be written to the file.
+     * @param [in] ulCount The number of bytes to write to the file.
+     * @return If the operation failed -1 is returned, otherwise the function
+     *         returns the number of bytes written (this may be zero).
+     */
+    TInt64 CFile::Write(const void *pBuffer,unsigned long ulCount)
+    {
+        if (m_iHandle == -1)
+            return -1;
+
+        return write(m_iHandle,pBuffer,ulCount);
+    }
+
+    /**
      * Checks whether the file exist or not.
      * @return If the file exist true is returned, otherwise false.
      */
     bool CFile::Exist()
     {
-        return Exist(m_FilePath.c_str());
-
-        // FIXME: Not safe.
-        /*if (m_iHandle != -1)
-            return true;
-
-        // Try to open the file.
-        if (Open(READ))
+        if (m_iHandle != -1)
         {
-            Close();
-            return true;
+            struct stat Stat;
+            return fstat(m_iHandle,&Stat) == 0;
         }
 
-        return false;*/
+        return Exist(m_FilePath.c_str());
     }
 
     /**
@@ -179,6 +223,52 @@ namespace ckCore
         }
 
         return false;
+    }
+
+    /**
+     * Obtains time stamps on when the file was last accessed, last modified
+     * and created.
+     * @param [out] AccessTime Time of last access.
+     * @param [out] ModifyTime Time of last modification.
+     * @param [out] CreateTime Time of creation (last status change on Linux).
+     * @return If successfull true is returned, otherwise false.
+     */
+    bool CFile::Time(struct tm &AccessTime,struct tm &ModifyTime,
+        struct tm &CreateTime)
+    {
+        if (m_iHandle != -1)
+        {
+            struct stat Stat;
+            if (fstat(m_iHandle,&Stat) == -1)
+                return false;
+
+            // Convert to local time.
+            if (localtime_r(&Stat.st_atime,&AccessTime) == NULL)
+                return false;
+
+            if (localtime_r(&Stat.st_mtime,&ModifyTime) == NULL)
+                return false;
+
+            if (localtime_r(&Stat.st_ctime,&CreateTime) == NULL)
+                return false;
+
+            return true;
+        }
+
+        return Time(m_FilePath.c_str(),AccessTime,ModifyTime,CreateTime);
+    }
+
+    /**
+     * Checks if the active user has permission to open the file in a certain
+     * file mode.
+     * @param [in] FileMode The file mode to check for access permission.
+     * @return If the active user have permission to open the file in the
+     *         specified file mode true is returned, otherwise false is
+     *         returned.
+     */
+    bool CFile::Access(EFileMode FileMode)
+    {
+        return Access(m_FilePath.c_str(),FileMode);
     }
 
     /**
@@ -236,6 +326,85 @@ namespace ckCore
             return false;
 
         return rename(szOldFilePath,szNewFilePath) == 0;
+    }
+
+    /**
+     * Obtains time stamps on when the specified file was last accessed, last
+     * modified and created.
+     * @param [in] szFilePath The path to the file.
+     * @param [out] AccessTime Time of last access.
+     * @param [out] ModifyTime Time of last modification.
+     * @param [out] CreateTime Time of creation (last status change on Linux).
+     * @return If successfull true is returned, otherwise false.
+     */
+    bool CFile::Time(const TChar *szFilePath,struct tm &AccessTime,
+        struct tm &ModifyTime,struct tm &CreateTime)
+    {
+        struct stat Stat;
+        if (stat(szFilePath,&Stat) == -1)
+            return false;
+
+        // Convert to local time.
+        if (localtime_r(&Stat.st_atime,&AccessTime) == NULL)
+            return false;
+
+        if (localtime_r(&Stat.st_mtime,&ModifyTime) == NULL)
+            return false;
+
+        if (localtime_r(&Stat.st_ctime,&CreateTime) == NULL)
+            return false;
+
+        //struct tm *pLocalAccess = localtime(&Stat.st_atime);
+
+        // Access time.
+        /*Access.m_ucSecond = pLocalAccess->tm_sec;
+        Access.m_ucMinute = pLocalAccess->tm_min;
+        Access.m_ucHour = pLocalAccess->tm_hour;
+        Access.m_ucDayMonth = pLocalAccess->tm_mday;
+        Access.m_ucMonth = pLocalAccess->tm_mon;
+        Access.m_ucYear = pLocalAccess->tm_year;
+        Access.m_ucDayWeek = pLocalAccess->tm_wday;
+        Access.m_usDayYear = pLocalAccess->tm_yday;
+
+        switch (pLocalAccess->tm_isdst)
+        {
+            case -1:
+                Access.m_DaySaveTime = CTime::DST_UNKNOWN;
+                break;
+
+            case 0:
+                Access.m_DaySaveTime = CTime::DST_DISABLED;
+                break;
+
+            case 1:
+                Access.m_DaySaveTime = CTime::DST_ENABLED;
+                break;
+        }*/
+
+        return true;
+    }
+
+    /**
+     * Checks if the active user has permission to open the specified file in a
+     * certain file mode.
+     * @param szFilePath The path to the file.
+     * @param [in] FileMode The file mode to check for access permission.
+     * @return If the active user have permission to open the file in the
+     *         specified file mode true is returned, otherwise false is
+     *         returned.
+     */
+    bool CFile::Access(const TChar *szFilePath,EFileMode FileMode)
+    {
+        switch (FileMode)
+        {
+            case OPEN_READ:
+                return access(szFilePath,R_OK) == 0;
+
+            case OPEN_WRITE:
+                return access(szFilePath,W_OK) == 0;
+        }
+
+        return false;
     }
 
     /**

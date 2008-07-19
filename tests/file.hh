@@ -1,3 +1,21 @@
+/*
+ * The ckCore library provides core software functionality.
+ * Copyright (C) 2006-2008 Christian Kindahl
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <cxxtest/TestSuite.h>
 #include <stdlib.h>
 #include "../src/types.hh"
@@ -39,6 +57,40 @@ public:
         TS_ASSERT(File2.Test());
         TS_ASSERT(File2.Close());
         TS_ASSERT(!File2.Test());
+    }
+
+    void testReadWrite()
+    {
+        ckCore::CFile File("data/file/new");
+        TS_ASSERT(File.Open(ckCore::CFile::OPEN_WRITE));
+        const char szOutData[] = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+        size_t iTotWrite = 0;
+        while (iTotWrite < 37)
+        {
+            size_t iWrite = File.Write(szOutData + iTotWrite,37 - iTotWrite);
+            TS_ASSERT(iWrite != -1);
+
+            iTotWrite += iWrite;
+        }
+
+        File.Close();
+        File.Open(ckCore::CFile::OPEN_READ);
+        char szInData[37];
+
+        size_t iTotRead = 0;
+        while (iTotRead < 37)
+        {
+            size_t iRead = File.Read(szInData,37 - iTotRead);
+            TS_ASSERT(iRead != -1);
+
+            iTotRead += iRead;
+        }
+
+        File.Close();
+        File.Delete();
+
+        TS_ASSERT_SAME_DATA(szInData,szOutData,37);
     }
 
     void testSeekTell()

@@ -1,4 +1,4 @@
-EXTRA_DIST = file.hh types.hh
+EXTRA_DIST = file.hh types.hh time.hh
 #INCLUDES = -I../include
 SUBDIRS = linux
 
