@@ -20,22 +20,46 @@
  * @file src/types.hh
  * @brief Defines custom types used by the library.
  */
-
 #pragma once
-#include <string>
+#include "types.hh"
 
 namespace ckCore
 {
-#ifdef _WINDOWS
-    typedef TCHAR tchar;
-    typedef __int64 tint64;
-    typedef std::string tstring;
-#endif
+    class Path
+    {
+    public:
+        class Iterator
+        {
+        private:
+            bool at_end_;
+            size_t pos_start_;
+            size_t pos_end_;
+            const Path *path_;
 
-#ifdef _LINUX
-    typedef char tchar;
-    typedef long long tint64;
-    typedef std::string tstring;
-#endif
+            void Next();
+
+        public:
+            Iterator();
+            Iterator(const Path &path);
+
+            tstring operator*() const;
+            Iterator &operator++();
+            Iterator &operator++(int);
+            bool operator==(const Iterator &it);
+            bool operator!=(const Iterator &it);
+        };
+
+    private:
+        tstring path_name_;
+
+    public:
+        Path(const tchar *path_name);
+        ~Path();
+
+        Iterator Begin();
+        Iterator End();
+
+        //bool Valid();
+    };
 };
 

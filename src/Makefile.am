@@ -1,12 +1,11 @@
-EXTRA_DIST = file.hh types.hh
+EXTRA_DIST = directory.hh file.hh types.hh path.hh
 #INCLUDES = -I../include
 SUBDIRS = linux
 
 lib_LTLIBRARIES = libckcore.la
 
-libckcore_la_SOURCES = linux/file.cc 
-#libckui_la_LIBADD = x/libckuix.la
+libckcore_la_SOURCES = path.cc linux/directory.cc linux/file.cc
 
 library_includedir = $(includedir)/ckcore
-library_include_HEADERS = file.hh types.hh
+library_include_HEADERS = directory.hh file.hh types.hh path.hh
 

@@ -17,25 +17,29 @@
  */
 
 /**
- * @file src/types.hh
- * @brief Defines custom types used by the library.
+ * @file src/linux/directory.hh
+ * @brief Defines the Linux file class.
  */
-
 #pragma once
-#include <string>
+#include "../file.hh"
+#include "../types.hh"
 
 namespace ckCore
 {
-#ifdef _WINDOWS
-    typedef TCHAR tchar;
-    typedef __int64 tint64;
-    typedef std::string tstring;
-#endif
+    /**
+     * @brief The class for dealing with directories on Linux.
+     */
+    class Directory
+    {
+    private:
+        tstring dir_path_;
 
-#ifdef _LINUX
-    typedef char tchar;
-    typedef long long tint64;
-    typedef std::string tstring;
-#endif
+    public:
+        Directory(const tchar *dir_path);
+        ~Directory();
+
+        bool Create();
+        bool Remove();
+    };
 };
 

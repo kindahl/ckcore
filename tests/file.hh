@@ -40,7 +40,7 @@ public:
         TS_ASSERT(file1.Close());
         TS_ASSERT(!file1.Test());
 
-        TS_ASSERT(file1.Delete());
+        TS_ASSERT(file1.Remove());
         TS_ASSERT(!file1.Test());
         TS_ASSERT(!file1.Close());
 
@@ -88,7 +88,7 @@ public:
         }
 
         file.Close();
-        file.Delete();
+        file.Remove();
 
         TS_ASSERT_SAME_DATA(in_data,out_data,37);
     }
@@ -135,14 +135,14 @@ public:
         }
     }
 
-    void testExistDelete()
+    void testExistRemove()
     {
         ckCore::File file1("data/file/non-existent");
         TS_ASSERT(!file1.Exist());
-        TS_ASSERT(!file1.Delete());
+        TS_ASSERT(!file1.Remove());
         TS_ASSERT(file1.Open(ckCore::File::OPEN_WRITE));
         TS_ASSERT(file1.Exist());
-        TS_ASSERT(file1.Delete());
+        TS_ASSERT(file1.Remove());
         TS_ASSERT(!file1.Exist());
 
         ckCore::File file2("data/file/0bytes");
@@ -152,13 +152,13 @@ public:
         TS_ASSERT(ckCore::File::Exist("data/file/0bytes"));
         TS_ASSERT(!ckCore::File::Exist("data/file/non-existent"));
 
-        TS_ASSERT(!ckCore::File::Delete("data/file/non-existent"));
+        TS_ASSERT(!ckCore::File::Remove("data/file/non-existent"));
         ckCore::File file3("data/file/new");
         TS_ASSERT(file3.Open(ckCore::File::OPEN_WRITE));
         TS_ASSERT(file3.Close());
-        TS_ASSERT(ckCore::File::Delete("data/file/new"));
-        TS_ASSERT(!ckCore::File::Delete("data/file/non-existent"));
-        TS_ASSERT(!ckCore::File::Delete(""));
+        TS_ASSERT(ckCore::File::Remove("data/file/new"));
+        TS_ASSERT(!ckCore::File::Remove("data/file/non-existent"));
+        TS_ASSERT(!ckCore::File::Remove(""));
 
     }
 
@@ -184,8 +184,8 @@ public:
         TS_ASSERT(!file2.Rename("data/file/new2"));
 
         // Clean up.
-        TS_ASSERT(file1.Delete());
-        TS_ASSERT(file2.Delete());
+        TS_ASSERT(file1.Remove());
+        TS_ASSERT(file2.Remove());
 
         // Try to rename non-existent file.
         ckCore::File file3("data/file/non-existent");
@@ -205,12 +205,12 @@ public:
         TS_ASSERT(!ckCore::File::Rename("data/file/new2","data/file/new2"));
         TS_ASSERT(!ckCore::File::Rename("data/file/new2",""));
         TS_ASSERT(!ckCore::File::Rename("data/file/new2","data/file/new/new2"));
-        TS_ASSERT(ckCore::File::Delete("data/file/new2"));
+        TS_ASSERT(ckCore::File::Remove("data/file/new2"));
     }
 
     void testSize()
     {
-        const ckCore::TChar *file_paths[] =
+        const ckCore::tchar *file_paths[] =
         {
             "data/file/0bytes",
             "data/file/53bytes",
@@ -218,7 +218,7 @@ public:
             "data/file/8253bytes"
         };
 
-        const ckCore::TInt64 file_sizes[] =
+        const ckCore::tint64 file_sizes[] =
         {
             0,
             53,

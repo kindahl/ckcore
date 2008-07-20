@@ -33,42 +33,42 @@ namespace ckCore
     {
     private:
         int file_handle_;
-        TString file_path_;
+        tstring file_path_;
 
     public:
-        File(const TChar *file_path);
+        File(const tchar *file_path);
         ~File();
 
         // Functions for internal manipulation.
         bool Open(FileMode file_mode);
         bool Close();
         bool Test();
-        TInt64 Seek(TInt64 distance,FileWhence whence);
-        TInt64 Tell();
-        TInt64 Read(void *buffer,unsigned long count);
-        TInt64 Write(const void *buffer,unsigned long count);
+        tint64 Seek(tint64 distance,FileWhence whence);
+        tint64 Tell();
+        tint64 Read(void *buffer,unsigned long count);
+        tint64 Write(const void *buffer,unsigned long count);
 
         // Functions for external manipulation (does not require file to be
         // opened).
         bool Exist();
-        bool Delete();
-        bool Rename(const TChar *new_file_path);
+        bool Remove();
+        bool Rename(const tchar *new_file_path);
         bool Time(struct tm &access_time,struct tm &modify_time,
                   struct tm &create_time);
         bool Access(FileMode file_mode);
-        TInt64 Size();
+        tint64 Size();
 
         // Static (conveniance and performance) functions, they are not allowed
         // to be wrappers around the non-static functions for performance
         // reasons.
-        static bool Exist(const TChar *file_path);
-        static bool Delete(const TChar *file_path);
-        static bool Rename(const TChar *old_file_path,
-                           const TChar *new_file_path);
-        static bool Time(const TChar *file_path,struct tm &access_time,
+        static bool Exist(const tchar *file_path);
+        static bool Remove(const tchar *file_path);
+        static bool Rename(const tchar *old_file_path,
+                           const tchar *new_file_path);
+        static bool Time(const tchar *file_path,struct tm &access_time,
                          struct tm &modify_time,struct tm &create_time);
-        static bool Access(const TChar *file_path,FileMode file_mode);
-        static TInt64 Size(const TChar *file_path);
+        static bool Access(const tchar *file_path,FileMode file_mode);
+        static tint64 Size(const tchar *file_path);
     };
 };
 

@@ -2,5 +2,5 @@
 
 export LD_LIBRARY_PATH=$PWD/../src/.libs/:$LD_LIBRARYPATH
 
-./bin/file
+./bin/test
 

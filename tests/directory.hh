@@ -16,26 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @file src/types.hh
- * @brief Defines custom types used by the library.
- */
+#include <cxxtest/TestSuite.h>
+#include <stdlib.h>
+#include "../src/types.hh"
+#include "../src/directory.hh"
 
-#pragma once
-#include <string>
-
-namespace ckCore
+class DirectoryTestSuite : public CxxTest::TestSuite
 {
-#ifdef _WINDOWS
-    typedef TCHAR tchar;
-    typedef __int64 tint64;
-    typedef std::string tstring;
-#endif
+public:
+    void testCreateRemove()
+    {
+        ckCore::Directory dir1("data/new");
+        TS_ASSERT(dir1.Create());
+        TS_ASSERT(dir1.Remove());
 
-#ifdef _LINUX
-    typedef char tchar;
-    typedef long long tint64;
-    typedef std::string tstring;
-#endif
+        ckCore::Directory dir2("data/new/");
+        TS_ASSERT(dir2.Create());
+        TS_ASSERT(dir2.Remove());
+
+        ckCore::Directory dir3("data/new/new");
+        TS_ASSERT(dir3.Create());
+        TS_ASSERT(dir3.Remove());
+
+        ckCore::Directory dir4("data/new/new/");
+        TS_ASSERT(dir4.Create());
+        TS_ASSERT(dir4.Remove());
+    }
 };
 

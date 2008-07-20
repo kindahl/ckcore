@@ -6,7 +6,7 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,25 +17,17 @@
  */
 
 /**
- * @file src/types.hh
- * @brief Defines custom types used by the library.
+ * @file src/directory.hh
+ * @brief Includes the platform specific directory class.
  */
 
 #pragma once
-#include <string>
 
-namespace ckCore
-{
 #ifdef _WINDOWS
-    typedef TCHAR tchar;
-    typedef __int64 tint64;
-    typedef std::string tstring;
+#include "windows/directory.hh"
 #endif
 
 #ifdef _LINUX
-    typedef char tchar;
-    typedef long long tint64;
-    typedef std::string tstring;
+#include "linux/directory.hh"
 #endif
-};
 

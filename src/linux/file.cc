@@ -23,15 +23,15 @@
 namespace ckCore
 {
     /**
-     * Constructs a ckFile object.
-     * @param [in] file_path The path of the file.
+     * Constructs a File object.
+     * @param [in] file_path The path to the file.
      */
-    File::File(const TChar *file_path) : file_handle_(-1),file_path_(file_path)
+    File::File(const tchar *file_path) : file_handle_(-1),file_path_(file_path)
     {
     }
 
     /**
-     * Destrucs the ckFile object. The file will be automatically closed if the
+     * Destructs the File object. The file will be automatically closed if the
      * close function has not been called.
      */
     File::~File()
@@ -106,7 +106,7 @@ namespace ckCore
      * @return If successfull the resulting file pointer location is returned,
      *         otherwise -1 is returned.
      */
-    TInt64 File::Seek(TInt64 distance,FileWhence whence)
+    tint64 File::Seek(tint64 distance,FileWhence whence)
     {
         if (file_handle_ == -1)
             return -1;
@@ -131,7 +131,7 @@ namespace ckCore
      * @return If successfull the current file pointer position, otherwise -1
      *         is returned.
      */
-    TInt64 File::Tell()
+    tint64 File::Tell()
     {
         if (file_handle_ == -1)
             return -1;
@@ -150,7 +150,7 @@ namespace ckCore
      *         returns the number of bytes read (this may be zero when the end
      *         of the file has been reached).
      */
-    TInt64 File::Read(void *buffer,unsigned long count)
+    tint64 File::Read(void *buffer,unsigned long count)
     {
         if (file_handle_ == -1)
             return -1;
@@ -166,7 +166,7 @@ namespace ckCore
      * @return If the operation failed -1 is returned, otherwise the function
      *         returns the number of bytes written (this may be zero).
      */
-    TInt64 File::Write(const void *buffer,unsigned long count)
+    tint64 File::Write(const void *buffer,unsigned long count)
     {
         if (file_handle_ == -1)
             return -1;
@@ -190,12 +190,12 @@ namespace ckCore
     }
 
     /**
-     * Deletes the file from the file system. If other links exists to the file
+     * Removes the file from the file system. If other links exists to the file
      * only this link will be deleted. If the file is opened it will be closed.
      * @return If the file was successfully deleted true is returned, otherwise
      *         false is returned.
      */
-    bool File::Delete()
+    bool File::Remove()
     {
         Close();
 
@@ -209,7 +209,7 @@ namespace ckCore
      * @return If the file was sucessfully renamed true is returned, otherwise
      *         false is returned.
      */
-    bool File::Rename(const TChar *new_file_path)
+    bool File::Rename(const tchar *new_file_path)
     {
         // If a file already exist abort so it will not be overwritten. 
         if (Exist(new_file_path))
@@ -276,15 +276,15 @@ namespace ckCore
      * Calcualtes the size of the file.
      * @return If successfull the size of the file, otherwise -1 is returned.
      */
-    TInt64 File::Size()
+    tint64 File::Size()
     {
         // If the file is not open, use the static in this case optimized
         // function.
         if (file_handle_ == -1)
             return Size(file_path_.c_str());
 
-        TInt64 cur_pos = Tell();
-        TInt64 size = Seek(0,FILE_END);
+        tint64 cur_pos = Tell();
+        tint64 size = Seek(0,FILE_END);
         Seek(cur_pos,FILE_BEGIN);
 
         return size;
@@ -295,20 +295,20 @@ namespace ckCore
      * @param [in] file_path The path to the file.
      * @return If the file exist true is returned, otherwise false.
      */
-    bool File::Exist(const TChar *file_path)
+    bool File::Exist(const tchar *file_path)
     {
         struct stat file_stat;
         return stat(file_path,&file_stat) == 0;
     }
 
     /**
-     * Deletes the specified file from the file system. If other links exists
+     * Removes the specified file from the file system. If other links exists
      * to the file only the specified link will be deleted.
      * @param [in] file_path The path to the file.
      * @return If the file was successfully deleted true is returned, otherwise
      *         false is returned.
      */
-    bool File::Delete(const TChar *file_path)
+    bool File::Remove(const tchar *file_path)
     {
         return unlink(file_path) == 0;
     }
@@ -321,7 +321,7 @@ namespace ckCore
      * @return If the file was sucessfully renamed true is returned, otherwise
      *         false is returned.
      */
-    bool File::Rename(const TChar *old_file_path,const TChar *new_file_path)
+    bool File::Rename(const tchar *old_file_path,const tchar *new_file_path)
     {
         if (Exist(new_file_path))
             return false;
@@ -338,7 +338,7 @@ namespace ckCore
      * @param [out] create_time Time of creation (last status change on Linux).
      * @return If successfull true is returned, otherwise false.
      */
-    bool File::Time(const TChar *file_path,struct tm &access_time,
+    bool File::Time(const tchar *file_path,struct tm &access_time,
                     struct tm &modify_time,struct tm &create_time)
     {
         struct stat file_stat;
@@ -355,33 +355,6 @@ namespace ckCore
         if (localtime_r(&file_stat.st_ctime,&create_time) == NULL)
             return false;
 
-        //struct tm *pLocalAccess = localtime(&Stat.st_atime);
-
-        // Access time.
-        /*Access.m_ucSecond = pLocalAccess->tm_sec;
-        Access.m_ucMinute = pLocalAccess->tm_min;
-        Access.m_ucHour = pLocalAccess->tm_hour;
-        Access.m_ucDayMonth = pLocalAccess->tm_mday;
-        Access.m_ucMonth = pLocalAccess->tm_mon;
-        Access.m_ucYear = pLocalAccess->tm_year;
-        Access.m_ucDayWeek = pLocalAccess->tm_wday;
-        Access.m_usDayYear = pLocalAccess->tm_yday;
-
-        switch (pLocalAccess->tm_isdst)
-        {
-            case -1:
-                Access.m_DaySaveTime = CTime::DST_UNKNOWN;
-                break;
-
-            case 0:
-                Access.m_DaySaveTime = CTime::DST_DISABLED;
-                break;
-
-            case 1:
-                Access.m_DaySaveTime = CTime::DST_ENABLED;
-                break;
-        }*/
-
         return true;
     }
 
@@ -394,7 +367,7 @@ namespace ckCore
      *         specified file mode true is returned, otherwise false is
      *         returned.
      */
-    bool File::Access(const TChar *file_path,FileMode file_mode)
+    bool File::Access(const tchar *file_path,FileMode file_mode)
     {
         switch (file_mode)
         {
@@ -413,7 +386,7 @@ namespace ckCore
      * @param [in] file_path The path to the file.
      * @return If successfull the size of the file, otherwise -1 is returned.
      */
-    TInt64 File::Size(const TChar *file_path)
+    tint64 File::Size(const tchar *file_path)
     {
         struct stat file_stat;
         if (stat(file_path,&file_stat) == -1)
