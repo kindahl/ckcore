@@ -28,13 +28,13 @@ namespace ckCore
     /**
      * @brief The virtual base class for using files.
      */
-    class CFileBase
+    class FileBase
     {
     public:
         /**
          * Defines modes which describes how to open files.
          */
-        enum EFileMode
+        enum FileMode
         {
             OPEN_READ,
             OPEN_WRITE
@@ -44,19 +44,11 @@ namespace ckCore
          * Defines directives what to use as base offset when performing seek
          * operations.
          */
-        enum EFileWhence
+        enum FileWhence
         {
             FILE_CURRENT,
             FILE_BEGIN,
             FILE_END
-        };
-
-        /**
-         * Defines a set of file attribute flags.
-         */
-        enum EFileAttrFlags
-        {
-            FILE_READONLY = 0x01
         };
     };
 };

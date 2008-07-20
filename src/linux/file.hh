@@ -29,48 +29,46 @@ namespace ckCore
     /**
      * @brief The class for dealing with files on Linux.
      */
-    class CFile : public CFileBase
+    class File : public FileBase
     {
     private:
-        int m_iHandle;
-        TString m_FilePath;
+        int file_handle_;
+        TString file_path_;
 
     public:
-        CFile(const TChar *szFilePath);
-        ~CFile();
+        File(const TChar *file_path);
+        ~File();
 
         // Functions for internal manipulation.
-        bool Open(EFileMode FileMode);
+        bool Open(FileMode file_mode);
         bool Close();
         bool Test();
-        TInt64 Seek(TInt64 iDistance,EFileWhence FileWhence);
+        TInt64 Seek(TInt64 distance,FileWhence whence);
         TInt64 Tell();
-        TInt64 Read(void *pBuffer,unsigned long ulCount);
-        TInt64 Write(const void *pBuffer,unsigned long ulCount);
+        TInt64 Read(void *buffer,unsigned long count);
+        TInt64 Write(const void *buffer,unsigned long count);
 
         // Functions for external manipulation (does not require file to be
         // opened).
         bool Exist();
         bool Delete();
-        bool Rename(const TChar *szNewFilePath);
-        bool Time(struct tm &AccessTime,struct tm &ModifyTime,
-            struct tm &CreateTime);
-        bool Access(EFileMode FileMode);
+        bool Rename(const TChar *new_file_path);
+        bool Time(struct tm &access_time,struct tm &modify_time,
+                  struct tm &create_time);
+        bool Access(FileMode file_mode);
         TInt64 Size();
 
         // Static (conveniance and performance) functions, they are not allowed
         // to be wrappers around the non-static functions for performance
         // reasons.
-        static bool Exist(const TChar *szFilePath);
-        static bool Delete(const TChar *szFilePath);
-        static bool Rename(const TChar *szOldFilePath,
-            const TChar *szNewFilePath);
-        static bool Time(const TChar *szFilePath,struct tm &AccessTime,
-            struct tm &ModifyTime,struct tm &CreateTime);
-        static bool Access(const TChar *szFilePath,EFileMode FileMode);
-        static TInt64 Size(const TChar *szFilePath);
-
-        //static void Attributes(const TChar *szFilePath) {}
+        static bool Exist(const TChar *file_path);
+        static bool Delete(const TChar *file_path);
+        static bool Rename(const TChar *old_file_path,
+                           const TChar *new_file_path);
+        static bool Time(const TChar *file_path,struct tm &access_time,
+                         struct tm &modify_time,struct tm &create_time);
+        static bool Access(const TChar *file_path,FileMode file_mode);
+        static TInt64 Size(const TChar *file_path);
     };
 };
 

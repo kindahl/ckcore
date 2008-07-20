@@ -24,8 +24,9 @@ namespace ckCore
 {
     /**
      * Constructs a ckFile object.
+     * @param [in] file_path The path of the file.
      */
-    CFile::CFile(const TChar *szFilePath) : m_iHandle(-1),m_FilePath(szFilePath)
+    File::File(const TChar *file_path) : file_handle_(-1),file_path_(file_path)
     {
     }
 
@@ -33,37 +34,38 @@ namespace ckCore
      * Destrucs the ckFile object. The file will be automatically closed if the
      * close function has not been called.
      */
-    CFile::~CFile()
+    File::~File()
     {
         Close();
     }
 
     /**
      * Opens the file in the requested mode.
-     * @param [in] FileMode Determines how the file should be opened. In write mode
-     *                      the file will be created if it does not exist.
+     * @param [in] file_mode Determines how the file should be opened. In write
+     *                       mode the file will be created if it does not
+     *                       exist.
      * @return If successfull true is returned, otherwise false.
      */
-    bool CFile::Open(EFileMode FileMode)
+    bool File::Open(FileMode file_mode)
     {
         // Check a file handle has already been opened, in that case try to close
         // it.
-        if (m_iHandle != -1 && !Close())
+        if (file_handle_ != -1 && !Close())
             return false;
 
         // Open the file handle.
-        switch (FileMode)
+        switch (file_mode)
         {
             case OPEN_READ:
-                m_iHandle = open(m_FilePath.c_str(),O_RDONLY);
+                file_handle_ = open(file_path_.c_str(),O_RDONLY);
                 break;
 
             case OPEN_WRITE:
-                m_iHandle = open(m_FilePath.c_str(),O_CREAT | O_WRONLY,S_IRUSR | S_IWUSR);
+                file_handle_ = open(file_path_.c_str(),O_CREAT | O_WRONLY,S_IRUSR | S_IWUSR);
                 break;
         }
 
-        return m_iHandle != -1;
+        return file_handle_ != -1;
     }
 
     /**
@@ -71,14 +73,14 @@ namespace ckCore
      * a call this call will fail.
      * @return If successfull true is returned, otherwise false.
      */
-    bool CFile::Close()
+    bool File::Close()
     {
-        if (m_iHandle == -1)
+        if (file_handle_ == -1)
             return false;
 
-        if (close(m_iHandle) == 0)
+        if (close(file_handle_) == 0)
         {
-            m_iHandle = -1;
+            file_handle_ = -1;
             return true;
         }
 
@@ -89,37 +91,36 @@ namespace ckCore
      * Checks whether the file has been opened or not.
      * @return If a file is open true is returned, otherwise false.
      */
-    bool CFile::Test()
+    bool File::Test()
     {
-        return m_iHandle != -1;
+        return file_handle_ != -1;
     }
 
     /**
      * Repositions the file pointer to the specified offset accoding to the
      * whence directive in the file.
-     * @param [in] iDistance The number of bytes that the file pointer should
-     *                       move.
-     * @param [in] FileWhence Specifies what to use as base when calculating
-     *                        the final file pointer position.
+     * @param [in] distance The number of bytes that the file pointer should
+     *                      move.
+     * @param [in] whence Specifies what to use as base when calculating the
+     *                    final file pointer position.
      * @return If successfull the resulting file pointer location is returned,
      *         otherwise -1 is returned.
      */
-    TInt64 CFile::Seek(TInt64 iDistance,EFileWhence FileWhence)
+    TInt64 File::Seek(TInt64 distance,FileWhence whence)
     {
-        if (m_iHandle == -1)
+        if (file_handle_ == -1)
             return -1;
 
-        int iWhence;
-        switch (FileWhence)
+        switch (whence)
         {
             case FILE_CURRENT:
-                return lseek(m_iHandle,iDistance,SEEK_CUR);
+                return lseek(file_handle_,distance,SEEK_CUR);
 
             case FILE_BEGIN:
-                return lseek(m_iHandle,iDistance,SEEK_SET);
+                return lseek(file_handle_,distance,SEEK_SET);
 
             case FILE_END:
-                return lseek(m_iHandle,iDistance,SEEK_END);
+                return lseek(file_handle_,distance,SEEK_END);
         }
 
         return -1;
@@ -130,62 +131,62 @@ namespace ckCore
      * @return If successfull the current file pointer position, otherwise -1
      *         is returned.
      */
-    TInt64 CFile::Tell()
+    TInt64 File::Tell()
     {
-        if (m_iHandle == -1)
+        if (file_handle_ == -1)
             return -1;
 
         // Obtain the current file pointer position by seeking 0 bytes from the
         // current position.
-        return lseek(m_iHandle,0,SEEK_CUR);
+        return lseek(file_handle_,0,SEEK_CUR);
     }
 
     /**
      * Reads raw data from the current file.
-     * @param [out] pBuffer A pointer to the beginning of a buffer in which to
-     *                      put the data.
-     * @param [in] ulCount The number of bytes to read from the file.
+     * @param [out] buffer A pointer to the beginning of a buffer in which to
+     *                     put the data.
+     * @param [in] count The number of bytes to read from the file.
      * @return If the operation failed -1 is returned, otherwise the function
      *         returns the number of bytes read (this may be zero when the end
      *         of the file has been reached).
      */
-    TInt64 CFile::Read(void *pBuffer,unsigned long ulCount)
+    TInt64 File::Read(void *buffer,unsigned long count)
     {
-        if (m_iHandle == -1)
+        if (file_handle_ == -1)
             return -1;
 
-        return read(m_iHandle,pBuffer,ulCount);
+        return read(file_handle_,buffer,count);
     }
 
     /**
      * Writes raw data to the current file.
-     * @param [in] pBuffer A pointer to the beginning of a buffer from which to
-     *                     read data to be written to the file.
-     * @param [in] ulCount The number of bytes to write to the file.
+     * @param [in] buffer A pointer to the beginning of a buffer from which to
+     *                    read data to be written to the file.
+     * @param [in] count The number of bytes to write to the file.
      * @return If the operation failed -1 is returned, otherwise the function
      *         returns the number of bytes written (this may be zero).
      */
-    TInt64 CFile::Write(const void *pBuffer,unsigned long ulCount)
+    TInt64 File::Write(const void *buffer,unsigned long count)
     {
-        if (m_iHandle == -1)
+        if (file_handle_ == -1)
             return -1;
 
-        return write(m_iHandle,pBuffer,ulCount);
+        return write(file_handle_,buffer,count);
     }
 
     /**
      * Checks whether the file exist or not.
      * @return If the file exist true is returned, otherwise false.
      */
-    bool CFile::Exist()
+    bool File::Exist()
     {
-        if (m_iHandle != -1)
+        if (file_handle_ != -1)
         {
-            struct stat Stat;
-            return fstat(m_iHandle,&Stat) == 0;
+            struct stat file_stat;
+            return fstat(file_handle_,&file_stat) == 0;
         }
 
-        return Exist(m_FilePath.c_str());
+        return Exist(file_path_.c_str());
     }
 
     /**
@@ -194,31 +195,31 @@ namespace ckCore
      * @return If the file was successfully deleted true is returned, otherwise
      *         false is returned.
      */
-    bool CFile::Delete()
+    bool File::Delete()
     {
         Close();
 
-        return unlink(m_FilePath.c_str()) == 0;
+        return unlink(file_path_.c_str()) == 0;
     }
 
     /**
      * Moves the file to use the new file path. If the new full path exist it
      * will not be overwritten. If the file is open it will be closed.
-     * @param [in] szNewFilePath The new file path.
+     * @param [in] new_file_path The new file path.
      * @return If the file was sucessfully renamed true is returned, otherwise
      *         false is returned.
      */
-    bool CFile::Rename(const TChar *szNewFilePath)
+    bool File::Rename(const TChar *new_file_path)
     {
         // If a file already exist abort so it will not be overwritten. 
-        if (Exist(szNewFilePath))
+        if (Exist(new_file_path))
             return false;
 
         Close();
 
-        if (rename(m_FilePath.c_str(),szNewFilePath) == 0)
+        if (rename(file_path_.c_str(),new_file_path) == 0)
         {
-            m_FilePath = szNewFilePath;
+            file_path_ = new_file_path;
             return true;
         }
 
@@ -228,130 +229,130 @@ namespace ckCore
     /**
      * Obtains time stamps on when the file was last accessed, last modified
      * and created.
-     * @param [out] AccessTime Time of last access.
-     * @param [out] ModifyTime Time of last modification.
-     * @param [out] CreateTime Time of creation (last status change on Linux).
+     * @param [out] access_time Time of last access.
+     * @param [out] modify_time Time of last modification.
+     * @param [out] create_time Time of creation (last status change on Linux).
      * @return If successfull true is returned, otherwise false.
      */
-    bool CFile::Time(struct tm &AccessTime,struct tm &ModifyTime,
-        struct tm &CreateTime)
+    bool File::Time(struct tm &access_time,struct tm &modify_time,
+                    struct tm &create_time)
     {
-        if (m_iHandle != -1)
+        if (file_handle_ != -1)
         {
-            struct stat Stat;
-            if (fstat(m_iHandle,&Stat) == -1)
+            struct stat file_stat;
+            if (fstat(file_handle_,&file_stat) == -1)
                 return false;
 
             // Convert to local time.
-            if (localtime_r(&Stat.st_atime,&AccessTime) == NULL)
+            if (localtime_r(&file_stat.st_atime,&access_time) == NULL)
                 return false;
 
-            if (localtime_r(&Stat.st_mtime,&ModifyTime) == NULL)
+            if (localtime_r(&file_stat.st_mtime,&modify_time) == NULL)
                 return false;
 
-            if (localtime_r(&Stat.st_ctime,&CreateTime) == NULL)
+            if (localtime_r(&file_stat.st_ctime,&create_time) == NULL)
                 return false;
 
             return true;
         }
 
-        return Time(m_FilePath.c_str(),AccessTime,ModifyTime,CreateTime);
+        return Time(file_path_.c_str(),access_time,modify_time,create_time);
     }
 
     /**
      * Checks if the active user has permission to open the file in a certain
      * file mode.
-     * @param [in] FileMode The file mode to check for access permission.
+     * @param [in] file_mode The file mode to check for access permission.
      * @return If the active user have permission to open the file in the
      *         specified file mode true is returned, otherwise false is
      *         returned.
      */
-    bool CFile::Access(EFileMode FileMode)
+    bool File::Access(FileMode file_mode)
     {
-        return Access(m_FilePath.c_str(),FileMode);
+        return Access(file_path_.c_str(),file_mode);
     }
 
     /**
      * Calcualtes the size of the file.
      * @return If successfull the size of the file, otherwise -1 is returned.
      */
-    TInt64 CFile::Size()
+    TInt64 File::Size()
     {
         // If the file is not open, use the static in this case optimized
         // function.
-        if (m_iHandle == -1)
-            return Size(m_FilePath.c_str());
+        if (file_handle_ == -1)
+            return Size(file_path_.c_str());
 
-        TInt64 iCurPos = Tell();
-        TInt64 iFileSize = Seek(0,FILE_END);
-        Seek(iCurPos,FILE_BEGIN);
+        TInt64 cur_pos = Tell();
+        TInt64 size = Seek(0,FILE_END);
+        Seek(cur_pos,FILE_BEGIN);
 
-        return iFileSize;
+        return size;
     }
 
     /**
      * Checks whether the specified file exist or not.
-     * @param [in] szFilePath The path to the file.
+     * @param [in] file_path The path to the file.
      * @return If the file exist true is returned, otherwise false.
      */
-    bool CFile::Exist(const TChar *szFilePath)
+    bool File::Exist(const TChar *file_path)
     {
-        struct stat Stat;
-        return stat(szFilePath,&Stat) == 0;
+        struct stat file_stat;
+        return stat(file_path,&file_stat) == 0;
     }
 
     /**
      * Deletes the specified file from the file system. If other links exists
      * to the file only the specified link will be deleted.
-     * @param [in] szFilePath The path to the file.
+     * @param [in] file_path The path to the file.
      * @return If the file was successfully deleted true is returned, otherwise
      *         false is returned.
      */
-    bool CFile::Delete(const TChar *szFilePath)
+    bool File::Delete(const TChar *file_path)
     {
-        return unlink(szFilePath) == 0;
+        return unlink(file_path) == 0;
     }
 
     /**
      * Moves the old file to use the new file path. If the new full path exist
      * it will not be overwritten.
-     * @param [in] szOldFilePath The path to the file that should be moved.
-     * @param [in] szNewFilePath The new path of the existing file.
+     * @param [in] old_file_path The path to the file that should be moved.
+     * @param [in] new_file_path The new path of the existing file.
      * @return If the file was sucessfully renamed true is returned, otherwise
      *         false is returned.
      */
-    bool CFile::Rename(const TChar *szOldFilePath,const TChar *szNewFilePath)
+    bool File::Rename(const TChar *old_file_path,const TChar *new_file_path)
     {
-        if (Exist(szNewFilePath))
+        if (Exist(new_file_path))
             return false;
 
-        return rename(szOldFilePath,szNewFilePath) == 0;
+        return rename(old_file_path,new_file_path) == 0;
     }
 
     /**
      * Obtains time stamps on when the specified file was last accessed, last
      * modified and created.
-     * @param [in] szFilePath The path to the file.
-     * @param [out] AccessTime Time of last access.
-     * @param [out] ModifyTime Time of last modification.
-     * @param [out] CreateTime Time of creation (last status change on Linux).
+     * @param [in] file_path The path to the file.
+     * @param [out] access_time Time of last access.
+     * @param [out] modify_time Time of last modification.
+     * @param [out] create_time Time of creation (last status change on Linux).
      * @return If successfull true is returned, otherwise false.
      */
-    bool CFile::Time(const TChar *szFilePath,struct tm &AccessTime,
-        struct tm &ModifyTime,struct tm &CreateTime)
+    bool File::Time(const TChar *file_path,struct tm &access_time,
+                    struct tm &modify_time,struct tm &create_time)
     {
-        struct stat Stat;
-        if (stat(szFilePath,&Stat) == -1)
+        struct stat file_stat;
+        if (stat(file_path,&file_stat) == -1)
             return false;
 
         // Convert to local time.
-        if (localtime_r(&Stat.st_atime,&AccessTime) == NULL)
+        if (localtime_r(&file_stat.st_atime,&access_time) == NULL)
             return false;
 
-        if (localtime_r(&Stat.st_mtime,&ModifyTime) == NULL)
+        if (localtime_r(&file_stat.st_mtime,&modify_time) == NULL)
             return false;
 
-        if (localtime_r(&Stat.st_ctime,&CreateTime) == NULL)
+        if (localtime_r(&file_stat.st_ctime,&create_time) == NULL)
             return false;
 
         //struct tm *pLocalAccess = localtime(&Stat.st_atime);
@@ -387,21 +388,21 @@ namespace ckCore
     /**
      * Checks if the active user has permission to open the specified file in a
      * certain file mode.
-     * @param szFilePath The path to the file.
-     * @param [in] FileMode The file mode to check for access permission.
+     * @param [in] file_path The path to the file.
+     * @param [in] file_mode The file mode to check for access permission.
      * @return If the active user have permission to open the file in the
      *         specified file mode true is returned, otherwise false is
      *         returned.
      */
-    bool CFile::Access(const TChar *szFilePath,EFileMode FileMode)
+    bool File::Access(const TChar *file_path,FileMode file_mode)
     {
-        switch (FileMode)
+        switch (file_mode)
         {
             case OPEN_READ:
-                return access(szFilePath,R_OK) == 0;
+                return access(file_path,R_OK) == 0;
 
             case OPEN_WRITE:
-                return access(szFilePath,W_OK) == 0;
+                return access(file_path,W_OK) == 0;
         }
 
         return false;
@@ -409,16 +410,16 @@ namespace ckCore
 
     /**
      * Calcualtes the size of the specified file.
-     * @param [in] szFilePath The path to the file.
+     * @param [in] file_path The path to the file.
      * @return If successfull the size of the file, otherwise -1 is returned.
      */
-    TInt64 CFile::Size(const TChar *szFilePath)
+    TInt64 File::Size(const TChar *file_path)
     {
-        struct stat Stat;
-        if (stat(szFilePath,&Stat) == -1)
+        struct stat file_stat;
+        if (stat(file_path,&file_stat) == -1)
             return -1;
 
-        return Stat.st_size;
+        return file_stat.st_size;
     }
 };
 
