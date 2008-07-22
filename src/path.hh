@@ -17,17 +17,24 @@
  */
 
 /**
- * @file src/types.hh
- * @brief Defines custom types used by the library.
+ * @file src/path.hh
+ * @brief Defines the path name class.
  */
 #pragma once
 #include "types.hh"
 
 namespace ckCore
 {
+    /**
+     * @brief Class for dealing with path names.
+     */
     class Path
     {
     public:
+        /**
+         * @brief Class for iterating the file/directory structure of a path
+         *        name.
+         */
         class Iterator
         {
         private:
@@ -56,10 +63,15 @@ namespace ckCore
         Path(const tchar *path_name);
         ~Path();
 
-        Iterator Begin();
-        Iterator End();
+        Iterator Begin() const;
+        Iterator End() const;
 
-        //bool Valid();
+        bool Valid();
+        tstring DirName();
+        tstring BaseName();
+
+        bool operator==(const Path &p);
+        bool operator!=(const Path &p);
     };
 };
 

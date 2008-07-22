@@ -18,7 +18,7 @@
 
 /**
  * @file src/linux/directory.hh
- * @brief Defines the Linux file class.
+ * @brief Defines the Linux directory class.
  */
 #pragma once
 #include "../file.hh"
