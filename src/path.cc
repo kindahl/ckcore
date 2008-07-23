@@ -107,7 +107,8 @@ namespace ckCore
     }
 
     /**
-     * Compares to iterators.
+     * Tests the equivalence of this and another iterator.
+     * @param [in] it The iterator to use for comparison.
      * @return If the iterators are equal true is returned, otherwise false.
      */
     bool Path::Iterator::operator==(const Iterator &it)
@@ -119,7 +120,8 @@ namespace ckCore
     }
 
     /**
-     * Compares two iterators.
+     * Tests the non-equivalence of this and another iterator.
+     * @param [in] it The iterator to use for comparison.
      * @return If the iterators are not equal true is returned, otherwise
      *         false.
      */
@@ -195,6 +197,15 @@ namespace ckCore
     }
 
     /**
+     * Returns the full path name.
+     * @return The full path name.
+     */
+    const tstring &Path::Name()
+    {
+        return path_name_;
+    }
+
+    /**
      * Calculates the dir name of the path name. The dir name will contain a
      * trailing path delimiter.
      * @return A string containing the dir name of the path name.
@@ -241,7 +252,23 @@ namespace ckCore
     }
 
     /**
-     * Compares two paths.
+     * Calculates the name of the file extension (if any). The separating dot
+     * character is not included in the returned extension name.
+     * @return A string containing the extension name.
+     */
+    tstring Path::ExtName()
+    {
+        tstring base_name = BaseName();
+        size_t delim = base_name.rfind('.');
+        if (delim == -1)
+            return tstring("");
+        else
+            return base_name.substr(delim + 1);
+    }
+
+    /**
+     * Tests the equivalence of this and another path.
+     * @param [in] p The path to use for comparison.
      * @return If the two Path objects are equal true is returned, otherwise
      *         false.
      */
@@ -262,13 +289,80 @@ namespace ckCore
     }
 
     /**
-     * Compares two paths.
+     * Tests the non-equivalence of this and another path.
+     * @param [in] p The path to use for comparison.
      * @return If the two Path objects are not equal true is returned,
      *         otherwise false.
      */
     bool Path::operator!=(const Path &p)
     {
         return !(*this == p);
+    }
+
+    /**
+     * Assigns this path the value of another path.
+     * @param [in] p The source path.
+     * @return This path.
+     */
+    Path &Path::operator=(const Path &p)
+    {
+        path_name_ = p.path_name_;
+        return *this;
+    }
+
+    /**
+     * Concatinates this and another path.
+     * @param [in] p The second path to use for concatination.
+     * @return A new Path object containing the two paths concatinated.
+     */
+    Path Path::operator+(const Path &p)
+    {
+        if (path_name_.size() < 1)
+            return Path(p.path_name_.c_str());
+        if (p.path_name_.size() < 1)
+            return Path(p.path_name_.c_str());
+
+        tstring new_path_name = path_name_;
+
+        size_t end = new_path_name.size() - 1;
+#ifdef _WINDOWS
+        bool delim_p1 = new_path_name[end] == '/' || new_path_name[end] == '\\';
+        bool delim_p2 = p.path_name_[0] == '/' || p.path_name_[0] == '\\';
+#else
+        bool delim_p1 = new_path_name[end] == '/';
+        bool delim_p2 = p.path_name_[0] == '/';
+#endif
+        if (delim_p1 && delim_p2)
+            new_path_name.resize(end);
+        else if (!delim_p1 && !delim_p2)
+            new_path_name.push_back('/');
+
+        new_path_name += p.path_name_;
+        return Path(new_path_name.c_str());
+    }
+
+    /**
+     * Append a path to this path.
+     * @param [in] p The path to append.
+     * @return This path.
+     */
+    Path &Path::operator+=(const Path &p)
+    {
+        size_t end = path_name_.size() - 1;
+#ifdef _WINDOWS
+        bool delim_p1 = path_name_[end] == '/' || path_name_[end] == '\\';
+        bool delim_p2 = p.path_name_[0] == '/' || p.path_name_[0] == '\\';
+#else
+        bool delim_p1 = path_name_[end] == '/';
+        bool delim_p2 = p.path_name_[0] == '/';
+#endif
+        if (delim_p1 && delim_p2)
+            path_name_.resize(end);
+        else if (!delim_p1 && !delim_p2)
+            path_name_.push_back('/');
+
+        path_name_ += p.path_name_;
+        return *this;
     }
 };
 

@@ -228,6 +228,41 @@ public:
 #endif
     }
 
+    void testExtName()
+    {
+        ckCore::Path path1 = "/this/is/a/test";
+        TS_ASSERT_EQUALS(path1.ExtName(),"");
+
+        path1 = "/this/is/a/test/";
+        TS_ASSERT_EQUALS(path1.ExtName(),"");
+
+        path1 = "/this/is/a/test.gz";
+        TS_ASSERT_EQUALS(path1.ExtName(),"gz");
+
+        path1 = "/this/is/a/test.tar.gz";
+        TS_ASSERT_EQUALS(path1.ExtName(),"gz");
+
+        path1 = "/this/is/a/.gz";
+        TS_ASSERT_EQUALS(path1.ExtName(),"gz");
+
+        path1 = "/this/is/a/.";
+        TS_ASSERT_EQUALS(path1.ExtName(),"");
+
+        // Special cases.
+        path1 = ".";
+        TS_ASSERT_EQUALS(path1.ExtName(),"");
+
+        path1 = "";
+        TS_ASSERT_EQUALS(path1.ExtName(),"");
+    }
+
+    void testFoo()
+    {
+        ckCore::Path path("/this/is/a/test");
+        ckCore::tstring foo;
+        const ckCore::tchar *c_str = foo;
+    }
+
     void testCompare()
     {
         ckCore::Path path1("/this/is/a/test/");
@@ -280,6 +315,63 @@ public:
         TS_ASSERT(path9 != path7);
         TS_ASSERT(!(path9 == path7));
 #endif
+    }
+
+    void testAssign()
+    {
+        ckCore::Path path1("/this/is/a/test");
+        TS_ASSERT_EQUALS(path1,"/this/is/a/test");
+        TS_ASSERT(path1 != "/this/is/not/a/test");
+
+        path1 = "/this/is/not/a/test";
+        TS_ASSERT_EQUALS(path1,"/this/is/not/a/test");
+        TS_ASSERT(path1 != "/this/is/a/test");
+
+        ckCore::Path path2("/this/is/a/test");
+        path1 = path2;
+        TS_ASSERT_EQUALS(path1,"/this/is/a/test");
+        TS_ASSERT(path1 != "/this/is/not/a/test");
+    }
+
+    void testAppend()
+    {
+        // + operator.
+        ckCore::Path path1("/this/is");
+        ckCore::Path path2 = path1 + "a/test";
+        TS_ASSERT_EQUALS(path2,"/this/is/a/test");
+
+        path2 = path1 + "/a/test";
+        TS_ASSERT_EQUALS(path2,"/this/is/a/test");
+
+        path2 = path1 + "/a/test/";
+        TS_ASSERT_EQUALS(path2,"/this/is/a/test");
+
+        path1 = "/this/is/";
+        path2 = path1 + "/a/test/";
+        TS_ASSERT_EQUALS(path2,"/this/is/a/test");
+
+        path2 = path1 + "a/test/";
+        TS_ASSERT_EQUALS(path2,"/this/is/a/test");
+
+        // += operator.
+        path1 += "a/test";
+        TS_ASSERT_EQUALS(path1,"/this/is/a/test");
+
+        path1 = "/this/is";
+        path1 += "/a/test";
+        TS_ASSERT_EQUALS(path1,"/this/is/a/test");
+
+        path1 = "/this/is";
+        path1 += "/a/test/";
+        TS_ASSERT_EQUALS(path1,"/this/is/a/test");
+
+        path1 = "/this/is/";
+        path1 += "/a/test/";
+        TS_ASSERT_EQUALS(path1,"/this/is/a/test");
+
+        path1 = "/this/is/";
+        path1 += "a/test/";
+        TS_ASSERT_EQUALS(path1,"/this/is/a/test");
     }
 };
 

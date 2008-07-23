@@ -67,11 +67,16 @@ namespace ckCore
         Iterator End() const;
 
         bool Valid();
+        const tstring &Name();
         tstring DirName();
         tstring BaseName();
+        tstring ExtName();
 
         bool operator==(const Path &p);
         bool operator!=(const Path &p);
+        Path &operator=(const Path &p);
+        Path operator+(const Path &p);
+        Path &operator+=(const Path &p);
     };
 };
 
