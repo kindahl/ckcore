@@ -41,6 +41,11 @@ public:
         ckCore::Directory dir4("data/new/new/");
         TS_ASSERT(dir4.Create());
         TS_ASSERT(dir4.Remove());
+
+        // This is just for clean up since the above calls to Remove does not
+        // remove more than one directory entry.
+        ckCore::Directory dir5("data/new");
+        TS_ASSERT(dir5.Remove());
     }
 };
 

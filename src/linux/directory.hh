@@ -22,7 +22,7 @@
  */
 #pragma once
 #include "../file.hh"
-#include "../types.hh"
+#include "../path.hh"
 
 namespace ckCore
 {
@@ -32,14 +32,23 @@ namespace ckCore
     class Directory
     {
     private:
-        tstring dir_path_;
+        Path dir_path_;
 
     public:
-        Directory(const tchar *dir_path);
+        Directory(const Path &dir_path);
         ~Directory();
 
-        bool Create();
-        bool Remove();
+        bool Create() const;
+        bool Remove() const;
+        bool Exist() const;
+        bool Time(struct tm &access_time,struct tm &modify_time,
+                  struct tm &create_time) const;
+
+        static bool Create(const Path &dir_path);
+        static bool Remove(const Path &dir_path);
+        static bool Exist(const Path &dir_path);
+        static bool Time(const Path &dir_path,struct tm &access_time,
+                         struct tm &modify_time,struct tm &create_time);
     };
 };
 

@@ -52,8 +52,8 @@ namespace ckCore
             tstring operator*() const;
             Iterator &operator++();
             Iterator &operator++(int);
-            bool operator==(const Iterator &it);
-            bool operator!=(const Iterator &it);
+            bool operator==(const Iterator &it) const;
+            bool operator!=(const Iterator &it) const;
         };
 
     private:
@@ -66,14 +66,15 @@ namespace ckCore
         Iterator Begin() const;
         Iterator End() const;
 
-        bool Valid();
-        const tstring &Name();
-        tstring DirName();
-        tstring BaseName();
-        tstring ExtName();
+        bool Valid() const;
+        const tstring &Name() const;
+        tstring RootName() const;
+        tstring DirName() const;
+        tstring BaseName() const;
+        tstring ExtName() const;
 
-        bool operator==(const Path &p);
-        bool operator!=(const Path &p);
+        bool operator==(const Path &p) const;
+        bool operator!=(const Path &p) const;
         Path &operator=(const Path &p);
         Path operator+(const Path &p);
         Path &operator+=(const Path &p);

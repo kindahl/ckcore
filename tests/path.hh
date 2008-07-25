@@ -157,6 +157,59 @@ public:
 #endif
     }
 
+    void testRootName()
+    {
+        ckCore::Path path1("/this/is/");
+#ifdef _WINDOWS
+        TS_ASSERT_EQUALS(path1.RootName(),"");
+
+        path1 = "/this/is";
+        TS_ASSERT_EQUALS(path1.RootName(),"");
+
+        path1 = "/this";
+        TS_ASSERT_EQUALS(path1.RootName(),"");
+
+        path1 = "/";
+        TS_ASSERT_EQUALS(path1.RootName(),"");
+
+        path1 = "this/is/";
+        TS_ASSERT_EQUALS(path1.RootName(),"");
+
+        path1 = "c:/";
+        TS_ASSERT_EQUALS(path1.RootName(),"c:/");
+
+        path1 = "c:/foo";
+        TS_ASSERT_EQUALS(path1.RootName(),"c:/");
+
+        path1 = "c:\\";
+        TS_ASSERT_EQUALS(path1.RootName(),"c:\\");
+#else
+        TS_ASSERT_EQUALS(path1.RootName(),"/");
+
+        path1 = "/this/is";
+        TS_ASSERT_EQUALS(path1.RootName(),"/");
+
+        path1 = "/this";
+        TS_ASSERT_EQUALS(path1.RootName(),"/");
+
+        path1 = "/";
+        TS_ASSERT_EQUALS(path1.RootName(),"/");
+
+        path1 = "this/is/";
+        TS_ASSERT_EQUALS(path1.RootName(),"");
+
+        path1 = "c:\\";
+        TS_ASSERT_EQUALS(path1.RootName(),"");
+#endif
+
+        // Special cases.
+        path1 = "";
+        TS_ASSERT_EQUALS(path1.RootName(),"");
+
+        path1 = "foo";
+        TS_ASSERT_EQUALS(path1.RootName(),"");
+    }
+
     void testDirName()
     {
         ckCore::Path path1("/this/is/a/test");
@@ -254,13 +307,6 @@ public:
 
         path1 = "";
         TS_ASSERT_EQUALS(path1.ExtName(),"");
-    }
-
-    void testFoo()
-    {
-        ckCore::Path path("/this/is/a/test");
-        ckCore::tstring foo;
-        const ckCore::tchar *c_str = foo;
     }
 
     void testCompare()
