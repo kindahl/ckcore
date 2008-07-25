@@ -21,6 +21,8 @@
  * @brief Defines the Linux directory class.
  */
 #pragma once
+#include <map>
+#include <dirent.h>
 #include "../file.hh"
 #include "../path.hh"
 
@@ -31,12 +33,46 @@ namespace ckCore
      */
     class Directory
     {
+    public:
+        /**
+         * @brief Class for iterating directory contents.
+         *
+         * Please note that each iterator (except for end iterators) allocates
+         * an instance to the directory which will not be released until the
+         * Directory (not Iterator) object is destroyed. In other words, a good
+         * way of abusing this library is to create lots of iteators while
+         * keeping the directory object alive.
+         */
+        class Iterator
+        {
+        private:
+            DIR *dir_handle_;
+            struct dirent *cur_ent_;
+
+            void Next();
+
+        public:
+            Iterator();
+            Iterator(const Directory &dir);
+
+            tstring operator*() const;
+            Iterator &operator++();
+            Iterator &operator++(int);
+            bool operator==(const Iterator &it) const;
+            bool operator!=(const Iterator &it) const;
+        };
+
     private:
         Path dir_path_;
+
+        std::map<Iterator *,DIR *> dir_handles_;
 
     public:
         Directory(const Path &dir_path);
         ~Directory();
+
+        Iterator Begin() const;
+        Iterator End() const;
 
         bool Create() const;
         bool Remove() const;

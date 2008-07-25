@@ -18,10 +18,118 @@
 
 #include <unistd.h>
 #include <fcntl.h>
+#include <string.h>
 #include "directory.hh"
 
 namespace ckCore
 {
+    /**
+     * Constructs an Iterator object.
+     */
+    Directory::Iterator::Iterator() : dir_handle_(NULL),cur_ent_(NULL)
+    {
+    }
+
+    /**
+     * Constructs an Iterator object.
+     * @param [in] dir A reference to the Directory object to iterate over.
+     */
+    Directory::Iterator::Iterator(const Directory &dir) : dir_handle_(NULL),
+        cur_ent_(NULL)
+    {
+        //dir_handle_ = opendir(dir.dir_path_.Name().c_str());
+        if (dir.dir_handles_.count(this) > 0)
+        {
+            dir_handle_ = const_cast<Directory &>(dir).dir_handles_[this];
+        }
+        else
+        {
+            dir_handle_ = opendir(dir.dir_path_.Name().c_str());
+            const_cast<Directory &>(dir).dir_handles_[this] = dir_handle_;
+        }
+
+        if (dir_handle_ != NULL)
+            Next();
+    }
+
+    void Directory::Iterator::Next()
+    {
+        cur_ent_ = readdir(dir_handle_);
+
+        // Skip system '.' and '..' directories.
+        while ((cur_ent_ != NULL) && (!strcmp(cur_ent_->d_name,".") ||
+                                      !strcmp(cur_ent_->d_name,"..")))
+        {
+            cur_ent_ = readdir(dir_handle_);
+        }
+    }
+
+    /**
+     * Returns the name of the file or directory that the iterator currently
+     * points at.
+     * @return The name of the file or directory that the iterator points at.
+     */
+    tstring Directory::Iterator::operator*() const
+    {
+        if (cur_ent_ == NULL)
+            return tstring("NULL");
+        else
+            return tstring(cur_ent_->d_name);
+    }
+
+    /**
+     * Moves the iterator to the next file or directory residing in the
+     * directory.
+     * @return An Iterator object pointing at the next file or directory.
+     */
+    Directory::Iterator &Directory::Iterator::operator++()
+    {
+        if (cur_ent_ != NULL)
+            Next();
+
+        return *this;
+    }
+
+    /**
+     * Moves the iterator to the next file or directory residing in the
+     * directory.
+     * @return An Iterator object pointing at the next file or directory.
+     */
+    Directory::Iterator &Directory::Iterator::operator++(int)
+    {
+        if (cur_ent_ != NULL)
+            Next();
+
+        return *this;
+    }
+
+    /**
+     * Tests the equivalence of this and another iterator.
+     * @param [in] it The iterator to use for comparison.
+     * @return If the iterators are equal true is returned, otherwise false.
+     */
+    bool Directory::Iterator::operator==(const Iterator &it) const
+    {
+        if (cur_ent_ == NULL && it.cur_ent_ == NULL)
+            return true;
+
+        if ((cur_ent_->d_name == NULL && it.cur_ent_ != NULL) ||
+            (cur_ent_->d_name != NULL && it.cur_ent_ == NULL))
+            return false;
+
+        return !strcmp(cur_ent_->d_name,it.cur_ent_->d_name);
+    }
+
+    /**
+     * Tests the non-equivalence of this and another iterator.
+     * @param [in] it The iterator to use for comparison.
+     * @return If the iterators are equal true is returned, otherwise false.
+     */
+    bool Directory::Iterator::operator!=(const Iterator &it) const
+    {
+        return !(*this == it);
+    }
+
     /**
      * Constructs a Directory object.
      * @param [in] dir_path The path to the directory.
@@ -35,6 +143,33 @@ namespace ckCore
      */
     Directory::~Directory()
     {
+        // Since the Directory object owns the iterator handles, we need to
+        // free them.
+        std::map<Iterator *,DIR *>::iterator it;
+        for (it = dir_handles_.begin(); it != dir_handles_.end(); it++)
+            closedir(it->second);
+
+        dir_handles_.clear();
+    }
+
+    /**
+     * Creates an iterator pointing to the first file or directory in the
+     * current directory.
+     * @return An Iteator object pointing to the first file or directory.
+     */
+    Directory::Iterator Directory::Begin() const
+    {
+        return Directory::Iterator(*this);
+    }
+
+    /**
+     * Creats an iterator poiting beyond the last file or directory in the
+     * directory in the current directory.
+     * @return An Iteator object pointing beyond the last file or directory.
+     */
+    Directory::Iterator Directory::End() const
+    {
+        return Directory::Iterator();
     }
 
     /**

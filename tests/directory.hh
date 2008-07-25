@@ -18,6 +18,7 @@
 
 #include <cxxtest/TestSuite.h>
 #include <stdlib.h>
+#include <algorithm>
 #include "../src/types.hh"
 #include "../src/directory.hh"
 
@@ -46,6 +47,42 @@ public:
         // remove more than one directory entry.
         ckCore::Directory dir5("data/new");
         TS_ASSERT(dir5.Remove());
+    }
+
+    void testIterator()
+    {
+        ckCore::Directory::Iterator it;
+        ckCore::Directory dir1("data");
+        ckCore::Directory dir2("data/file");
+
+        std::list<ckCore::tstring> files1,files2;
+        std::list<ckCore::tstring>::iterator it_file;
+
+        files1.push_back(".svn");
+        files1.push_back("file");
+
+        files2.push_back(".svn");
+        files2.push_back("0bytes");
+        files2.push_back("53bytes");
+        files2.push_back("123bytes");
+        files2.push_back("8253bytes");
+
+        for (it = dir1.Begin(); it != dir1.End(); it++)
+        {
+            it_file = std::find(files1.begin(),files1.end(),*it);
+            if (it_file != files1.end())
+                files1.erase(it_file);
+        }
+
+        for (it = dir2.Begin(); it != dir2.End(); it++)
+        {
+            it_file = std::find(files2.begin(),files2.end(),*it);
+            if (it_file != files2.end())
+                files2.erase(it_file);
+        }
+
+        TS_ASSERT(files1.size() == 0);
+        TS_ASSERT(files2.size() == 0);
     }
 };
 
