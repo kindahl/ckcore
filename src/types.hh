@@ -27,9 +27,20 @@
 namespace ckCore
 {
 #ifdef _WINDOWS
-    typedef TCHAR tchar;
+#ifdef _UNICODE
+    typedef wchar_t tchar;
+	typedef std::wstring tstring;
+#ifndef ckT
+#define ckT(quote) L##quote
+#endif
+#else
+	typedef char tchar;
+	typedef std::string tstring;
+#ifndef ckT
+#define ckT
+#endif
+#endif
     typedef __int64 tint64;
-    typedef std::string tstring;
 #endif
 
 #ifdef _LINUX

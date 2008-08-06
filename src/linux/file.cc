@@ -186,7 +186,7 @@ namespace ckCore
             return fstat(file_handle_,&file_stat) == 0;
         }
 
-        return Exist(file_path_.Name().c_str());
+        return Exist(file_path_);
     }
 
     /**
@@ -199,7 +199,7 @@ namespace ckCore
     {
         Close();
 
-        return unlink(file_path_.Name().c_str()) == 0;
+        return unlink(file_path_) == 0;
     }
 
     /**

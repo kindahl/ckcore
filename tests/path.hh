@@ -27,76 +27,76 @@ public:
     void testPath()
     {
         // Full Linux paths.
-        ckCore::Path path1("/this/is/a/test");
+        ckCore::Path path1(ckT("/this/is/a/test"));
         ckCore::Path::Iterator it = path1.Begin();
 
-        TS_ASSERT_EQUALS(*it,"this");
+        TS_ASSERT_EQUALS(*it,ckT("this"));
         ++it;
-        TS_ASSERT_EQUALS(*it,"is");
+        TS_ASSERT_EQUALS(*it,ckT("is"));
         it++;
-        TS_ASSERT_EQUALS(*it,"a");
+        TS_ASSERT_EQUALS(*it,ckT("a"));
         ++it;
-        TS_ASSERT_EQUALS(*it,"test");
+        TS_ASSERT_EQUALS(*it,ckT("test"));
 
-        ckCore::Path path2("/this/is/a/test/");
+        ckCore::Path path2(ckT("/this/is/a/test/"));
         it = path2.Begin();
 
-        TS_ASSERT_EQUALS(*it,"this");
+        TS_ASSERT_EQUALS(*it,ckT("this"));
         ++it;
-        TS_ASSERT_EQUALS(*it,"is");
+        TS_ASSERT_EQUALS(*it,ckT("is"));
         it++;
-        TS_ASSERT_EQUALS(*it,"a");
+        TS_ASSERT_EQUALS(*it,ckT("a"));
         ++it;
-        TS_ASSERT_EQUALS(*it,"test");
+        TS_ASSERT_EQUALS(*it,ckT("test"));
 
         // Relative path.
-        ckCore::Path path3("this/is/a/test");
+        ckCore::Path path3(ckT("this/is/a/test"));
         it = path3.Begin();
 
-        TS_ASSERT_EQUALS(*it,"this");
+        TS_ASSERT_EQUALS(*it,ckT("this"));
         ++it;
-        TS_ASSERT_EQUALS(*it,"is");
+        TS_ASSERT_EQUALS(*it,ckT("is"));
         it++;
-        TS_ASSERT_EQUALS(*it,"a");
+        TS_ASSERT_EQUALS(*it,ckT("a"));
         ++it;
-        TS_ASSERT_EQUALS(*it,"test");
+        TS_ASSERT_EQUALS(*it,ckT("test"));
 
         // Windows paths.
-        ckCore::Path path4("c:/this/is/a/test");
+        ckCore::Path path4(ckT("c:/this/is/a/test"));
         it = path4.Begin();
 
-        TS_ASSERT_EQUALS(*it,"c:");
+        TS_ASSERT_EQUALS(*it,ckT("c:"));
         it++;
-        TS_ASSERT_EQUALS(*it,"this");
+        TS_ASSERT_EQUALS(*it,ckT("this"));
         ++it;
-        TS_ASSERT_EQUALS(*it,"is");
+        TS_ASSERT_EQUALS(*it,ckT("is"));
         it++;
-        TS_ASSERT_EQUALS(*it,"a");
+        TS_ASSERT_EQUALS(*it,ckT("a"));
         ++it;
-        TS_ASSERT_EQUALS(*it,"test");
+        TS_ASSERT_EQUALS(*it,ckT("test"));
 
 #ifdef _WINDOWS
-        ckCore::Path path5("c:\\this/is\\a/test");
+        ckCore::Path path5(ckT("c:\\this/is\\a/test"));
         it = path5.Begin();
 
-        TS_ASSERT_EQUALS(*it,"c:");
+        TS_ASSERT_EQUALS(*it,ckT("c:"));
         it++;
-        TS_ASSERT_EQUALS(*it,"this");
+        TS_ASSERT_EQUALS(*it,ckT("this"));
         ++it;
-        TS_ASSERT_EQUALS(*it,"is");
+        TS_ASSERT_EQUALS(*it,ckT("is"));
         it++;
-        TS_ASSERT_EQUALS(*it,"a");
+        TS_ASSERT_EQUALS(*it,ckT("a"));
         ++it;
-        TS_ASSERT_EQUALS(*it,"test");
+        TS_ASSERT_EQUALS(*it,ckT("test"));
 #else
-        ckCore::Path path5("c:\\this/is\\a/test");
+        ckCore::Path path5(ckT("c:\\this/is\\a/test"));
         it = path5.Begin();
 
-        TS_ASSERT_EQUALS(*it,"c:\\this");
+        TS_ASSERT_EQUALS(*it,ckT("c:\\this"));
         it++;
-        TS_ASSERT_EQUALS(*it,"is\\a");
+        TS_ASSERT_EQUALS(*it,ckT("is\\a"));
         it++;
-        TS_ASSERT_EQUALS(*it,"test");
+        TS_ASSERT_EQUALS(*it,ckT("test"));
 #endif
 
         // Iterator end limit.
@@ -131,13 +131,13 @@ public:
 
     void testValid()
     {
-        ckCore::Path path1("c:/this/is/a/test");
-        ckCore::Path path2("c::/this/is/a/test");
-        ckCore::Path path3("c:/this?/is/a/test");
-        ckCore::Path path4("c:/this</is/a/test");
-        ckCore::Path path5("c:/this>/is/a/test");
-        ckCore::Path path6("c:/this|/is/a/test");
-        ckCore::Path path7("c:/this\"/is/a/test");
+        ckCore::Path path1(ckT("c:/this/is/a/test"));
+        ckCore::Path path2(ckT("c::/this/is/a/test"));
+        ckCore::Path path3(ckT("c:/this?/is/a/test"));
+        ckCore::Path path4(ckT("c:/this</is/a/test"));
+        ckCore::Path path5(ckT("c:/this>/is/a/test"));
+        ckCore::Path path6(ckT("c:/this|/is/a/test"));
+        ckCore::Path path7(ckT("c:/this\"/is/a/test"));
 #ifdef _WINDOWS
         TS_ASSERT(path1.Valid());
         TS_ASSERT(!path2.Valid());
@@ -159,186 +159,186 @@ public:
 
     void testRootName()
     {
-        ckCore::Path path1("/this/is/");
+        ckCore::Path path1(ckT("/this/is/"));
 #ifdef _WINDOWS
-        TS_ASSERT_EQUALS(path1.RootName(),"");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT(""));
 
-        path1 = "/this/is";
-        TS_ASSERT_EQUALS(path1.RootName(),"");
+        path1 = ckT("/this/is");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT(""));
 
-        path1 = "/this";
-        TS_ASSERT_EQUALS(path1.RootName(),"");
+        path1 = ckT("/this");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT(""));
 
-        path1 = "/";
-        TS_ASSERT_EQUALS(path1.RootName(),"");
+        path1 = ckT("/");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT(""));
 
-        path1 = "this/is/";
-        TS_ASSERT_EQUALS(path1.RootName(),"");
+        path1 = ckT("this/is/");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT(""));
 
-        path1 = "c:/";
-        TS_ASSERT_EQUALS(path1.RootName(),"c:/");
+        path1 = ckT("c:/");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT("c:/"));
 
-        path1 = "c:/foo";
-        TS_ASSERT_EQUALS(path1.RootName(),"c:/");
+        path1 = ckT("c:/foo");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT("c:/"));
 
-        path1 = "c:\\";
-        TS_ASSERT_EQUALS(path1.RootName(),"c:\\");
+        path1 = ckT("c:\\");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT("c:\\"));
 #else
-        TS_ASSERT_EQUALS(path1.RootName(),"/");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT("/"));
 
-        path1 = "/this/is";
-        TS_ASSERT_EQUALS(path1.RootName(),"/");
+        path1 = ckT("/this/is");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT("/"));
 
-        path1 = "/this";
-        TS_ASSERT_EQUALS(path1.RootName(),"/");
+        path1 = ckT("/this");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT("/"));
 
-        path1 = "/";
-        TS_ASSERT_EQUALS(path1.RootName(),"/");
+        path1 = ckT("/");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT("/"));
 
-        path1 = "this/is/";
-        TS_ASSERT_EQUALS(path1.RootName(),"");
+        path1 = ckT("this/is/");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT(""));
 
-        path1 = "c:\\";
-        TS_ASSERT_EQUALS(path1.RootName(),"");
+        path1 = ckT("c:\\";)
+        TS_ASSERT_EQUALS(path1.RootName(),ckT(""));
 #endif
 
         // Special cases.
-        path1 = "";
-        TS_ASSERT_EQUALS(path1.RootName(),"");
+        path1 = ckT("");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT(""));
 
-        path1 = "foo";
-        TS_ASSERT_EQUALS(path1.RootName(),"");
+        path1 = ckT("foo");
+        TS_ASSERT_EQUALS(path1.RootName(),ckT(""));
     }
 
     void testDirName()
     {
-        ckCore::Path path1("/this/is/a/test");
-        TS_ASSERT_EQUALS(path1.DirName(),"/this/is/a/");
+        ckCore::Path path1(ckT("/this/is/a/test"));
+        TS_ASSERT_EQUALS(path1.DirName(),ckT("/this/is/a/"));
 
-        ckCore::Path path2("/this/is/a/test/");
-        TS_ASSERT_EQUALS(path2.DirName(),"/this/is/a/");
+        ckCore::Path path2(ckT("/this/is/a/test/"));
+        TS_ASSERT_EQUALS(path2.DirName(),ckT("/this/is/a/"));
 
-        ckCore::Path path3("/this");
-        TS_ASSERT_EQUALS(path3.DirName(),"/");
+        ckCore::Path path3(ckT("/this"));
+        TS_ASSERT_EQUALS(path3.DirName(),ckT("/"));
 
-        ckCore::Path path4("/this/is/a/test/");
-        TS_ASSERT_EQUALS(path4.DirName(),"/this/is/a/");
+        ckCore::Path path4(ckT("/this/is/a/test/"));
+        TS_ASSERT_EQUALS(path4.DirName(),ckT("/this/is/a/"));
 
-        ckCore::Path path5("this");
-        TS_ASSERT_EQUALS(path5.DirName(),"");
+        ckCore::Path path5(ckT("this"));
+        TS_ASSERT_EQUALS(path5.DirName(),ckT(""));
 
-        ckCore::Path path6("c:/this");
-        TS_ASSERT_EQUALS(path6.DirName(),"c:/");
+        ckCore::Path path6(ckT("c:/this"));
+        TS_ASSERT_EQUALS(path6.DirName(),ckT("c:/"));
 
-        ckCore::Path path7("c:\\this");
-        ckCore::Path path8("c:\\this\\");
+        ckCore::Path path7(ckT("c:\\this"));
+        ckCore::Path path8(ckT("c:\\this\\"));
 #ifdef _WINDOWS
-        TS_ASSERT_EQUALS(path7.DirName(),"c:\\");
-        TS_ASSERT_EQUALS(path8.DirName(),"c:\\");
+        TS_ASSERT_EQUALS(path7.DirName(),ckT("c:\\"));
+        TS_ASSERT_EQUALS(path8.DirName(),ckT("c:\\"));
 #else
-        TS_ASSERT_EQUALS(path7.DirName(),"");
-        TS_ASSERT_EQUALS(path8.DirName(),"");
+        TS_ASSERT_EQUALS(path7.DirName(),ckT(""));
+        TS_ASSERT_EQUALS(path8.DirName(),ckT(""));
 #endif
     }
 
     void testBaseName()
     {
-        ckCore::Path path1("c:/this/is/a/test");
-        TS_ASSERT_EQUALS(path1.BaseName(),"test");
+        ckCore::Path path1(ckT("c:/this/is/a/test"));
+        TS_ASSERT_EQUALS(path1.BaseName(),ckT("test"));
 
-        ckCore::Path path2("c:/this/is/a/test/");
-        TS_ASSERT_EQUALS(path2.BaseName(),"test");
+        ckCore::Path path2(ckT("c:/this/is/a/test/"));
+        TS_ASSERT_EQUALS(path2.BaseName(),ckT("test"));
 
-        ckCore::Path path3("c:/test");
-        TS_ASSERT_EQUALS(path3.BaseName(),"test");
+        ckCore::Path path3(ckT("c:/test"));
+        TS_ASSERT_EQUALS(path3.BaseName(),ckT("test"));
 
-        ckCore::Path path4("c:/");
-        TS_ASSERT_EQUALS(path4.BaseName(),"c:");
+        ckCore::Path path4(ckT("c:/"));
+        TS_ASSERT_EQUALS(path4.BaseName(),ckT("c:"));
 
-        ckCore::Path path5("/test");
-        TS_ASSERT_EQUALS(path5.BaseName(),"test");
+        ckCore::Path path5(ckT("/test"));
+        TS_ASSERT_EQUALS(path5.BaseName(),ckT("test"));
 
-        ckCore::Path path6("test");
-        TS_ASSERT_EQUALS(path6.BaseName(),"test");
+        ckCore::Path path6(ckT("test"));
+        TS_ASSERT_EQUALS(path6.BaseName(),ckT("test"));
 
-        ckCore::Path path7("test/");
-        TS_ASSERT_EQUALS(path7.BaseName(),"test");
+        ckCore::Path path7(ckT("test/"));
+        TS_ASSERT_EQUALS(path7.BaseName(),ckT("test"));
 
-        ckCore::Path path8("c:\\this\\is\\a\\test");
-        ckCore::Path path9("c:\\this\\is\\a\\test/");
-        ckCore::Path path10("c:\\test");
-        ckCore::Path path11("c:\\");
+        ckCore::Path path8(ckT("c:\\this\\is\\a\\test"));
+        ckCore::Path path9(ckT("c:\\this\\is\\a\\test/"));
+        ckCore::Path path10(ckT("c:\\test"));
+        ckCore::Path path11(ckT("c:\\"));
 #ifdef _WINDOWS
-        TS_ASSERT_EQUALS(path8.BaseName(),"test");
-        TS_ASSERT_EQUALS(path9.BaseName(),"test");
-        TS_ASSERT_EQUALS(path10.BaseName(),"test");
-        TS_ASSERT_EQUALS(path11.BaseName(),"c:");
+        TS_ASSERT_EQUALS(path8.BaseName(),ckT("test"));
+        TS_ASSERT_EQUALS(path9.BaseName(),ckT("test"));
+        TS_ASSERT_EQUALS(path10.BaseName(),ckT("test"));
+        TS_ASSERT_EQUALS(path11.BaseName(),ckT("c:"));
 #else
-        TS_ASSERT_EQUALS(path8.BaseName(),"c:\\this\\is\\a\\test");
-        TS_ASSERT_EQUALS(path9.BaseName(),"c:\\this\\is\\a\\test");
-        TS_ASSERT_EQUALS(path10.BaseName(),"c:\\test");
-        TS_ASSERT_EQUALS(path11.BaseName(),"c:\\");
+        TS_ASSERT_EQUALS(path8.BaseName(),ckT("c:\\this\\is\\a\\test"));
+        TS_ASSERT_EQUALS(path9.BaseName(),ckT("c:\\this\\is\\a\\test"));
+        TS_ASSERT_EQUALS(path10.BaseName(),ckT("c:\\test"));
+        TS_ASSERT_EQUALS(path11.BaseName(),ckT("c:\\"));
 #endif
     }
 
     void testExtName()
     {
-        ckCore::Path path1 = "/this/is/a/test";
-        TS_ASSERT_EQUALS(path1.ExtName(),"");
+        ckCore::Path path1 = ckT("/this/is/a/test");
+        TS_ASSERT_EQUALS(path1.ExtName(),ckT(""));
 
-        path1 = "/this/is/a/test/";
-        TS_ASSERT_EQUALS(path1.ExtName(),"");
+        path1 = ckT("/this/is/a/test/");
+        TS_ASSERT_EQUALS(path1.ExtName(),ckT(""));
 
-        path1 = "/this/is/a/test.gz";
-        TS_ASSERT_EQUALS(path1.ExtName(),"gz");
+        path1 = ckT("/this/is/a/test.gz");
+        TS_ASSERT_EQUALS(path1.ExtName(),ckT("gz"));
 
-        path1 = "/this/is/a/test.tar.gz";
-        TS_ASSERT_EQUALS(path1.ExtName(),"gz");
+        path1 = ckT("/this/is/a/test.tar.gz");
+        TS_ASSERT_EQUALS(path1.ExtName(),ckT("gz"));
 
-        path1 = "/this/is/a/.gz";
-        TS_ASSERT_EQUALS(path1.ExtName(),"gz");
+        path1 = ckT("/this/is/a/.gz");
+        TS_ASSERT_EQUALS(path1.ExtName(),ckT("gz"));
 
-        path1 = "/this/is/a/.";
-        TS_ASSERT_EQUALS(path1.ExtName(),"");
+        path1 = ckT("/this/is/a/.");
+        TS_ASSERT_EQUALS(path1.ExtName(),ckT(""));
 
         // Special cases.
-        path1 = ".";
-        TS_ASSERT_EQUALS(path1.ExtName(),"");
+        path1 = ckT(".");
+        TS_ASSERT_EQUALS(path1.ExtName(),ckT(""));
 
-        path1 = "";
-        TS_ASSERT_EQUALS(path1.ExtName(),"");
+        path1 = ckT("");
+        TS_ASSERT_EQUALS(path1.ExtName(),ckT(""));
     }
 
     void testCompare()
     {
-        ckCore::Path path1("/this/is/a/test/");
-        ckCore::Path path2("/this/is/a/test");
+        ckCore::Path path1(ckT("/this/is/a/test/"));
+        ckCore::Path path2(ckT("/this/is/a/test"));
         TS_ASSERT(path1 == path2);
         TS_ASSERT(!(path1 != path2));
 
-        ckCore::Path path3("/this/is/a/test_");
+        ckCore::Path path3(ckT("/this/is/a/test_"));
         TS_ASSERT(path1 != path3);
         TS_ASSERT(!(path1 == path3));
 
-        ckCore::Path path4("/this/is/a/test/foo");
+        ckCore::Path path4(ckT("/this/is/a/test/foo"));
         TS_ASSERT(path1 != path4);
         TS_ASSERT(!(path1 == path4));
 
-        ckCore::Path path5("/this/is/a/test/foo/");
+        ckCore::Path path5(ckT("/this/is/a/test/foo/"));
         TS_ASSERT(path1 != path5);
         TS_ASSERT(!(path1 == path5));
 
-        ckCore::Path path6("/this/is/a");
+        ckCore::Path path6(ckT("/this/is/a"));
         TS_ASSERT(path1 != path6);
         TS_ASSERT(!(path1 == path6));
 
-        ckCore::Path path7("/this/is/a/");
+        ckCore::Path path7(ckT("/this/is/a/"));
         TS_ASSERT(path1 != path7);
         TS_ASSERT(!(path1 == path7));
 
         // Window paths.
-        ckCore::Path path8("/this/is/a\\test/foo/");
-        ckCore::Path path9("/this/is/a\\");
+        ckCore::Path path8(ckT("/this/is/a\\test/foo/"));
+        ckCore::Path path9(ckT("/this/is/a\\"));
 
 #ifdef _WINDOWS
         TS_ASSERT(path8 == path5);
@@ -365,59 +365,59 @@ public:
 
     void testAssign()
     {
-        ckCore::Path path1("/this/is/a/test");
-        TS_ASSERT_EQUALS(path1,"/this/is/a/test");
-        TS_ASSERT(path1 != "/this/is/not/a/test");
+        ckCore::Path path1(ckT("/this/is/a/test"));
+        TS_ASSERT_EQUALS(path1,ckT("/this/is/a/test"));
+        TS_ASSERT(path1 != ckT("/this/is/not/a/test"));
 
-        path1 = "/this/is/not/a/test";
-        TS_ASSERT_EQUALS(path1,"/this/is/not/a/test");
-        TS_ASSERT(path1 != "/this/is/a/test");
+        path1 = ckT("/this/is/not/a/test");
+        TS_ASSERT_EQUALS(path1,ckT("/this/is/not/a/test"));
+        TS_ASSERT(path1 != ckT("/this/is/a/test"));
 
-        ckCore::Path path2("/this/is/a/test");
+        ckCore::Path path2(ckT("/this/is/a/test"));
         path1 = path2;
-        TS_ASSERT_EQUALS(path1,"/this/is/a/test");
-        TS_ASSERT(path1 != "/this/is/not/a/test");
+        TS_ASSERT_EQUALS(path1,ckT("/this/is/a/test"));
+        TS_ASSERT(path1 != ckT("/this/is/not/a/test"));
     }
 
     void testAppend()
     {
         // + operator.
-        ckCore::Path path1("/this/is");
-        ckCore::Path path2 = path1 + "a/test";
-        TS_ASSERT_EQUALS(path2,"/this/is/a/test");
+        ckCore::Path path1(ckT("/this/is"));
+        ckCore::Path path2 = path1 + ckT("a/test");
+        TS_ASSERT_EQUALS(path2,ckT("/this/is/a/test"));
 
-        path2 = path1 + "/a/test";
-        TS_ASSERT_EQUALS(path2,"/this/is/a/test");
+        path2 = path1 + ckT("/a/test");
+        TS_ASSERT_EQUALS(path2,ckT("/this/is/a/test"));
 
-        path2 = path1 + "/a/test/";
-        TS_ASSERT_EQUALS(path2,"/this/is/a/test");
+        path2 = path1 + ckT("/a/test/");
+        TS_ASSERT_EQUALS(path2,ckT("/this/is/a/test"));
 
-        path1 = "/this/is/";
-        path2 = path1 + "/a/test/";
-        TS_ASSERT_EQUALS(path2,"/this/is/a/test");
+        path1 = ckT("/this/is/");
+        path2 = path1 + ckT("/a/test/");
+        TS_ASSERT_EQUALS(path2,ckT("/this/is/a/test"));
 
-        path2 = path1 + "a/test/";
-        TS_ASSERT_EQUALS(path2,"/this/is/a/test");
+        path2 = path1 + ckT("a/test/");
+        TS_ASSERT_EQUALS(path2,ckT("/this/is/a/test"));
 
         // += operator.
-        path1 += "a/test";
-        TS_ASSERT_EQUALS(path1,"/this/is/a/test");
+        path1 += ckT("a/test");
+        TS_ASSERT_EQUALS(path1,ckT("/this/is/a/test"));
 
-        path1 = "/this/is";
-        path1 += "/a/test";
-        TS_ASSERT_EQUALS(path1,"/this/is/a/test");
+        path1 = ckT("/this/is");
+        path1 += ckT("/a/test");
+        TS_ASSERT_EQUALS(path1,ckT("/this/is/a/test"));
 
-        path1 = "/this/is";
-        path1 += "/a/test/";
-        TS_ASSERT_EQUALS(path1,"/this/is/a/test");
+        path1 = ckT("/this/is");
+        path1 += ckT("/a/test/");
+        TS_ASSERT_EQUALS(path1,ckT("/this/is/a/test"));
 
-        path1 = "/this/is/";
-        path1 += "/a/test/";
-        TS_ASSERT_EQUALS(path1,"/this/is/a/test");
+        path1 = ckT("/this/is/");
+        path1 += ckT("/a/test/");
+        TS_ASSERT_EQUALS(path1,ckT("/this/is/a/test"));
 
-        path1 = "/this/is/";
-        path1 += "a/test/";
-        TS_ASSERT_EQUALS(path1,"/this/is/a/test");
+        path1 = ckT("/this/is/");
+        path1 += ckT("a/test/");
+        TS_ASSERT_EQUALS(path1,ckT("/this/is/a/test"));
     }
 };
 

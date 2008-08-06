@@ -113,8 +113,8 @@ namespace ckCore
         if (cur_ent_ == NULL && it.cur_ent_ == NULL)
             return true;
 
-        if ((cur_ent_->d_name == NULL && it.cur_ent_ != NULL) ||
-            (cur_ent_->d_name != NULL && it.cur_ent_ == NULL))
+		if ((cur_ent_ == NULL && it.cur_ent_ != NULL) ||
+            (cur_ent_ != NULL && it.cur_ent_ == NULL))
             return false;
 
         return !strcmp(cur_ent_->d_name,it.cur_ent_->d_name);

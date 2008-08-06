@@ -27,45 +27,45 @@ class DirectoryTestSuite : public CxxTest::TestSuite
 public:
     void testCreateRemove()
     {
-        ckCore::Directory dir1("data/new");
+        ckCore::Directory dir1(ckT("data/new"));
         TS_ASSERT(dir1.Create());
         TS_ASSERT(dir1.Remove());
 
-        ckCore::Directory dir2("data/new/");
+        ckCore::Directory dir2(ckT("data/new/"));
         TS_ASSERT(dir2.Create());
         TS_ASSERT(dir2.Remove());
 
-        ckCore::Directory dir3("data/new/new");
+        ckCore::Directory dir3(ckT("data/new/new"));
         TS_ASSERT(dir3.Create());
         TS_ASSERT(dir3.Remove());
 
-        ckCore::Directory dir4("data/new/new/");
+        ckCore::Directory dir4(ckT("data/new/new/"));
         TS_ASSERT(dir4.Create());
         TS_ASSERT(dir4.Remove());
 
         // This is just for clean up since the above calls to Remove does not
         // remove more than one directory entry.
-        ckCore::Directory dir5("data/new");
+        ckCore::Directory dir5(ckT("data/new"));
         TS_ASSERT(dir5.Remove());
     }
 
     void testIterator()
     {
         ckCore::Directory::Iterator it;
-        ckCore::Directory dir1("data");
-        ckCore::Directory dir2("data/file");
+        ckCore::Directory dir1(ckT("data"));
+        ckCore::Directory dir2(ckT("data/file"));
 
         std::list<ckCore::tstring> files1,files2;
         std::list<ckCore::tstring>::iterator it_file;
 
-        files1.push_back(".svn");
-        files1.push_back("file");
+        files1.push_back(ckT(".svn"));
+        files1.push_back(ckT("file"));
 
-        files2.push_back(".svn");
-        files2.push_back("0bytes");
-        files2.push_back("53bytes");
-        files2.push_back("123bytes");
-        files2.push_back("8253bytes");
+        files2.push_back(ckT(".svn"));
+        files2.push_back(ckT("0bytes"));
+        files2.push_back(ckT("53bytes"));
+        files2.push_back(ckT("123bytes"));
+        files2.push_back(ckT("8253bytes"));
 
         for (it = dir1.Begin(); it != dir1.End(); it++)
         {

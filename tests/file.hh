@@ -27,15 +27,15 @@ public:
     void testOpenCloseTest()
     {
         // Test non-existing file.
-        ckCore::File file1("data/file/non-existent");
+        ckCore::File file1(ckT("data/file/non-existent"));
         TS_ASSERT(!file1.Test());
 
-        TS_ASSERT(!file1.Open(ckCore::File::OPEN_READ));
+        TS_ASSERT(!file1.Open(ckCore::File::ckOPEN_READ));
         TS_ASSERT(!file1.Test());
         TS_ASSERT(!file1.Close());
         TS_ASSERT(!file1.Test());
 
-        TS_ASSERT(file1.Open(ckCore::File::OPEN_WRITE));
+        TS_ASSERT(file1.Open(ckCore::File::ckOPEN_WRITE));
         TS_ASSERT(file1.Test());
         TS_ASSERT(file1.Close());
         TS_ASSERT(!file1.Test());
@@ -45,15 +45,15 @@ public:
         TS_ASSERT(!file1.Close());
 
         // Test existing file.
-        ckCore::File file2("data/file/0bytes");
+        ckCore::File file2(ckT("data/file/0bytes"));
         TS_ASSERT(!file2.Test());
 
-        TS_ASSERT(file2.Open(ckCore::File::OPEN_READ));
+        TS_ASSERT(file2.Open(ckCore::File::ckOPEN_READ));
         TS_ASSERT(file2.Test());
         TS_ASSERT(file2.Close());
         TS_ASSERT(!file2.Test());
 
-        TS_ASSERT(file2.Open(ckCore::File::OPEN_WRITE));
+        TS_ASSERT(file2.Open(ckCore::File::ckOPEN_WRITE));
         TS_ASSERT(file2.Test());
         TS_ASSERT(file2.Close());
         TS_ASSERT(!file2.Test());
@@ -61,8 +61,8 @@ public:
 
     void testReadWrite()
     {
-        ckCore::File file("data/file/new");
-        TS_ASSERT(file.Open(ckCore::File::OPEN_WRITE));
+        ckCore::File file(ckT("data/file/new"));
+        TS_ASSERT(file.Open(ckCore::File::ckOPEN_WRITE));
         const char out_data[] = "abcdefghijklmnopqrstuvwxyz0123456789";
 
         size_t tot_write = 0;
@@ -75,7 +75,7 @@ public:
         }
 
         file.Close();
-        file.Open(ckCore::File::OPEN_READ);
+        file.Open(ckCore::File::ckOPEN_READ);
         char in_data[37];
 
         size_t tot_read = 0;
@@ -95,17 +95,17 @@ public:
 
     void testSeekTell()
     {
-        ckCore::File file("data/file/8253bytes");
-        TS_ASSERT(file.Open(ckCore::File::OPEN_READ));
+        ckCore::File file(ckT("data/file/8253bytes"));
+        TS_ASSERT(file.Open(ckCore::File::ckOPEN_READ));
         TS_ASSERT(file.Test());
 
         // Test exteme values.
-        TS_ASSERT(file.Seek(0,ckCore::File::FILE_BEGIN) == 0);
+        TS_ASSERT(file.Seek(0,ckCore::File::ckFILE_BEGIN) == 0);
         TS_ASSERT(file.Tell() == 0);
-        TS_ASSERT(file.Seek(0,ckCore::File::FILE_CURRENT) == 0);
+        TS_ASSERT(file.Seek(0,ckCore::File::ckFILE_CURRENT) == 0);
         TS_ASSERT(file.Tell() == 0);
 
-        TS_ASSERT(file.Seek(0,ckCore::File::FILE_END) == file.Size());
+        TS_ASSERT(file.Seek(0,ckCore::File::ckFILE_END) == file.Size());
         TS_ASSERT(file.Tell() == file.Size());
 
         int file_size = 8253;
@@ -113,109 +113,108 @@ public:
         // Test random seeking.
         for (unsigned int i = 0; i < 100; i++)
         {
-            TS_ASSERT(file.Seek(0,ckCore::File::FILE_BEGIN) == 0);
+            TS_ASSERT(file.Seek(0,ckCore::File::ckFILE_BEGIN) == 0);
 
             int seek1 = rand() % (file_size >> 1);
             int seek2 = rand() % (file_size >> 1);
-            int seek_tot = seek1 + seek2;
+            int seekckTot = seek1 + seek2;
 
             // Seek forward from the current position.
-            TS_ASSERT(file.Seek(seek1,ckCore::File::FILE_CURRENT) == seek1);
+            TS_ASSERT(file.Seek(seek1,ckCore::File::ckFILE_CURRENT) == seek1);
             TS_ASSERT(file.Tell() == seek1);
 
-            TS_ASSERT(file.Seek(seek2,ckCore::File::FILE_CURRENT) == seek_tot);
-            TS_ASSERT(file.Tell() == seek_tot);
+            TS_ASSERT(file.Seek(seek2,ckCore::File::ckFILE_CURRENT) == seekckTot);
+            TS_ASSERT(file.Tell() == seekckTot);
 
             // Seek backward from the current position.
-            TS_ASSERT(file.Seek(-seek1,ckCore::File::FILE_CURRENT) == seek2);
+            TS_ASSERT(file.Seek(-seek1,ckCore::File::ckFILE_CURRENT) == seek2);
             TS_ASSERT(file.Tell() == seek2);
 
-            TS_ASSERT(file.Seek(-seek2,ckCore::File::FILE_CURRENT) == 0);
+            TS_ASSERT(file.Seek(-seek2,ckCore::File::ckFILE_CURRENT) == 0);
             TS_ASSERT(file.Tell() == 0);
         }
     }
 
     void testExistRemove()
     {
-        ckCore::File file1("data/file/non-existent");
+        ckCore::File file1(ckT("data/file/non-existent"));
         TS_ASSERT(!file1.Exist());
         TS_ASSERT(!file1.Remove());
-        TS_ASSERT(file1.Open(ckCore::File::OPEN_WRITE));
+        TS_ASSERT(file1.Open(ckCore::File::ckOPEN_WRITE));
         TS_ASSERT(file1.Exist());
         TS_ASSERT(file1.Remove());
         TS_ASSERT(!file1.Exist());
 
-        ckCore::File file2("data/file/0bytes");
+        ckCore::File file2(ckT("data/file/0bytes"));
         TS_ASSERT(file2.Exist());
 
         // Test static functions.
-        TS_ASSERT(ckCore::File::Exist("data/file/0bytes"));
-        TS_ASSERT(!ckCore::File::Exist("data/file/non-existent"));
+        TS_ASSERT(ckCore::File::Exist(ckT("data/file/0bytes")));
+        TS_ASSERT(!ckCore::File::Exist(ckT("data/file/non-existent")));
 
-        TS_ASSERT(!ckCore::File::Remove("data/file/non-existent"));
-        ckCore::File file3("data/file/new");
-        TS_ASSERT(file3.Open(ckCore::File::OPEN_WRITE));
+        TS_ASSERT(!ckCore::File::Remove(ckT("data/file/non-existent")));
+        ckCore::File file3(ckT("data/file/new"));
+        TS_ASSERT(file3.Open(ckCore::File::ckOPEN_WRITE));
         TS_ASSERT(file3.Close());
-        TS_ASSERT(ckCore::File::Remove("data/file/new"));
-        TS_ASSERT(!ckCore::File::Remove("data/file/non-existent"));
-        TS_ASSERT(!ckCore::File::Remove(""));
-
+        TS_ASSERT(ckCore::File::Remove(ckT("data/file/new")));
+        TS_ASSERT(!ckCore::File::Remove(ckT("data/file/non-existent")));
+        TS_ASSERT(!ckCore::File::Remove(ckT("")));
     }
 
     void testRename()
     {
         // Rename file in existing folder (should succeed).
-        ckCore::File file1("data/file/new");
-        TS_ASSERT(file1.Open(ckCore::File::OPEN_WRITE));
+        ckCore::File file1(ckT("data/file/new"));
+        TS_ASSERT(file1.Open(ckCore::File::ckOPEN_WRITE));
 
-        TS_ASSERT(file1.Rename("data/file/new2"));
-        TS_ASSERT(ckCore::File::Exist("data/file/new2"));
+        TS_ASSERT(file1.Rename(ckT("data/file/new2")));
+        TS_ASSERT(ckCore::File::Exist(ckT("data/file/new2")));
         TS_ASSERT(!file1.Close());
 
         // Rename file in new non-existing folder (should fail).
-        ckCore::File file2("data/file/new");
-        TS_ASSERT(file2.Open(ckCore::File::OPEN_WRITE));
+        ckCore::File file2(ckT("data/file/new"));
+        TS_ASSERT(file2.Open(ckCore::File::ckOPEN_WRITE));
 
-        TS_ASSERT(!file2.Rename("data/file/new/new2"));
-        TS_ASSERT(!ckCore::File::Exist("data/file/new/new2"));
+        TS_ASSERT(!file2.Rename(ckT("data/file/new/new2")));
+        TS_ASSERT(!ckCore::File::Exist(ckT("data/file/new/new2")));
         TS_ASSERT(!file2.Close());
 
         // Try to rename file to existing file (should fail).
-        TS_ASSERT(!file2.Rename("data/file/new2"));
+        TS_ASSERT(!file2.Rename(ckT("data/file/new2")));
 
         // Clean up.
         TS_ASSERT(file1.Remove());
         TS_ASSERT(file2.Remove());
 
         // Try to rename non-existent file.
-        ckCore::File file3("data/file/non-existent");
-        TS_ASSERT(!file3.Rename("data/file/new"));
-        TS_ASSERT(!ckCore::File::Exist("data/file/new"));
-        TS_ASSERT(!file3.Rename("data/file/non-existent"));
-        TS_ASSERT(!ckCore::File::Exist("data/file/non-existent"));
+        ckCore::File file3(ckT("data/file/non-existent"));
+        TS_ASSERT(!file3.Rename(ckT("data/file/new")));
+        TS_ASSERT(!ckCore::File::Exist(ckT("data/file/new")));
+        TS_ASSERT(!file3.Rename(ckT("data/file/non-existent")));
+        TS_ASSERT(!ckCore::File::Exist(ckT("data/file/non-existent")));
 
         // Try to rename without name.
-        TS_ASSERT(!file3.Rename(""));
+        TS_ASSERT(!file3.Rename(ckT("")));
 
         // Test static function.
-        ckCore::File file4("data/file/new");
-        TS_ASSERT(file4.Open(ckCore::File::OPEN_WRITE));
+        ckCore::File file4(ckT("data/file/new"));
+        TS_ASSERT(file4.Open(ckCore::File::ckOPEN_WRITE));
         TS_ASSERT(file4.Close());
-        TS_ASSERT(ckCore::File::Rename("data/file/new","data/file/new2"));
-        TS_ASSERT(!ckCore::File::Rename("data/file/new2","data/file/new2"));
-        TS_ASSERT(!ckCore::File::Rename("data/file/new2",""));
-        TS_ASSERT(!ckCore::File::Rename("data/file/new2","data/file/new/new2"));
-        TS_ASSERT(ckCore::File::Remove("data/file/new2"));
+        TS_ASSERT(ckCore::File::Rename(ckT("data/file/new"),ckT("data/file/new2")));
+        TS_ASSERT(!ckCore::File::Rename(ckT("data/file/new2"),ckT("data/file/new2")));
+        TS_ASSERT(!ckCore::File::Rename(ckT("data/file/new2"),ckT("")));
+        TS_ASSERT(!ckCore::File::Rename(ckT("data/file/new2"),ckT("data/file/new/new2")));
+        TS_ASSERT(ckCore::File::Remove(ckT("data/file/new2")));
     }
 
     void testSize()
     {
         const ckCore::tchar *file_paths[] =
         {
-            "data/file/0bytes",
-            "data/file/53bytes",
-            "data/file/123bytes",
-            "data/file/8253bytes"
+            ckT("data/file/0bytes"),
+            ckT("data/file/53bytes"),
+            ckT("data/file/123bytes"),
+            ckT("data/file/8253bytes")
         };
 
         const ckCore::tint64 file_sizes[] =
@@ -228,19 +227,17 @@ public:
 
         for (unsigned int i = 0; i < 4; i++)
         {
-            //TS_TRACE(file_paths[i]);
             ckCore::File file(file_paths[i]);
             TS_ASSERT_EQUALS(file.Size(),file_sizes[i]);
-            file.Open(ckCore::File::OPEN_READ);
+            file.Open(ckCore::File::ckOPEN_READ);
             TS_ASSERT_EQUALS(file.Size(),file_sizes[i]);
             file.Close();
-            file.Open(ckCore::File::OPEN_WRITE);
+            /*file.Open(ckCore::File::ckOPEN_WRITE);
             TS_ASSERT_EQUALS(file.Size(),file_sizes[i]);
-            file.Close();
+            file.Close();*/
 
             // Test static function.
             TS_ASSERT_EQUALS(ckCore::File::Size(file_paths[i]),file_sizes[i]);
         }
     }
 };
-

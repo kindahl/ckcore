@@ -21,6 +21,7 @@
  * @brief Defines the path name class.
  */
 #pragma once
+#include <vector>
 #include "types.hh"
 
 namespace ckCore

@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ckcore", "ckcore.vcproj", "{8C6E3FA3-12FB-4C9C-8E7F-43C0E19C78CD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test.vcproj", "{2C35640E-0BF9-4BAE-8A0E-3DE5A691D160}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8C6E3FA3-12FB-4C9C-8E7F-43C0E19C78CD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8C6E3FA3-12FB-4C9C-8E7F-43C0E19C78CD}.Debug|Win32.Build.0 = Debug|Win32
+		{8C6E3FA3-12FB-4C9C-8E7F-43C0E19C78CD}.Release|Win32.ActiveCfg = Release|Win32
+		{8C6E3FA3-12FB-4C9C-8E7F-43C0E19C78CD}.Release|Win32.Build.0 = Release|Win32
+		{2C35640E-0BF9-4BAE-8A0E-3DE5A691D160}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2C35640E-0BF9-4BAE-8A0E-3DE5A691D160}.Debug|Win32.Build.0 = Debug|Win32
+		{2C35640E-0BF9-4BAE-8A0E-3DE5A691D160}.Release|Win32.ActiveCfg = Release|Win32
+		{2C35640E-0BF9-4BAE-8A0E-3DE5A691D160}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
