@@ -56,11 +56,11 @@ namespace ckCore
         // Open the file handle.
         switch (file_mode)
         {
-            case OPEN_READ:
+            case ckOPEN_READ:
                 file_handle_ = open(file_path_.Name().c_str(),O_RDONLY);
                 break;
 
-            case OPEN_WRITE:
+            case ckOPEN_WRITE:
                 file_handle_ = open(file_path_.Name().c_str(),O_CREAT | O_WRONLY,S_IRUSR | S_IWUSR);
                 break;
         }
@@ -113,13 +113,13 @@ namespace ckCore
 
         switch (whence)
         {
-            case FILE_CURRENT:
+            case ckFILE_CURRENT:
                 return lseek(file_handle_,distance,SEEK_CUR);
 
-            case FILE_BEGIN:
+            case ckFILE_BEGIN:
                 return lseek(file_handle_,distance,SEEK_SET);
 
-            case FILE_END:
+            case ckFILE_END:
                 return lseek(file_handle_,distance,SEEK_END);
         }
 
@@ -199,7 +199,7 @@ namespace ckCore
     {
         Close();
 
-        return unlink(file_path_) == 0;
+        return unlink(file_path_.Name().c_str()) == 0;
     }
 
     /**
@@ -284,8 +284,8 @@ namespace ckCore
             return Size(file_path_.Name().c_str());
 
         tint64 cur_pos = Tell();
-        tint64 size = Seek(0,FILE_END);
-        Seek(cur_pos,FILE_BEGIN);
+        tint64 size = Seek(0,ckFILE_END);
+        Seek(cur_pos,ckFILE_BEGIN);
 
         return size;
     }
@@ -372,10 +372,10 @@ namespace ckCore
     {
         switch (file_mode)
         {
-            case OPEN_READ:
+            case ckOPEN_READ:
                 return access(file_path.Name().c_str(),R_OK) == 0;
 
-            case OPEN_WRITE:
+            case ckOPEN_WRITE:
                 return access(file_path.Name().c_str(),W_OK) == 0;
         }
 

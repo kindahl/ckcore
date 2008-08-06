@@ -198,7 +198,7 @@ public:
         path1 = ckT("this/is/");
         TS_ASSERT_EQUALS(path1.RootName(),ckT(""));
 
-        path1 = ckT("c:\\";)
+        path1 = ckT("c:\\");
         TS_ASSERT_EQUALS(path1.RootName(),ckT(""));
 #endif
 

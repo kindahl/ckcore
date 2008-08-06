@@ -47,6 +47,9 @@ namespace ckCore
     typedef char tchar;
     typedef long long tint64;
     typedef std::string tstring;
+#ifndef ckT
+#define ckT
+#endif
 #endif
 };
 
