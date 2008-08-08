@@ -42,12 +42,16 @@ namespace ckCore
 #endif
     typedef __int64 tint64;
     typedef unsigned __int64 tuint64;
+    typedef long tint32;
+    typedef unsigned long tuint32;
 #endif
 
 #ifdef _LINUX
     typedef char tchar;
     typedef long long tint64;
     typedef unsigned long long tuint64;
+    typedef int tint32;
+    typedef unsigned int tuint32;
     typedef std::string tstring;
 #ifndef ckT
 #define ckT

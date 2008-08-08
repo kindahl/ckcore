@@ -22,6 +22,7 @@
 #include "../src/types.hh"
 #include "../src/filestream.hh"
 #include "../src/bufferedstream.hh"
+#include "../src/crcstream.hh"
 
 class StreamTestSuite : public CxxTest::TestSuite
 {
@@ -137,6 +138,98 @@ public:
             delete [] buffer1;
             delete [] buffer2;
         }
+    }
+
+    void testCrcStream()
+    {
+        ckCore::FileInStream is1("data/file/8253bytes");
+        TS_ASSERT(is1.Open());
+        ckCore::FileInStream is2("data/file/123bytes");
+        TS_ASSERT(is2.Open());
+        ckCore::FileInStream is3("data/file/53bytes");
+        TS_ASSERT(is3.Open());
+        ckCore::FileInStream is4("data/file/0bytes");
+        TS_ASSERT(is4.Open());
+
+        // CRC-32.
+        ckCore::CrcStream crc32(ckCore::CrcStream::ckCRC_32);
+
+        ckCore::Stream::Copy(is1,crc32);
+        TS_ASSERT_EQUALS(crc32.Checksum(),0x33d5a2ec);
+        crc32.Reset();
+
+        ckCore::Stream::Copy(is2,crc32);
+        TS_ASSERT_EQUALS(crc32.Checksum(),0xfa2e73f4);
+        crc32.Reset();
+
+        ckCore::Stream::Copy(is3,crc32);
+        TS_ASSERT_EQUALS(crc32.Checksum(),0x30e06b16);
+        crc32.Reset();
+
+        ckCore::Stream::Copy(is4,crc32);
+        TS_ASSERT_EQUALS(crc32.Checksum(),0x00000000);
+        crc32.Reset();
+
+        is1.Close();
+        is1.Open();
+        is2.Close();
+        is2.Open();
+        is3.Close();
+        is3.Open();
+        is4.Close();
+        is4.Open();
+
+        // CRC-16 (CCITT polynomial).
+        ckCore::CrcStream crc16udf(ckCore::CrcStream::ckCRC_CCITT);
+
+        ckCore::Stream::Copy(is1,crc16udf);
+        TS_ASSERT_EQUALS(crc16udf.Checksum(),0x8430);
+        crc16udf.Reset();
+
+        ckCore::Stream::Copy(is2,crc16udf);
+        TS_ASSERT_EQUALS(crc16udf.Checksum(),0x8bfe);
+        crc16udf.Reset();
+
+        ckCore::Stream::Copy(is3,crc16udf);
+        TS_ASSERT_EQUALS(crc16udf.Checksum(),0xef2a);
+        crc16udf.Reset();
+
+        ckCore::Stream::Copy(is4,crc16udf);
+        TS_ASSERT_EQUALS(crc16udf.Checksum(),0x0000);
+        crc16udf.Reset();
+
+        // Test from the UDF 1.50 reference.
+        unsigned char bytes[] = { 0x70, 0x6A, 0x77 };
+        crc16udf.Write(bytes,3);
+        TS_ASSERT_EQUALS(crc16udf.Checksum(),0x3299);
+
+        is1.Close();
+        is1.Open();
+        is2.Close();
+        is2.Open();
+        is3.Close();
+        is3.Open();
+        is4.Close();
+        is4.Open();
+
+        // CRC-16 (IBM polynomial).
+        ckCore::CrcStream crc16ibm(ckCore::CrcStream::ckCRC_16);
+
+        ckCore::Stream::Copy(is1,crc16ibm);
+        TS_ASSERT_EQUALS(crc16ibm.Checksum(),0x398e);
+        crc16ibm.Reset();
+
+        ckCore::Stream::Copy(is2,crc16ibm);
+        TS_ASSERT_EQUALS(crc16ibm.Checksum(),0xd3bb);
+        crc16ibm.Reset();
+
+        ckCore::Stream::Copy(is3,crc16ibm);
+        TS_ASSERT_EQUALS(crc16ibm.Checksum(),0xb7d4);
+        crc16ibm.Reset();
+
+        ckCore::Stream::Copy(is4,crc16ibm);
+        TS_ASSERT_EQUALS(crc16ibm.Checksum(),0x0000);
+        crc16ibm.Reset();
     }
 };
 

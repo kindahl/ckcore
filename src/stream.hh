@@ -67,5 +67,10 @@ namespace ckCore
          */
         virtual tint64 Write(void *buffer,unsigned long count) = 0;
     };
+
+    namespace Stream
+    {
+        bool Copy(InStream &from,OutStream &to);
+    };
 };
 

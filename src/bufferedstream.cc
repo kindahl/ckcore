@@ -31,7 +31,14 @@ namespace ckCore
         buffer_(NULL),buffer_size_(0),buffer_pos_(0),buffer_data_(0)
     {
         buffer_size_ = System::Cache(System::ckLEVEL_1);
+        if (buffer_size_ == 0)
+            buffer_size_ = 4096;
+
         buffer_ = new unsigned char[buffer_size_];
+
+        // Make sure that the memory allocation succeeded.
+        if (buffer_ == NULL)
+            buffer_size_ = 0;
     }
 
     /**
@@ -44,7 +51,14 @@ namespace ckCore
         stream_(stream),buffer_(NULL),buffer_size_(buffer_size),buffer_pos_(0),
         buffer_data_(0)
     {
+        if (buffer_size_ == 0)
+            buffer_size_ = 4096;
+
         buffer_ = new unsigned char[buffer_size_];
+
+        // Make sure that the memory allocation succeeded.
+        if (buffer_ == NULL)
+            buffer_size_ = 0;
     }
 
     /**
@@ -80,6 +94,11 @@ namespace ckCore
      */
     tint64 BufferedInStream::Read(void *buffer,unsigned long count)
     {
+        // If we have failed to allocate the internal buffer, just redirect the
+        // read call.
+        if (buffer_size_ == 0)
+            return stream_.Read(buffer,count);
+
         unsigned long pos = 0;
 
         while (count > buffer_data_)
@@ -119,7 +138,14 @@ namespace ckCore
         buffer_(NULL),buffer_size_(0),buffer_pos_(0)
     {
         buffer_size_ = System::Cache(System::ckLEVEL_1);
+        if (buffer_size_ == 0)
+            buffer_size_ = 4096;
+
         buffer_ = new unsigned char[buffer_size_];
+
+        // Make sure that the memory allocation succeeded.
+        if (buffer_ == NULL)
+            buffer_size_ = 0;
     }
 
     /**
@@ -131,7 +157,14 @@ namespace ckCore
                                          unsigned long buffer_size) :
         stream_(stream),buffer_(NULL),buffer_size_(buffer_size),buffer_pos_(0)
     {
+        if (buffer_size_ == 0)
+            buffer_size_ = 4096;
+
         buffer_ = new unsigned char[buffer_size_];
+
+        // Make sure that the memory allocation succeeded.
+        if (buffer_ == NULL)
+            buffer_size_ = 0;
     }
 
     /**
@@ -157,6 +190,11 @@ namespace ckCore
      */
     tint64 BufferedOutStream::Write(void *buffer,unsigned long count)
     {
+        // If we failed to allocate the internal buffer, just redirect the
+        // write call.
+        if (buffer_size_ == 0)
+            return stream_.Write(buffer,count);
+
         unsigned long pos = 0;
 
         while (buffer_pos_ + count > buffer_size_)
@@ -189,6 +227,10 @@ namespace ckCore
      */
     tint64 BufferedOutStream::Flush()
     {
+        // If we don't have a buffer we can't flush.
+        if (buffer_size_ == 0)
+            return 0;
+
         tint64 result = stream_.Write(buffer_,buffer_pos_);
         if (result != -1)
             buffer_pos_ = 0;

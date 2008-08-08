@@ -21,7 +21,7 @@
 namespace ckCore
 {
     /**
-     * Constructs an FileInStream object.
+     * Constructs a FileInStream object.
      */
     FileInStream::FileInStream(const Path &file_path) : file_(file_path),
         size_(file_.Size()),read_(0)
@@ -82,7 +82,7 @@ namespace ckCore
     }
 
     /**
-     * Constructs an FileOutStream object.
+     * Constructs a FileOutStream object.
      */
     FileOutStream::FileOutStream(const Path &file_path) : file_(file_path)
     {
