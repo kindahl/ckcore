@@ -17,41 +17,43 @@
  */
 
 /**
- * @file src/types.hh
- * @brief Defines custom types used by the library.
+ * @file src/system.hh
+ * @brief Defines the system class.
  */
 
 #pragma once
-#include <string>
+#include "types.hh"
 
 namespace ckCore
 {
-#ifdef _WINDOWS
-#ifdef _UNICODE
-    typedef wchar_t tchar;
-	typedef std::wstring tstring;
-#ifndef ckT
-#define ckT(quote) L##quote
-#endif
-#else
-	typedef char tchar;
-	typedef std::string tstring;
-#ifndef ckT
-#define ckT
-#endif
-#endif
-    typedef __int64 tint64;
-    typedef unsigned __int64 tuint64;
-#endif
+    /**
+     * @brief System class.
+     */
+    class System
+    {
+    public:
+        /**
+         * Defines different cache levels.
+         */
+        enum CacheLevel
+        {
+            ckLEVEL_1 = 0x01,
+            ckLEVEL_2,
+            ckLEVEL_3
+        };
 
-#ifdef _LINUX
-    typedef char tchar;
-    typedef long long tint64;
-    typedef unsigned long long tuint64;
-    typedef std::string tstring;
-#ifndef ckT
-#define ckT
-#endif
-#endif
+    private:
+        static void Cpuid(unsigned long func,unsigned long arg,
+                          unsigned long &a,unsigned long &b,
+                          unsigned long &c,unsigned long &d);
+
+        static unsigned long CacheIntel(CacheLevel level);
+        static unsigned long CacheAmd(CacheLevel level);
+
+    public:
+        static tuint64 Time();
+        static tuint64 Ticks();
+        static unsigned long Cache(CacheLevel level);
+    };
 };
 
