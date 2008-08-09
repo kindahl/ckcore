@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stdafx.h"
+#include "stdafx.hh"
 #include "file.hh"
 #include "util.hh"
 
@@ -174,7 +174,7 @@ namespace ckCore
      *         returns the number of bytes read (this may be zero when the end
      *         of the file has been reached).
      */
-    tint64 File::Read(void *buffer,unsigned long count)
+    tint64 File::Read(void *buffer,tuint32 count)
     {
         if (file_handle_ == INVALID_HANDLE_VALUE)
             return -1;
@@ -194,7 +194,7 @@ namespace ckCore
      * @return If the operation failed -1 is returned, otherwise the function
      *         returns the number of bytes written (this may be zero).
      */
-    tint64 File::Write(const void *buffer,unsigned long count)
+    tint64 File::Write(const void *buffer,tuint32 count)
     {
         if (file_handle_ == INVALID_HANDLE_VALUE)
             return -1;

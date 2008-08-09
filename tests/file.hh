@@ -65,10 +65,11 @@ public:
         TS_ASSERT(file.Open(ckCore::File::ckOPEN_WRITE));
         const char out_data[] = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-        size_t tot_write = 0;
+		ckCore::tuint32 tot_write = 0;
         while (tot_write < 37)
         {
-            size_t write = file.Write(out_data + tot_write,37 - tot_write);
+			ckCore::tuint32 write = (ckCore::tuint32)file.Write(out_data + tot_write,
+																37 - tot_write);
             TS_ASSERT(write != -1);
 
             tot_write += write;
@@ -78,10 +79,10 @@ public:
         file.Open(ckCore::File::ckOPEN_READ);
         char in_data[37];
 
-        size_t tot_read = 0;
+		ckCore::tuint32 tot_read = 0;
         while (tot_read < 37)
         {
-            size_t read = file.Read(in_data,37 - tot_read);
+            ckCore::tuint32 read = (ckCore::tuint32)file.Read(in_data,37 - tot_read);
             TS_ASSERT(read != -1);
 
             tot_read += read;

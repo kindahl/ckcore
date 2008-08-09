@@ -23,14 +23,15 @@
 #include "../src/filestream.hh"
 #include "../src/bufferedstream.hh"
 #include "../src/crcstream.hh"
+#include "../src/system.hh"
 
 class StreamTestSuite : public CxxTest::TestSuite
 {
 public:
     void testInStream()
     {
-        ckCore::FileInStream is1("data/file/8253bytes");
-        ckCore::FileInStream fs("data/file/8253bytes");
+        ckCore::FileInStream is1(ckT("data/file/8253bytes"));
+        ckCore::FileInStream fs(ckT("data/file/8253bytes"));
         ckCore::BufferedInStream is2(fs);
 
         for (int i = 0; i < 100; i++)
@@ -45,13 +46,13 @@ public:
             ckCore::tint64 read1 = 0,read2 = 0;
             while (!is1.Eos() && !is2.Eos())
             {
-                ckCore::tint64 res1 = is1.Read(buffer1,buffer_size);
-                ckCore::tint64 res2 = is2.Read(buffer2,buffer_size);
+                ckCore::tint64 res1 = is1.Read(buffer1,(ckCore::tuint32)buffer_size);
+                ckCore::tint64 res2 = is2.Read(buffer2,(ckCore::tuint32)buffer_size);
 
                 TS_ASSERT(res1 != -1);
                 TS_ASSERT(res2 != -1);
 
-                TS_ASSERT_SAME_DATA(buffer1,buffer2,buffer_size);
+                TS_ASSERT_SAME_DATA(buffer1,buffer2,(unsigned int)buffer_size);
 
                 read1 += res1;
                 read2 += res2;
@@ -71,9 +72,9 @@ public:
 
     void testOutStream()
     {
-        ckCore::FileInStream is1("data/file/8253bytes");
-        ckCore::FileInStream is2("data/file/new");
-        ckCore::FileOutStream fs("data/file/new");
+        ckCore::FileInStream is1(ckT("data/file/8253bytes"));
+        ckCore::FileInStream is2(ckT("data/file/new"));
+        ckCore::FileOutStream fs(ckT("data/file/new"));
         ckCore::BufferedOutStream os(fs);
 
         // Run 100 tests with different buffer sizes to capture buffer edge errors.
@@ -89,10 +90,10 @@ public:
             ckCore::tint64 written = 0;
             while (!is1.Eos())
             {
-                ckCore::tint64 res1 = is1.Read(buffer1,buffer_size);
+                ckCore::tint64 res1 = is1.Read(buffer1,(ckCore::tuint32)buffer_size);
                 TS_ASSERT(res1 != -1);
 
-                ckCore::tint64 res2 = os.Write(buffer1,res1);
+                ckCore::tint64 res2 = os.Write(buffer1,(ckCore::tuint32)res1);
                 TS_ASSERT(res2 != -1);
 
                 TS_ASSERT_EQUALS(res1,res2);
@@ -114,13 +115,13 @@ public:
             ckCore::tint64 read1 = 0,read2 = 0;
             while (!is1.Eos() && !is2.Eos())
             {
-                ckCore::tint64 res1 = is1.Read(buffer1,buffer_size);
-                ckCore::tint64 res2 = is2.Read(buffer2,buffer_size);
+                ckCore::tint64 res1 = is1.Read(buffer1,(ckCore::tuint32)buffer_size);
+                ckCore::tint64 res2 = is2.Read(buffer2,(ckCore::tuint32)buffer_size);
 
                 TS_ASSERT(res1 != -1);
                 TS_ASSERT(res2 != -1);
 
-                TS_ASSERT_SAME_DATA(buffer1,buffer2,buffer_size);
+                TS_ASSERT_SAME_DATA(buffer1,buffer2,(unsigned int)buffer_size);
 
                 read1 += res1;
                 read2 += res2;
@@ -133,7 +134,7 @@ public:
             TS_ASSERT(is1.Close());
             TS_ASSERT(is2.Close());
 
-            TS_ASSERT(ckCore::File::Remove("data/file/new"));
+            TS_ASSERT(ckCore::File::Remove(ckT("data/file/new")));
 
             delete [] buffer1;
             delete [] buffer2;
@@ -142,13 +143,13 @@ public:
 
     void testCrcStream()
     {
-        ckCore::FileInStream is1("data/file/8253bytes");
+        ckCore::FileInStream is1(ckT("data/file/8253bytes"));
         TS_ASSERT(is1.Open());
-        ckCore::FileInStream is2("data/file/123bytes");
+        ckCore::FileInStream is2(ckT("data/file/123bytes"));
         TS_ASSERT(is2.Open());
-        ckCore::FileInStream is3("data/file/53bytes");
+        ckCore::FileInStream is3(ckT("data/file/53bytes"));
         TS_ASSERT(is3.Open());
-        ckCore::FileInStream is4("data/file/0bytes");
+        ckCore::FileInStream is4(ckT("data/file/0bytes"));
         TS_ASSERT(is4.Open());
 
         // CRC-32.

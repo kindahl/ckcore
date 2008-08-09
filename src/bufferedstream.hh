@@ -37,20 +37,20 @@ namespace ckCore
         InStream &stream_;
 
         unsigned char *buffer_;
-        unsigned long buffer_size_;
-        unsigned long buffer_pos_;
+        tuint32 buffer_size_;
+        tuint32 buffer_pos_;
 
         // The number of valid bytes of data the buffer contains.
         unsigned long buffer_data_;
 
     public:
         BufferedInStream(InStream &stream);
-        BufferedInStream(InStream &stream,unsigned long buffer_size);
+        BufferedInStream(InStream &stream,tuint32 buffer_size);
         ~BufferedInStream();
 
         bool Eos();
 
-        tint64 Read(void *buffer,unsigned long count);
+        tint64 Read(void *buffer,tuint32 count);
     };
 
     /**
@@ -62,15 +62,15 @@ namespace ckCore
         OutStream &stream_;
 
         unsigned char *buffer_;
-        unsigned long buffer_size_;
-        unsigned long buffer_pos_;
+        tuint32 buffer_size_;
+        tuint32 buffer_pos_;
 
     public:
         BufferedOutStream(OutStream &stream);
-        BufferedOutStream(OutStream &stream,unsigned long buffer_size);
+        BufferedOutStream(OutStream &stream,tuint32 buffer_size);
         ~BufferedOutStream();
 
-        tint64 Write(void *buffer,unsigned long count);
+        tint64 Write(void *buffer,tuint32 count);
         tint64 Flush();
     };
 };

@@ -72,7 +72,7 @@ namespace ckCore
      *         function returns the number of butes read (this may be zero
      *         when the end of the file has been reached).
      */
-    tint64 FileInStream::Read(void *buffer,unsigned long count)
+    tint64 FileInStream::Read(void *buffer,tuint32 count)
     {
         tint64 result = file_.Read(buffer,count);
         if (result != -1)
@@ -116,7 +116,7 @@ namespace ckCore
      *         function returns the number of bytes written (this may be
      *         zero).
      */
-    tint64 FileOutStream::Write(void *buffer,unsigned long count)
+    tint64 FileOutStream::Write(void *buffer,tuint32 count)
     {
         return file_.Write(buffer,count);
     }

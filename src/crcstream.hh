@@ -57,7 +57,7 @@ namespace ckCore
 
     private:
         bool reflect_;
-        tuint32 order_;         // Which order of CRC (8,16,32,...).
+        unsigned char order_;   // Which order of CRC (8,16,32,...).
         tuint32 mask_;          // Mask of all bits in the checksum.
         tuint32 initial_;       // Initial checksum (for reset function).
         tuint32 final_;         // Value to xor with final checksum.
@@ -72,7 +72,7 @@ namespace ckCore
         void Reset();
         tuint32 Checksum();
 
-        tint64 Write(void *buffer,unsigned long count);
+        tint64 Write(void *buffer,tuint32 count);
     };
 };
 

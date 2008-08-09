@@ -47,7 +47,7 @@ namespace ckCore
      * @param [in] buffer_size The size of the internal buffer.
      */
     BufferedInStream::BufferedInStream(InStream &stream,
-                                       unsigned long buffer_size) :
+                                       tuint32 buffer_size) :
         stream_(stream),buffer_(NULL),buffer_size_(buffer_size),buffer_pos_(0),
         buffer_data_(0)
     {
@@ -92,14 +92,14 @@ namespace ckCore
      *         function returns the number of butes read (this may be zero
      *         when the end of the file has been reached).
      */
-    tint64 BufferedInStream::Read(void *buffer,unsigned long count)
+    tint64 BufferedInStream::Read(void *buffer,tuint32 count)
     {
         // If we have failed to allocate the internal buffer, just redirect the
         // read call.
         if (buffer_size_ == 0)
             return stream_.Read(buffer,count);
 
-        unsigned long pos = 0;
+        tuint32 pos = 0;
 
         while (count > buffer_data_)
         {
@@ -119,7 +119,7 @@ namespace ckCore
             if (result == -1)
                 return pos == 0 ? -1 : pos;
 
-            buffer_data_ = result;
+            buffer_data_ = (tuint32)result;
         }
 
         memcpy((unsigned char *)buffer + pos,buffer_ + buffer_pos_,count);
@@ -154,7 +154,7 @@ namespace ckCore
      * @param [in] buffer_size The size of the internal buffer.
      */
     BufferedOutStream::BufferedOutStream(OutStream &stream,
-                                         unsigned long buffer_size) :
+                                         tuint32 buffer_size) :
         stream_(stream),buffer_(NULL),buffer_size_(buffer_size),buffer_pos_(0)
     {
         if (buffer_size_ == 0)
@@ -188,18 +188,18 @@ namespace ckCore
      * @return If the operation failed -1 is returned, otherwise the
      *         function returns the number of bytes written.
      */
-    tint64 BufferedOutStream::Write(void *buffer,unsigned long count)
+    tint64 BufferedOutStream::Write(void *buffer,tuint32 count)
     {
         // If we failed to allocate the internal buffer, just redirect the
         // write call.
         if (buffer_size_ == 0)
             return stream_.Write(buffer,count);
 
-        unsigned long pos = 0;
+        tuint32 pos = 0;
 
         while (buffer_pos_ + count > buffer_size_)
         {
-            unsigned long remain = buffer_size_ - buffer_pos_;
+            tuint32 remain = buffer_size_ - buffer_pos_;
             memcpy(buffer_ + buffer_pos_,(unsigned char *)buffer + pos,remain);
 
             pos += remain;

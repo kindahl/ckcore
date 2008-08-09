@@ -119,7 +119,7 @@ namespace ckCore
      * @param [in] count The number of bytes in the buffer.
      * @return The number of bytes processed (always the same as count).
      */
-    tint64 CrcStream::Write(void *buffer,unsigned long count)
+    tint64 CrcStream::Write(void *buffer,tuint32 count)
     {
         for (unsigned long i = 0; i < count; i++)
         {

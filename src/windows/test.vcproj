@@ -25,7 +25,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="Generating test program."
-				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh"
+				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -107,6 +107,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Generating test program."
+				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -203,6 +205,10 @@
 			</File>
 			<File
 				RelativePath="..\..\tests\path.hh"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\stream.hh"
 				>
 			</File>
 		</Filter>

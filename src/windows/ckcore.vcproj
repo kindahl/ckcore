@@ -45,6 +45,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="stdafx.hh"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
@@ -163,7 +164,67 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\bufferedstream.cc"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\crcstream.cc"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\filestream.cc"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\path.cc"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\stream.cc"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\system.cc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -178,10 +239,6 @@
 				Name="windows"
 				>
 				<File
-					RelativePath=".\ckcore.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\directory.cc"
 					>
 				</File>
@@ -190,18 +247,10 @@
 					>
 				</File>
 				<File
-					RelativePath=".\stdafx.cpp"
+					RelativePath=".\stdafx.cc"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="1"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -221,6 +270,14 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\bufferedstream.hh"
+				>
+			</File>
+			<File
+				RelativePath="..\crcstream.hh"
+				>
+			</File>
+			<File
 				RelativePath="..\directory.hh"
 				>
 			</File>
@@ -229,7 +286,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\filestream.hh"
+				>
+			</File>
+			<File
 				RelativePath="..\path.hh"
+				>
+			</File>
+			<File
+				RelativePath="..\stream.hh"
+				>
+			</File>
+			<File
+				RelativePath="..\system.hh"
 				>
 			</File>
 			<File
@@ -248,7 +317,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\stdafx.h"
+					RelativePath=".\stdafx.hh"
 					>
 				</File>
 				<File

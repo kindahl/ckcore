@@ -46,7 +46,7 @@ namespace ckCore
         bool Close();
         bool Eos();
 
-        tint64 Read(void *buffer,unsigned long count);
+        tint64 Read(void *buffer,tuint32 count);
     };
 
     /**
@@ -63,7 +63,7 @@ namespace ckCore
         bool Open();
         bool Close();
 
-        tint64 Write(void *buffer,unsigned long count);
+        tint64 Write(void *buffer,tuint32 count);
     };
 };
 

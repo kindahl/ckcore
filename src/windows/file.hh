@@ -47,8 +47,8 @@ namespace ckCore
         bool Test() const;
         tint64 Seek(tint64 distance,FileWhence whence);
         tint64 Tell() const;
-        tint64 Read(void *buffer,unsigned long count);
-        tint64 Write(const void *buffer,unsigned long count);
+        tint64 Read(void *buffer,tuint32 count);
+        tint64 Write(const void *buffer,tuint32 count);
 
         // Functions for external manipulation (does not require file to be
         // opened).

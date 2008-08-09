@@ -17,6 +17,9 @@
  */
 
 #include <string.h>
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
 #ifdef _LINUX
 #include <sys/time.h>
 #endif
@@ -32,7 +35,7 @@ namespace ckCore
     tuint64 System::Time()
     {
 #ifdef _WINDOWS
-        return GetTickCount64();
+        return GetTickCount();
 #else
         struct timeval time;
         gettimeofday(&time,(struct timezone *)0);
@@ -41,44 +44,58 @@ namespace ckCore
     }
 
     /**
-     * Returnes the number of clock cycles executed by the host processor since
+     * Returns the number of clock cycles executed by the host processor since
      * the system was started.
      * @return The number of executed clock cycles since the system was
      *         started.
      */
     tuint64 System::Ticks()
     {
+		unsigned long lo = 0,hi = 0;
 #ifdef _WINDOWS
-        return __rdtsc();
+		__asm
+		{
+			rdtsc
+			mov DWORD PTR lo, eax
+			mov DWORD PTR hi, edx
+		};
 #else
-        unsigned long low = 0,high = 0;
-
         asm("rdtsc"
-            :"=a"(low),"=d"(high)
+            :"=a"(lo),"=d"(hi)
             :
             :);
-
-        tuint64 result = high;
-        result <<= 32;
-        result |= low;
-        return result;
 #endif
+		tuint64 result = hi;
+        result <<= 32;
+        result |= lo;
+        return result;
     }
 
     void System::Cpuid(unsigned long func,unsigned long arg,
                        unsigned long &a,unsigned long &b,
                        unsigned long &c,unsigned long &d)
     {
+
 #ifdef _WINDOWS
-        __asm
+		// I don't know how to copy back to arguments passed by reference, that's
+		// why I use temporary variables first.
+		unsigned long t1,t2,t3,t4;
+
+		__asm
         {
             mov eax,func
+			mov ecx,arg
             cpuid
-            mov dword a,eax
-            mov dword b,ebx
-            mov dword c,ecx
-            mov dword d,edx
+            mov dword ptr t1,eax
+            mov dword ptr t2,ebx
+            mov dword ptr t3,ecx
+            mov dword ptr t4,edx
         };
+
+		a = t1;
+		b = t2;
+		c = t3;
+		d = t4;
 #else
         asm("cpuid"
             :"=a"(a),
@@ -105,12 +122,12 @@ namespace ckCore
             Cpuid(4,reg++,a,b,c,d);
 
             // Check if we have found the last cache.
-            unsigned char cur_type = a & 0x1f;
+            unsigned char cur_type = (unsigned char)a & 0x1f;
             if (cur_type == 0)
                 break;
 
             // We're only interested in the level 1 data cache.
-            unsigned char cur_level = (a >> 5) & 0x07;
+            unsigned char cur_level = (unsigned char)(a >> 5) & 0x07;
             if ((cur_type == 1 || cur_type == 3) && cur_level == level)
             {
                 unsigned long ways = (b >> 22) & 0x3ff;

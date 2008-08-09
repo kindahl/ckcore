@@ -40,7 +40,7 @@ namespace ckCore
          *         function returns the number of butes read (this may be zero
          *         when the end of the file has been reached).
          */
-        virtual tint64 Read(void *buffer,unsigned long count) = 0;
+        virtual tint64 Read(void *buffer,tuint32 count) = 0;
 
         /**
          * Checks if the end of the stream has been reached.
@@ -65,7 +65,7 @@ namespace ckCore
          *         function returns the number of bytes written (this may be
          *         zero).
          */
-        virtual tint64 Write(void *buffer,unsigned long count) = 0;
+        virtual tint64 Write(void *buffer,tuint32 count) = 0;
     };
 
     namespace Stream

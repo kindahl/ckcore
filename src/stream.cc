@@ -33,7 +33,7 @@ namespace ckCore
          */
         bool Copy(InStream &from,OutStream &to)
         {
-            unsigned long buffer_size = System::Cache(System::ckLEVEL_1);
+            tuint32 buffer_size = System::Cache(System::ckLEVEL_1);
             if (buffer_size == 0)
                 buffer_size = 4096;
 
@@ -51,7 +51,7 @@ namespace ckCore
                     return false;
                 }
 
-                res = to.Write(buffer,res);
+                res = to.Write(buffer,(tuint32)res);
                 if (res == -1)
                 {
                     delete [] buffer;
