@@ -19,6 +19,7 @@
 #include <string.h>
 #ifdef _WINDOWS
 #include <windows.h>
+#include <intrin.h>
 #endif
 #ifdef _LINUX
 #include <sys/time.h>
@@ -51,25 +52,28 @@ namespace ckCore
      */
     tuint64 System::Ticks()
     {
-		unsigned long lo = 0,hi = 0;
 #ifdef _WINDOWS
-		__asm
-		{
-			rdtsc
-			mov DWORD PTR lo, eax
-			mov DWORD PTR hi, edx
-		};
+		return __rdtsc();
 #else
+		unsigned long low = 0,high = 0;
+
         asm("rdtsc"
-            :"=a"(lo),"=d"(hi)
+            :"=a"(low),"=d"(high)
             :
             :);
-#endif
-		tuint64 result = hi;
+
+		tuint64 result = high;
         result <<= 32;
-        result |= lo;
+        result |= low;
         return result;
+#endif
     }
+
+#ifdef _WINDOWS
+#ifdef _M_X64
+	extern "C" void cpuid64(unsigned long func,unsigned long arg,unsigned long *words);
+#endif
+#endif
 
     void System::Cpuid(unsigned long func,unsigned long arg,
                        unsigned long &a,unsigned long &b,
@@ -77,6 +81,15 @@ namespace ckCore
     {
 
 #ifdef _WINDOWS
+#ifdef _M_X64
+		unsigned long words[4];
+		cpuid64(func,arg,words);
+
+		a = words[0];
+		b = words[1];
+		c = words[2];
+		d = words[3];
+#else
 		// I don't know how to copy back to arguments passed by reference, that's
 		// why I use temporary variables first.
 		unsigned long t1,t2,t3,t4;
@@ -96,6 +109,7 @@ namespace ckCore
 		b = t2;
 		c = t3;
 		d = t4;
+#endif
 #else
         asm("cpuid"
             :"=a"(a),
