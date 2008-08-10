@@ -21,7 +21,7 @@
 #include <string.h>
 #include "directory.hh"
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * Constructs an Iterator object.

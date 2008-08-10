@@ -20,7 +20,7 @@
 #include <fcntl.h>
 #include "file.hh"
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * Constructs a File object.
