@@ -70,7 +70,7 @@ namespace ckcore
 
     namespace Stream
     {
-        bool Copy(InStream &from,OutStream &to);
+        bool copy(InStream &from,OutStream &to);
     };
 };
 

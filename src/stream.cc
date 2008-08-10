@@ -31,7 +31,7 @@ namespace ckcore
          * @return If successfull true is returned, otherwise false is
          *         returned.
          */
-        bool Copy(InStream &from,OutStream &to)
+        bool copy(InStream &from,OutStream &to)
         {
             tuint32 buffer_size = System::Cache(System::ckLEVEL_1);
             if (buffer_size == 0)

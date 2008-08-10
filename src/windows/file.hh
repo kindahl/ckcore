@@ -29,7 +29,7 @@
 namespace ckcore
 {
     /**
-     * @brief The class for dealing with files on Linux.
+     * @brief The class for dealing with files on Windows.
      */
     class File : public FileBase
     {

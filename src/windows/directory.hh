@@ -28,7 +28,7 @@
 namespace ckcore
 {
     /**
-     * @brief The class for dealing with directories on Linux.
+     * @brief The class for dealing with directories on Windows.
      */
     class Directory
     {

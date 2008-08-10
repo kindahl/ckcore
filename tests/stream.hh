@@ -155,19 +155,19 @@ public:
         // CRC-32.
         ckcore::CrcStream crc32(ckcore::CrcStream::ckCRC_32);
 
-        ckcore::Stream::Copy(is1,crc32);
+        ckcore::Stream::copy(is1,crc32);
         TS_ASSERT_EQUALS(crc32.Checksum(),0x33d5a2ec);
         crc32.Reset();
 
-        ckcore::Stream::Copy(is2,crc32);
+        ckcore::Stream::copy(is2,crc32);
         TS_ASSERT_EQUALS(crc32.Checksum(),0xfa2e73f4);
         crc32.Reset();
 
-        ckcore::Stream::Copy(is3,crc32);
+        ckcore::Stream::copy(is3,crc32);
         TS_ASSERT_EQUALS(crc32.Checksum(),0x30e06b16);
         crc32.Reset();
 
-        ckcore::Stream::Copy(is4,crc32);
+        ckcore::Stream::copy(is4,crc32);
         TS_ASSERT_EQUALS(crc32.Checksum(),0x00000000);
         crc32.Reset();
 
@@ -183,19 +183,19 @@ public:
         // CRC-16 (CCITT polynomial).
         ckcore::CrcStream crc16udf(ckcore::CrcStream::ckCRC_CCITT);
 
-        ckcore::Stream::Copy(is1,crc16udf);
+        ckcore::Stream::copy(is1,crc16udf);
         TS_ASSERT_EQUALS(crc16udf.Checksum(),0x8430);
         crc16udf.Reset();
 
-        ckcore::Stream::Copy(is2,crc16udf);
+        ckcore::Stream::copy(is2,crc16udf);
         TS_ASSERT_EQUALS(crc16udf.Checksum(),0x8bfe);
         crc16udf.Reset();
 
-        ckcore::Stream::Copy(is3,crc16udf);
+        ckcore::Stream::copy(is3,crc16udf);
         TS_ASSERT_EQUALS(crc16udf.Checksum(),0xef2a);
         crc16udf.Reset();
 
-        ckcore::Stream::Copy(is4,crc16udf);
+        ckcore::Stream::copy(is4,crc16udf);
         TS_ASSERT_EQUALS(crc16udf.Checksum(),0x0000);
         crc16udf.Reset();
 
@@ -216,19 +216,19 @@ public:
         // CRC-16 (IBM polynomial).
         ckcore::CrcStream crc16ibm(ckcore::CrcStream::ckCRC_16);
 
-        ckcore::Stream::Copy(is1,crc16ibm);
+        ckcore::Stream::copy(is1,crc16ibm);
         TS_ASSERT_EQUALS(crc16ibm.Checksum(),0x398e);
         crc16ibm.Reset();
 
-        ckcore::Stream::Copy(is2,crc16ibm);
+        ckcore::Stream::copy(is2,crc16ibm);
         TS_ASSERT_EQUALS(crc16ibm.Checksum(),0xd3bb);
         crc16ibm.Reset();
 
-        ckcore::Stream::Copy(is3,crc16ibm);
+        ckcore::Stream::copy(is3,crc16ibm);
         TS_ASSERT_EQUALS(crc16ibm.Checksum(),0xb7d4);
         crc16ibm.Reset();
 
-        ckcore::Stream::Copy(is4,crc16ibm);
+        ckcore::Stream::copy(is4,crc16ibm);
         TS_ASSERT_EQUALS(crc16ibm.Checksum(),0x0000);
         crc16ibm.Reset();
     }
