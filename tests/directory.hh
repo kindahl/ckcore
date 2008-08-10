@@ -27,36 +27,36 @@ class DirectoryTestSuite : public CxxTest::TestSuite
 public:
     void testCreateRemove()
     {
-        ckCore::Directory dir1(ckT("data/new"));
+        ckcore::Directory dir1(ckT("data/new"));
         TS_ASSERT(dir1.Create());
         TS_ASSERT(dir1.Remove());
 
-        ckCore::Directory dir2(ckT("data/new/"));
+        ckcore::Directory dir2(ckT("data/new/"));
         TS_ASSERT(dir2.Create());
         TS_ASSERT(dir2.Remove());
 
-        ckCore::Directory dir3(ckT("data/new/new"));
+        ckcore::Directory dir3(ckT("data/new/new"));
         TS_ASSERT(dir3.Create());
         TS_ASSERT(dir3.Remove());
 
-        ckCore::Directory dir4(ckT("data/new/new/"));
+        ckcore::Directory dir4(ckT("data/new/new/"));
         TS_ASSERT(dir4.Create());
         TS_ASSERT(dir4.Remove());
 
         // This is just for clean up since the above calls to Remove does not
         // remove more than one directory entry.
-        ckCore::Directory dir5(ckT("data/new"));
+        ckcore::Directory dir5(ckT("data/new"));
         TS_ASSERT(dir5.Remove());
     }
 
     void testIterator()
     {
-        ckCore::Directory::Iterator it;
-        ckCore::Directory dir1(ckT("data"));
-        ckCore::Directory dir2(ckT("data/file"));
+        ckcore::Directory::Iterator it;
+        ckcore::Directory dir1(ckT("data"));
+        ckcore::Directory dir2(ckT("data/file"));
 
-        std::list<ckCore::tstring> files1,files2;
-        std::list<ckCore::tstring>::iterator it_file;
+        std::list<ckcore::tstring> files1,files2;
+        std::list<ckcore::tstring>::iterator it_file;
 
         files1.push_back(ckT(".svn"));
         files1.push_back(ckT("file"));

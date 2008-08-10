@@ -25,7 +25,7 @@
 #include "../file.hh"
 #include "../path.hh"
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * @brief The class for dealing with directories on Linux.

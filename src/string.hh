@@ -17,8 +17,8 @@
  */
 
 /**
- * @file src/system.hh
- * @brief Defines the system class.
+ * @file src/string.hh
+ * @brief String helper functions.
  */
 
 #pragma once
@@ -26,34 +26,9 @@
 
 namespace ckcore
 {
-    /**
-     * @brief System class.
-     */
-    class System
+    namespace string
     {
-    public:
-        /**
-         * Defines different cache levels.
-         */
-        enum CacheLevel
-        {
-            ckLEVEL_1 = 0x01,
-            ckLEVEL_2,
-            ckLEVEL_3
-        };
-
-    private:
-        static void Cpuid(unsigned long func,unsigned long arg,
-                          unsigned long &a,unsigned long &b,
-                          unsigned long &c,unsigned long &d);
-
-        static unsigned long CacheIntel(CacheLevel level);
-        static unsigned long CacheAmd(CacheLevel level);
-
-    public:
-        static tuint64 Time();
-        static tuint64 Ticks();
-        static unsigned long Cache(CacheLevel level);
+		int compare(const tchar *str1,const tchar *str2);
     };
 };
 

@@ -20,7 +20,7 @@
 #include "file.hh"
 #include "util.hh"
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * Constructs a File object.

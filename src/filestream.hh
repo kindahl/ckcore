@@ -27,7 +27,7 @@
 #include "file.hh"
 #include "path.hh"
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * @brief Stream class for reading files.
@@ -46,6 +46,7 @@ namespace ckCore
         bool Close();
         bool Eos();
 
+		tint64 Seek(tint64 distance,FileBase::FileWhence whence);
         tint64 Read(void *buffer,tuint32 count);
     };
 

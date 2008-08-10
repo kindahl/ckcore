@@ -26,7 +26,7 @@
 #include "stream.hh"
 #include "path.hh"
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * @brief Buffered stream class for reading streams.
@@ -46,7 +46,7 @@ namespace ckCore
     public:
         BufferedInStream(InStream &stream);
         BufferedInStream(InStream &stream,tuint32 buffer_size);
-        ~BufferedInStream();
+        virtual ~BufferedInStream();
 
         bool Eos();
 

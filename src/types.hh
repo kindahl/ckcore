@@ -24,7 +24,7 @@
 #pragma once
 #include <string>
 
-namespace ckCore
+namespace ckcore
 {
 #ifdef _WINDOWS
 #ifdef _UNICODE

@@ -348,6 +348,26 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\convert.cc"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\crcstream.cc"
 				>
 				<FileConfiguration
@@ -428,6 +448,18 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\string.cc"
+				>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\system.cc"
 				>
 				<FileConfiguration
@@ -458,7 +490,7 @@
 						>
 						<Tool
 							Name="VCCustomBuildTool"
-							CommandLine="ml64.exe /c /nologo /Fo &quot;$(IntDir)&quot;\cpuid64.obj /Zi &quot;$(InputPath)&quot;"
+							CommandLine="ml64.exe /c /nologo /Fo &quot;$(IntDir)&quot;\cpuid64.obj /Zi &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 							Outputs="$(IntDir)\cpuid64.obj"
 						/>
 					</FileConfiguration>
@@ -507,6 +539,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\convert.hh"
+				>
+			</File>
+			<File
 				RelativePath="..\crcstream.hh"
 				>
 			</File>
@@ -528,6 +564,10 @@
 			</File>
 			<File
 				RelativePath="..\stream.hh"
+				>
+			</File>
+			<File
+				RelativePath="..\string.hh"
 				>
 			</File>
 			<File

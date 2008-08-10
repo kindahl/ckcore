@@ -24,7 +24,7 @@
 #include <vector>
 #include "types.hh"
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * @brief Class for dealing with path names.

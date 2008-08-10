@@ -19,7 +19,7 @@
 #include "system.hh"
 #include "stream.hh"
 
-namespace ckCore
+namespace ckcore
 {
     namespace Stream
     {

@@ -25,7 +25,7 @@
 #include "types.hh"
 #include "stream.hh"
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * @brief Stream for calculating CRC checksums.

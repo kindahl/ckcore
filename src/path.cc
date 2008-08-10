@@ -18,7 +18,7 @@
 
 #include "path.hh"
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * Constructs an Interator object.

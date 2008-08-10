@@ -25,7 +25,7 @@
 #include "../types.hh"
 #include "../path.hh"
 
-namespace ckCore
+namespace ckcore
 {
 	void SysTimeToTm(SYSTEMTIME &stime,struct tm &time);
 };

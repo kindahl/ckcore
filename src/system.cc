@@ -26,7 +26,7 @@
 #endif
 #include "system.hh"
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * Returns the number of milliseconds that has elapsed since the system was

@@ -19,7 +19,7 @@
 #include "stdafx.hh"
 #include "util.hh"
 
-namespace ckCore
+namespace ckcore
 {
 	/**
 	 * Converts a SYSTEMTIME structure to a struct tm structure.

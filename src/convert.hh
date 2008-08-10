@@ -17,8 +17,8 @@
  */
 
 /**
- * @file src/system.hh
- * @brief Defines the system class.
+ * @file src/convert.hh
+ * @brief Type conversion functions.
  */
 
 #pragma once
@@ -26,34 +26,14 @@
 
 namespace ckcore
 {
-    /**
-     * @brief System class.
-     */
-    class System
+    namespace convert
     {
-    public:
-        /**
-         * Defines different cache levels.
-         */
-        enum CacheLevel
-        {
-            ckLEVEL_1 = 0x01,
-            ckLEVEL_2,
-            ckLEVEL_3
-        };
+		void sprintf(tchar *buffer,size_t size,const tchar *format,...);
 
-    private:
-        static void Cpuid(unsigned long func,unsigned long arg,
-                          unsigned long &a,unsigned long &b,
-                          unsigned long &c,unsigned long &d);
-
-        static unsigned long CacheIntel(CacheLevel level);
-        static unsigned long CacheAmd(CacheLevel level);
-
-    public:
-        static tuint64 Time();
-        static tuint64 Ticks();
-        static unsigned long Cache(CacheLevel level);
+		const tchar *b_to_str(bool value);
+		const tchar *i32_to_str(tint32 value);
+		const tchar *ui32_to_str(tuint32 value);
+		const tchar *i64_to_str(tint64 value);
+		const tchar *ui64_to_str(tuint64 value);
     };
 };
-

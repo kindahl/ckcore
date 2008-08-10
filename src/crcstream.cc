@@ -18,7 +18,7 @@
 
 #include "crcstream.hh"
 
-namespace ckCore
+namespace ckcore
 {
     tuint32 CrcStream::Reflect(tuint32 crc,unsigned char length)
     {

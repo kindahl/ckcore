@@ -18,7 +18,7 @@
 
 #include "filestream.hh"
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * Constructs a FileInStream object.
@@ -63,6 +63,25 @@ namespace ckCore
     {
         return read_ >= size_;
     }
+
+	/**
+     * Repositions the file pointer to the specified offset accoding to the
+     * whence directive in the file.
+     * @param [in] distance The number of bytes that the file pointer should
+     *                      move.
+     * @param [in] whence Specifies what to use as base when calculating the
+     *                    final file pointer position.
+     * @return If successfull the resulting file pointer location is returned,
+     *         otherwise -1 is returned.
+     */
+	tint64 FileInStream::Seek(tint64 distance,FileBase::FileWhence whence)
+	{
+		tint64 result = file_.Seek(distance,whence);
+		if (result != -1)
+			read_ = result;
+
+		return result;
+	}
 
     /**
      * Reads raw data from the stream.

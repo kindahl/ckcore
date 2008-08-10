@@ -24,7 +24,7 @@
 #pragma once
 #include "types.hh"
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * @brief Interface for input streams.

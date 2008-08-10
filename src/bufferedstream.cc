@@ -20,7 +20,7 @@
 #include "system.hh"
 #include "bufferedstream.hh"
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * Constructs an BufferedInStream object. The default internal buffer size

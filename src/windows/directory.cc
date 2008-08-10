@@ -20,7 +20,7 @@
 #include "directory.hh"
 #include "util.hh"
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * Constructs an Iterator object.

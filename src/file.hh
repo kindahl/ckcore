@@ -23,7 +23,7 @@
 
 #pragma once
 
-namespace ckCore
+namespace ckcore
 {
     /**
      * @brief The virtual base class for using files.

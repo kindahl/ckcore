@@ -30,9 +30,9 @@ class StreamTestSuite : public CxxTest::TestSuite
 public:
     void testInStream()
     {
-        ckCore::FileInStream is1(ckT("data/file/8253bytes"));
-        ckCore::FileInStream fs(ckT("data/file/8253bytes"));
-        ckCore::BufferedInStream is2(fs);
+        ckcore::FileInStream is1(ckT("data/file/8253bytes"));
+        ckcore::FileInStream fs(ckT("data/file/8253bytes"));
+        ckcore::BufferedInStream is2(fs);
 
         for (int i = 0; i < 100; i++)
         {
@@ -43,11 +43,11 @@ public:
             unsigned char *buffer1 = new unsigned char[buffer_size];
             unsigned char *buffer2 = new unsigned char[buffer_size];
 
-            ckCore::tint64 read1 = 0,read2 = 0;
+            ckcore::tint64 read1 = 0,read2 = 0;
             while (!is1.Eos() && !is2.Eos())
             {
-                ckCore::tint64 res1 = is1.Read(buffer1,(ckCore::tuint32)buffer_size);
-                ckCore::tint64 res2 = is2.Read(buffer2,(ckCore::tuint32)buffer_size);
+                ckcore::tint64 res1 = is1.Read(buffer1,(ckcore::tuint32)buffer_size);
+                ckcore::tint64 res2 = is2.Read(buffer2,(ckcore::tuint32)buffer_size);
 
                 TS_ASSERT(res1 != -1);
                 TS_ASSERT(res2 != -1);
@@ -72,10 +72,10 @@ public:
 
     void testOutStream()
     {
-        ckCore::FileInStream is1(ckT("data/file/8253bytes"));
-        ckCore::FileInStream is2(ckT("data/file/new"));
-        ckCore::FileOutStream fs(ckT("data/file/new"));
-        ckCore::BufferedOutStream os(fs);
+        ckcore::FileInStream is1(ckT("data/file/8253bytes"));
+        ckcore::FileInStream is2(ckT("data/file/new"));
+        ckcore::FileOutStream fs(ckT("data/file/new"));
+        ckcore::BufferedOutStream os(fs);
 
         // Run 100 tests with different buffer sizes to capture buffer edge errors.
         for (int i = 0; i < 100; i++)
@@ -87,13 +87,13 @@ public:
             unsigned char *buffer1 = new unsigned char[buffer_size];
             unsigned char *buffer2 = new unsigned char[buffer_size];
 
-            ckCore::tint64 written = 0;
+            ckcore::tint64 written = 0;
             while (!is1.Eos())
             {
-                ckCore::tint64 res1 = is1.Read(buffer1,(ckCore::tuint32)buffer_size);
+                ckcore::tint64 res1 = is1.Read(buffer1,(ckcore::tuint32)buffer_size);
                 TS_ASSERT(res1 != -1);
 
-                ckCore::tint64 res2 = os.Write(buffer1,(ckCore::tuint32)res1);
+                ckcore::tint64 res2 = os.Write(buffer1,(ckcore::tuint32)res1);
                 TS_ASSERT(res2 != -1);
 
                 TS_ASSERT_EQUALS(res1,res2);
@@ -112,11 +112,11 @@ public:
             TS_ASSERT(is1.Open());
             TS_ASSERT(is2.Open());
 
-            ckCore::tint64 read1 = 0,read2 = 0;
+            ckcore::tint64 read1 = 0,read2 = 0;
             while (!is1.Eos() && !is2.Eos())
             {
-                ckCore::tint64 res1 = is1.Read(buffer1,(ckCore::tuint32)buffer_size);
-                ckCore::tint64 res2 = is2.Read(buffer2,(ckCore::tuint32)buffer_size);
+                ckcore::tint64 res1 = is1.Read(buffer1,(ckcore::tuint32)buffer_size);
+                ckcore::tint64 res2 = is2.Read(buffer2,(ckcore::tuint32)buffer_size);
 
                 TS_ASSERT(res1 != -1);
                 TS_ASSERT(res2 != -1);
@@ -134,7 +134,7 @@ public:
             TS_ASSERT(is1.Close());
             TS_ASSERT(is2.Close());
 
-            TS_ASSERT(ckCore::File::Remove(ckT("data/file/new")));
+            TS_ASSERT(ckcore::File::Remove(ckT("data/file/new")));
 
             delete [] buffer1;
             delete [] buffer2;
@@ -143,31 +143,31 @@ public:
 
     void testCrcStream()
     {
-        ckCore::FileInStream is1(ckT("data/file/8253bytes"));
+        ckcore::FileInStream is1(ckT("data/file/8253bytes"));
         TS_ASSERT(is1.Open());
-        ckCore::FileInStream is2(ckT("data/file/123bytes"));
+        ckcore::FileInStream is2(ckT("data/file/123bytes"));
         TS_ASSERT(is2.Open());
-        ckCore::FileInStream is3(ckT("data/file/53bytes"));
+        ckcore::FileInStream is3(ckT("data/file/53bytes"));
         TS_ASSERT(is3.Open());
-        ckCore::FileInStream is4(ckT("data/file/0bytes"));
+        ckcore::FileInStream is4(ckT("data/file/0bytes"));
         TS_ASSERT(is4.Open());
 
         // CRC-32.
-        ckCore::CrcStream crc32(ckCore::CrcStream::ckCRC_32);
+        ckcore::CrcStream crc32(ckcore::CrcStream::ckCRC_32);
 
-        ckCore::Stream::Copy(is1,crc32);
+        ckcore::Stream::Copy(is1,crc32);
         TS_ASSERT_EQUALS(crc32.Checksum(),0x33d5a2ec);
         crc32.Reset();
 
-        ckCore::Stream::Copy(is2,crc32);
+        ckcore::Stream::Copy(is2,crc32);
         TS_ASSERT_EQUALS(crc32.Checksum(),0xfa2e73f4);
         crc32.Reset();
 
-        ckCore::Stream::Copy(is3,crc32);
+        ckcore::Stream::Copy(is3,crc32);
         TS_ASSERT_EQUALS(crc32.Checksum(),0x30e06b16);
         crc32.Reset();
 
-        ckCore::Stream::Copy(is4,crc32);
+        ckcore::Stream::Copy(is4,crc32);
         TS_ASSERT_EQUALS(crc32.Checksum(),0x00000000);
         crc32.Reset();
 
@@ -181,21 +181,21 @@ public:
         is4.Open();
 
         // CRC-16 (CCITT polynomial).
-        ckCore::CrcStream crc16udf(ckCore::CrcStream::ckCRC_CCITT);
+        ckcore::CrcStream crc16udf(ckcore::CrcStream::ckCRC_CCITT);
 
-        ckCore::Stream::Copy(is1,crc16udf);
+        ckcore::Stream::Copy(is1,crc16udf);
         TS_ASSERT_EQUALS(crc16udf.Checksum(),0x8430);
         crc16udf.Reset();
 
-        ckCore::Stream::Copy(is2,crc16udf);
+        ckcore::Stream::Copy(is2,crc16udf);
         TS_ASSERT_EQUALS(crc16udf.Checksum(),0x8bfe);
         crc16udf.Reset();
 
-        ckCore::Stream::Copy(is3,crc16udf);
+        ckcore::Stream::Copy(is3,crc16udf);
         TS_ASSERT_EQUALS(crc16udf.Checksum(),0xef2a);
         crc16udf.Reset();
 
-        ckCore::Stream::Copy(is4,crc16udf);
+        ckcore::Stream::Copy(is4,crc16udf);
         TS_ASSERT_EQUALS(crc16udf.Checksum(),0x0000);
         crc16udf.Reset();
 
@@ -214,21 +214,21 @@ public:
         is4.Open();
 
         // CRC-16 (IBM polynomial).
-        ckCore::CrcStream crc16ibm(ckCore::CrcStream::ckCRC_16);
+        ckcore::CrcStream crc16ibm(ckcore::CrcStream::ckCRC_16);
 
-        ckCore::Stream::Copy(is1,crc16ibm);
+        ckcore::Stream::Copy(is1,crc16ibm);
         TS_ASSERT_EQUALS(crc16ibm.Checksum(),0x398e);
         crc16ibm.Reset();
 
-        ckCore::Stream::Copy(is2,crc16ibm);
+        ckcore::Stream::Copy(is2,crc16ibm);
         TS_ASSERT_EQUALS(crc16ibm.Checksum(),0xd3bb);
         crc16ibm.Reset();
 
-        ckCore::Stream::Copy(is3,crc16ibm);
+        ckcore::Stream::Copy(is3,crc16ibm);
         TS_ASSERT_EQUALS(crc16ibm.Checksum(),0xb7d4);
         crc16ibm.Reset();
 
-        ckCore::Stream::Copy(is4,crc16ibm);
+        ckcore::Stream::Copy(is4,crc16ibm);
         TS_ASSERT_EQUALS(crc16ibm.Checksum(),0x0000);
         crc16ibm.Reset();
     }
