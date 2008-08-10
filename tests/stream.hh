@@ -23,6 +23,7 @@
 #include "../src/filestream.hh"
 #include "../src/bufferedstream.hh"
 #include "../src/crcstream.hh"
+#include "../src/nullstream.hh"
 #include "../src/system.hh"
 
 class StreamTestSuite : public CxxTest::TestSuite
@@ -231,6 +232,19 @@ public:
         ckcore::Stream::copy(is4,crc16ibm);
         TS_ASSERT_EQUALS(crc16ibm.Checksum(),0x0000);
         crc16ibm.Reset();
+    }
+
+    void testNullStream()
+    {
+        ckcore::NullStream ns;
+        ns.Write(NULL,42);
+        TS_ASSERT_EQUALS(ns.Written(),42);
+        
+        ns.Write(NULL,1);
+        TS_ASSERT_EQUALS(ns.Written(),43);
+        
+        ns.Write(NULL,754);
+        TS_ASSERT_EQUALS(ns.Written(),797);
     }
 };
 
