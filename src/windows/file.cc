@@ -71,6 +71,13 @@ namespace ckcore
 										  FILE_SHARE_READ,NULL,CREATE_ALWAYS,
 										  FILE_ATTRIBUTE_ARCHIVE,NULL);
                 break;
+
+			case ckOPEN_READWRITE:
+				file_handle_ = CreateFile(file_path_.Name().c_str(),
+										  GENERIC_WRITE,
+										  FILE_SHARE_READ,NULL,OPEN_EXISTING,
+										  FILE_ATTRIBUTE_ARCHIVE,NULL);
+				break;
         }
 
         return file_handle_ != INVALID_HANDLE_VALUE;
@@ -435,6 +442,7 @@ namespace ckcore
 				return Exist(file_path);
 
             case ckOPEN_WRITE:
+			case ckOPEN_READWRITE:
 				unsigned long attr = GetFileAttributes(file_path.Name().c_str());
 				return (attr != -1) && !(attr & FILE_ATTRIBUTE_READONLY);
         }

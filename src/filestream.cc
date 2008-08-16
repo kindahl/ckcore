@@ -59,7 +59,7 @@ namespace ckcore
      * @return If positioned at end of the stream true is returned,
      *         otherwise false is returned.
      */
-    bool FileInStream::Eos()
+    bool FileInStream::End()
     {
         return read_ >= size_;
     }
@@ -71,16 +71,30 @@ namespace ckcore
      *                      move.
      * @param [in] whence Specifies what to use as base when calculating the
      *                    final file pointer position.
-     * @return If successfull the resulting file pointer location is returned,
-     *         otherwise -1 is returned.
+     * @return If successfull true is returned, otherwise false is returned.
      */
-	tint64 FileInStream::Seek(tint64 distance,FileBase::FileWhence whence)
+	bool FileInStream::Seek(tuint32 distance,StreamWhence whence)
 	{
-		tint64 result = file_.Seek(distance,whence);
-		if (result != -1)
-			read_ = result;
+		FileBase::FileWhence file_whence;
+		switch (whence)
+		{
+			case ckSTREAM_CURRENT:
+				file_whence = FileBase::ckFILE_CURRENT;
+				break;
 
-		return result;
+			default:
+				file_whence = FileBase::ckFILE_BEGIN;
+				break;
+		}
+
+		tint64 result = file_.Seek(distance,file_whence);
+		if (result != -1)
+		{
+			read_ = result;
+			return true;
+		}
+
+		return false;
 	}
 
     /**
@@ -99,6 +113,16 @@ namespace ckcore
 
         return result;
     }
+
+	/**
+	 * Returns the size of the file provoding data for the stream.
+	 * @return If successfull the size in bytes of the file is returned,
+	 *		   if unsuccessfull -1 is returned.
+	 */
+	tint64 FileInStream::Size()
+	{
+		return size_;
+	}
 
     /**
      * Constructs a FileOutStream object.

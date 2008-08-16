@@ -38,7 +38,7 @@ namespace ckcore
 
 #ifdef _WINDOWS
 #ifdef _UNICODE
-			_vsnwprintf_s(buffer,size,size/sizeof(tchar) - 1,format,ap);
+			_vsnwprintf_s(buffer,size/sizeof(tchar),size/sizeof(tchar) - 1,format,ap);
 #else
 			_vsnprintf_s(buffer,size,size - 1,format,ap);
 #endif
@@ -123,6 +123,33 @@ namespace ckcore
 			sprintf(global_buffer,sizeof(global_buffer),ckT("%lu"),value);
 #endif
 			return global_buffer;
+		}
+
+		/**
+         * Converts the specified big endian unsigned 32-bit integer value into
+         * a little endian 32-bit unsigned integer value.
+         * @param [in] value The integer value to convert.
+         * @return The converted integer value.
+         */
+		tuint32 be_to_le32(tuint32 value)
+		{
+			unsigned char *temp = (unsigned char *)&value;
+
+			return ((tuint32)temp[0] << 24) | ((tuint32)temp[1] << 16) |
+				   ((tuint32)temp[2] <<  8) | temp[3];
+		}
+
+		/**
+         * Converts the specified big endian unsigned 16-bit integer value into
+         * a little endian 16-bit unsigned integer value.
+         * @param [in] value The integer value to convert.
+         * @return The converted integer value.
+         */
+		tuint16 be_to_le16(tuint16 value)
+		{
+			unsigned char *temp = (unsigned char *)&value;
+
+			return ((tuint16)temp[0] << 8) | temp[1];
 		}
     };
 };

@@ -48,9 +48,11 @@ namespace ckcore
         BufferedInStream(InStream &stream,tuint32 buffer_size);
         virtual ~BufferedInStream();
 
-        bool Eos();
+        bool End();
+		bool Seek(tuint32 distance,StreamWhence whence);
 
         tint64 Read(void *buffer,tuint32 count);
+		tint64 Size();
     };
 
     /**

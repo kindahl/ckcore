@@ -32,7 +32,7 @@ namespace ckcore
     {
         buffer_size_ = System::Cache(System::ckLEVEL_1);
         if (buffer_size_ == 0)
-            buffer_size_ = 4096;
+            buffer_size_ = 8192;
 
         buffer_ = new unsigned char[buffer_size_];
 
@@ -79,10 +79,57 @@ namespace ckcore
      * @return If positioned at end of the stream true is returned,
      *         otherwise false is returned.
      */
-    bool BufferedInStream::Eos()
+    bool BufferedInStream::End()
     {
-        return stream_.Eos() && buffer_data_ == 0;
+        return stream_.End() && buffer_data_ == 0;
     }
+
+	/**
+     * Repositions the file pointer to the specified offset accoding to the
+     * whence directive in the stream. Please note that the seeking performance
+	 * is very poor since it calls the read function and throws the data.
+     * @param [in] distance The number of bytes that the stream pointer should
+     *                      move.
+     * @param [in] whence Specifies what to use as base when calculating the
+     *                    final stream pointer position.
+     * @return If successfull true is returned, otherwise false is returned.
+     */
+	bool BufferedInStream::Seek(tuint32 distance,StreamWhence whence)
+	{
+		// Reset the internal state if necessary.
+		if (whence == ckSTREAM_BEGIN)
+		{
+			if (!stream_.Seek(0,ckSTREAM_BEGIN))
+				return false;
+
+			buffer_pos_ = 0;
+			buffer_data_ = 0;
+		}
+
+		// Optimization.
+		if (distance == 0)
+			return true;
+
+		// Perform the seek operation.
+		tuint32 buffer_size = buffer_size_ == 0 ? 8192 : buffer_size_;
+		unsigned char *temp_buffer = new unsigned char[buffer_size];
+		while (distance > 0)
+		{
+			tuint32 read = distance > buffer_size ? buffer_size : distance;
+
+			tint64 res = Read(temp_buffer,read);
+			if (res == -1)
+			{
+				delete [] temp_buffer;
+				return false;
+			}
+
+			distance -= (tuint32)res;
+		}
+
+		delete [] temp_buffer;
+		return true;
+	}
 
     /**
      * Reads raw data from the stream.
@@ -112,7 +159,7 @@ namespace ckcore
             buffer_data_ = 0;
 
             // Fetch more data from the input stream.
-            if (stream_.Eos())
+            if (stream_.End())
                 return pos;
 
             tint64 result = stream_.Read(buffer_,buffer_size_);
@@ -128,6 +175,16 @@ namespace ckcore
 
         return pos + count;
     }
+
+	/**
+	 * Calculates the size of the data provided by the stream.
+	 * @return If successfull the size in bytes of the stream data is returned,
+	 *		   if unsuccessfull -1 is returned.
+	 */
+	tint64 BufferedInStream::Size()
+	{
+		return stream_.Size();
+	}
 
     /**
      * Constructs an BufferedOutStream object. The default internal buffer size

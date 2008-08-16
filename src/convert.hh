@@ -35,5 +35,8 @@ namespace ckcore
 		const tchar *ui32_to_str(tuint32 value);
 		const tchar *i64_to_str(tint64 value);
 		const tchar *ui64_to_str(tuint64 value);
+
+		tuint32 be_to_le32(tuint32 value);
+		tuint16 be_to_le16(tuint16 value);
     };
 };

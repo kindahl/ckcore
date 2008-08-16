@@ -44,6 +44,8 @@ namespace ckcore
     typedef unsigned __int64 tuint64;
     typedef long tint32;
     typedef unsigned long tuint32;
+	typedef short tint16;
+	typedef unsigned short tuint16;
 #endif
 
 #ifdef _LINUX
@@ -52,6 +54,8 @@ namespace ckcore
     typedef unsigned long long tuint64;
     typedef int tint32;
     typedef unsigned int tuint32;
+	typedef short tint16;
+	typedef unsigned short tuint16;
     typedef std::string tstring;
 #ifndef ckT
 #define ckT

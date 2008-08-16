@@ -63,6 +63,10 @@ namespace ckcore
             case ckOPEN_WRITE:
                 file_handle_ = open(file_path_.Name().c_str(),O_CREAT | O_WRONLY,S_IRUSR | S_IWUSR);
                 break;
+
+			case ckOPEN_READWRITE:
+				file_handle_ = open(file_path_.Name().c_str(),O_RDWR,S_IRUSR | S_IWUSR);
+                break;
         }
 
         return file_handle_ != -1;
@@ -377,6 +381,9 @@ namespace ckcore
 
             case ckOPEN_WRITE:
                 return access(file_path.Name().c_str(),W_OK) == 0;
+
+			case ckOPEN_READWRITE:
+				return access(file_path.Name().c_str(),W_OK | R_OK) == 0;
         }
 
         return false;

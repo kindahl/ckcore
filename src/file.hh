@@ -37,7 +37,8 @@ namespace ckcore
         enum FileMode
         {
             ckOPEN_READ,
-            ckOPEN_WRITE
+            ckOPEN_WRITE,
+			ckOPEN_READWRITE
         };
 
         /**

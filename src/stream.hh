@@ -23,6 +23,8 @@
 
 #pragma once
 #include "types.hh"
+#include "progress.hh"
+#include "progresser.hh"
 
 namespace ckcore
 {
@@ -32,8 +34,18 @@ namespace ckcore
     class InStream
     {
     public:
+		/**
+         * Defines directives what to use as base offset when performing seek
+         * operations.
+         */
+		enum StreamWhence
+		{
+			ckSTREAM_CURRENT,
+            ckSTREAM_BEGIN
+		};
+
         /**
-         * Readsi raw data from the stream.
+         * Reads raw data from the stream.
          * @param [in] buffer Pointer to beginning of buffer to read to.
          * @param [in] count The number of bytes to read.
          * @return If the operation failed -1 is returned, otherwise the
@@ -42,12 +54,30 @@ namespace ckcore
          */
         virtual tint64 Read(void *buffer,tuint32 count) = 0;
 
+		/**
+		 * Calculates the size of the data provided by the stream.
+		 * @return If successfull the size in bytes of the stream data is returned,
+		 *		   if unsuccessfull -1 is returned.
+		 */
+		virtual tint64 Size() = 0;
+
         /**
          * Checks if the end of the stream has been reached.
          * @return If positioned at end of the stream true is returned,
          *         otherwise false is returned.
          */
-        virtual bool Eos() = 0;
+        virtual bool End() = 0;
+
+		/**
+		 * Repositions the internal stream pointer to the specified offset accoding
+		 * to the whence directive.
+		 * @param [in] distance The number of bytes that the stream pointer should
+		 *                      move.
+		 * @param [in] whence Specifies what to use as base when calculating the
+		 *                    final stream pointer position.
+		 * @return If successfull true is returned, oterwise false is returned.
+		 */
+		virtual bool Seek(tuint32 distance,StreamWhence whence) = 0;
     };
 
     /**
@@ -68,9 +98,11 @@ namespace ckcore
         virtual tint64 Write(void *buffer,tuint32 count) = 0;
     };
 
-    namespace Stream
+    namespace stream
     {
         bool copy(InStream &from,OutStream &to);
+		bool copy(InStream &from,OutStream &to,Progress &progress);
+		bool copy(InStream &from,OutStream &to,Progresser &progresser);
     };
 };
 

@@ -44,10 +44,11 @@ namespace ckcore
 
         bool Open();
         bool Close();
-        bool Eos();
+        bool End();
+		bool Seek(tuint32 distance,StreamWhence whence);
 
-		tint64 Seek(tint64 distance,FileBase::FileWhence whence);
         tint64 Read(void *buffer,tuint32 count);
+		tint64 Size();
     };
 
     /**
