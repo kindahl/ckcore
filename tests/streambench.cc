@@ -32,7 +32,7 @@ int main(int argc,const char *argv[])
     ckcore::tuint64 last_read = 0;
 
     unsigned char buffer[100];
-    while (!is.Eos())
+    while (!is.End())
     {
         ckcore::tint64 res = is.Read(buffer,sizeof(buffer));
         if (res == -1)

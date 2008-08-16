@@ -111,9 +111,21 @@ namespace ckcore
 		d = t4;
 #endif
 #else
-        asm("cpuid"
+        /*asm("cpuid"
             :"=a"(a),
              "=b"(b),
+             "=c"(c),
+             "=d"(d)
+            :"a"(func),
+             "c"(arg));*/
+
+		// fPIC compatible version.
+        asm("pushl %%ebx\n"
+			"cpuid\n"
+			"movl %%ebx,%1\n"
+			"popl %%ebx\n"
+            :"=a"(a),
+             "=r"(b),
              "=c"(c),
              "=d"(d)
             :"a"(func),

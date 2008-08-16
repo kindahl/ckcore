@@ -45,20 +45,20 @@ public:
 		TS_ASSERT(!ckcore::string::compare(str41,str42));
 
 		const ckcore::tchar *str51 = ckT("4294967295");
-		const ckcore::tchar *str52 = ckcore::convert::ui32_to_str(4294967295);
+		const ckcore::tchar *str52 = ckcore::convert::ui32_to_str(4294967295UL);
 		TS_ASSERT(!ckcore::string::compare(str51,str52));
 
 		// Test 64-bit integer values.
 		const ckcore::tchar *str61 = ckT("9223372036854775807");
-		const ckcore::tchar *str62 = ckcore::convert::i64_to_str(9223372036854775807);
+		const ckcore::tchar *str62 = ckcore::convert::i64_to_str(9223372036854775807LL);
 		TS_ASSERT(!ckcore::string::compare(str61,str62));
 
 		const ckcore::tchar *str71 = ckT("-9223372036854775807");
-		const ckcore::tchar *str72 = ckcore::convert::i64_to_str(-9223372036854775807);
+		const ckcore::tchar *str72 = ckcore::convert::i64_to_str(-9223372036854775807LL);
 		TS_ASSERT(!ckcore::string::compare(str71,str72));
 
 		const ckcore::tchar *str81 = ckT("18446744073709551615");
-		const ckcore::tchar *str82 = ckcore::convert::ui64_to_str(18446744073709551615);
+		const ckcore::tchar *str82 = ckcore::convert::ui64_to_str(18446744073709551615ULL);
 		TS_ASSERT(!ckcore::string::compare(str81,str82));
 	}
 };

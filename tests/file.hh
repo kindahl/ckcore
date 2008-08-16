@@ -59,6 +59,33 @@ public:
         TS_ASSERT(!file2.Test());
     }
 
+	void testAppend()
+	{
+		ckcore::File file1(ckT("data/file/new1"));
+		ckcore::File file2(ckT("data/file/new2"));
+
+		TS_ASSERT(file1.Open(ckcore::FileBase::ckOPEN_WRITE));
+		TS_ASSERT(file2.Open(ckcore::FileBase::ckOPEN_WRITE));
+		TS_ASSERT(file1.Write("1234",4) != -1);
+		TS_ASSERT(file2.Write("1234",4) != -1);
+		TS_ASSERT(file1.Close());
+		TS_ASSERT(file2.Close());
+
+		TS_ASSERT(file1.Open(ckcore::FileBase::ckOPEN_WRITE));
+		TS_ASSERT(file2.Open(ckcore::FileBase::ckOPEN_READWRITE));
+		TS_ASSERT(file2.Seek(0,ckcore::FileBase::ckFILE_END) != -1);
+		TS_ASSERT(file1.Write("5678",4) != -1);
+		TS_ASSERT(file2.Write("5678",4) != -1);
+		TS_ASSERT(file1.Close());
+		TS_ASSERT(file2.Close());
+
+		TS_ASSERT_EQUALS(file1.Size(),4);
+		TS_ASSERT_EQUALS(file2.Size(),8);
+
+		TS_ASSERT(file1.Remove());
+		TS_ASSERT(file2.Remove());
+	}
+
     void testReadWrite()
     {
         ckcore::File file(ckT("data/file/new"));

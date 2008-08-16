@@ -102,7 +102,7 @@ namespace ckcore
 #ifdef _WINDOWS
 			sprintf(global_buffer,sizeof(global_buffer),ckT("%I64d"),value);
 #else
-			sprintf(global_buffer,sizeof(global_buffer),ckT("%ld"),value);
+			sprintf(global_buffer,sizeof(global_buffer),ckT("%lld"),value);
 #endif
 			return global_buffer;
 		}
@@ -120,7 +120,7 @@ namespace ckcore
 #ifdef _WINDOWS
 			sprintf(global_buffer,sizeof(global_buffer),ckT("%I64u"),value);
 #else
-			sprintf(global_buffer,sizeof(global_buffer),ckT("%lu"),value);
+			sprintf(global_buffer,sizeof(global_buffer),ckT("%llu"),value);
 #endif
 			return global_buffer;
 		}
