@@ -151,6 +151,24 @@ namespace ckcore
 
 			return ((tuint16)temp[0] << 8) | temp[1];
 		}
+
+		/**
+		 * Converts a tm structure into DOS date and time format.
+		 * @param [in] tm The input time structure.
+		 * @param [out] dos_date The date in DOS format.
+		 * @param [out] dos_time The time in DOS format.
+		 */
+		void tm_to_dostime(struct tm &time,unsigned short &dos_date,
+						   unsigned short &dos_time)
+		{
+			dos_date = time.tm_mday;
+			dos_date |= (unsigned short)(time.tm_mon + 1) << 5;
+			dos_date |= (unsigned short)(time.tm_year - 80) << 9;
+
+			dos_time = time.tm_sec >> 1;
+			dos_time |= (unsigned short)time.tm_min << 5;
+			dos_time |= (unsigned short)time.tm_hour << 11;
+		}
     };
 };
 

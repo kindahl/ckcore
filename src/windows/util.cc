@@ -56,6 +56,9 @@ namespace ckcore
 		}
 
 		time.tm_yday = days + time.tm_mday;
-		time.tm_isdst = -1;	// FIXME: Maybe this value can be obtained.
+
+		// Get day light saving attribute.
+		TIME_ZONE_INFORMATION tzi;
+		time.tm_isdst = GetTimeZoneInformation(&tzi) - 1;
 	}
 };

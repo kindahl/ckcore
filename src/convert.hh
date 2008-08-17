@@ -38,5 +38,8 @@ namespace ckcore
 
 		tuint32 be_to_le32(tuint32 value);
 		tuint16 be_to_le16(tuint16 value);
+
+		void tm_to_dostime(struct tm &time,unsigned short &dos_date,
+						   unsigned short &dos_time);
     };
 };

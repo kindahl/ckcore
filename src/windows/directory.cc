@@ -241,7 +241,7 @@ namespace ckcore
      */
     bool Directory::Create(const Path &dir_path)
     {
-        tstring cur_path = dir_path.RootName();
+		tstring cur_path;
 
         Path::Iterator it;
         for (it = dir_path.Begin(); it != dir_path.End(); it++)

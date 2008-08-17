@@ -280,16 +280,23 @@ namespace ckcore
 				return false;
 			}
 
+			// Convert to local file time.
+			FILETIME laccess_ftime,lmodify_ftime,lcreate_ftime;
+			if (FileTimeToLocalFileTime(&access_ftime,&laccess_ftime) == FALSE)
+				return false;
+			if (FileTimeToLocalFileTime(&modify_ftime,&lmodify_ftime) == FALSE)
+				return false;
+			if (FileTimeToLocalFileTime(&create_ftime,&lcreate_ftime) == FALSE)
+				return false;
+
 			// Convert to system time.
 			SYSTEMTIME access_stime,modify_stime,create_stime;
 
-			if (FileTimeToSystemTime(&access_ftime,&access_stime) == FALSE)
+			if (FileTimeToSystemTime(&laccess_ftime,&access_stime) == FALSE)
 				return false;
-
-			if (FileTimeToSystemTime(&modify_ftime,&modify_stime) == FALSE)
+			if (FileTimeToSystemTime(&lmodify_ftime,&modify_stime) == FALSE)
 				return false;
-
-			if (FileTimeToSystemTime(&create_ftime,&create_stime) == FALSE)
+			if (FileTimeToSystemTime(&lcreate_ftime,&create_stime) == FALSE)
 				return false;
 
 			// Convert to struct tm.
@@ -405,16 +412,25 @@ namespace ckcore
 		if (!result)
 			return false;
 
+		// Convert to local file time.
+		FILETIME laccess_ftime,lmodify_ftime,lcreate_ftime;
+		if (FileTimeToLocalFileTime(&access_ftime,&laccess_ftime) == FALSE)
+			return false;
+		if (FileTimeToLocalFileTime(&modify_ftime,&lmodify_ftime) == FALSE)
+			return false;
+		if (FileTimeToLocalFileTime(&create_ftime,&lcreate_ftime) == FALSE)
+			return false;
+
 		// Convert to system time.
 		SYSTEMTIME access_stime,modify_stime,create_stime;
 
-		if (FileTimeToSystemTime(&access_ftime,&access_stime) == FALSE)
+		if (FileTimeToSystemTime(&laccess_ftime,&access_stime) == FALSE)
 			return false;
 
-		if (FileTimeToSystemTime(&modify_ftime,&modify_stime) == FALSE)
+		if (FileTimeToSystemTime(&lmodify_ftime,&modify_stime) == FALSE)
 			return false;
 
-		if (FileTimeToSystemTime(&create_ftime,&create_stime) == FALSE)
+		if (FileTimeToSystemTime(&lcreate_ftime,&create_stime) == FALSE)
 			return false;
 
 		// Convert to struct tm.
