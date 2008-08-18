@@ -40,6 +40,15 @@ namespace ckcore
         Close();
     }
 
+	/**
+     * Returns the full file path name.
+     * @return The full file path name.
+     */
+	const tstring &File::Name() const
+	{
+		return file_path_.Name();
+	}
+
     /**
      * Opens the file in the requested mode.
      * @param [in] file_mode Determines how the file should be opened. In write
@@ -516,4 +525,20 @@ namespace ckcore
 	    
 		return result;
     }
+
+	/**
+	 * Creates a File object of a temporary file. The file path is generated
+	 * to be placed in the systems default temporary directory.
+	 * @return File object of temp file.
+	 */
+	File File::Temp()
+	{
+		tchar dir_name[246];
+		GetTempPath(sizeof(dir_name) / sizeof(tchar),dir_name);
+
+		tchar tmp_name[260];
+		GetTempFileName(dir_name,ckT("tmp"),0,tmp_name);
+
+		return File(tmp_name);
+	}
 };

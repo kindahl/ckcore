@@ -19,6 +19,7 @@
 #include "stdafx.hh"
 #include "directory.hh"
 #include "util.hh"
+#include "../convert.hh"
 
 namespace ckcore
 {
@@ -172,6 +173,15 @@ namespace ckcore
         dir_handles_.clear();
     }
 
+	/**
+     * Returns the full directory path name.
+     * @return The full directory path name.
+     */
+	const tstring &Directory::Name() const
+	{
+		return dir_path_.Name();
+	}
+
     /**
      * Creates an iterator pointing to the first file or directory in the
      * current directory.
@@ -315,4 +325,33 @@ namespace ckcore
 
 		return true;
     }
+
+	/**
+	 * Creates a Directory object of a temporary directory. The directory path is
+	 * generated to be placed in the systems default temporary directory.
+	 * @return Directory object of temp directory.
+	 */
+	Directory Directory::Temp()
+	{
+		tchar dir_name[246];
+		if (GetTempPath(sizeof(dir_name) / sizeof(tchar),dir_name) == 0)
+			dir_name[0] = '\0';
+
+		tchar tmp_name[260];
+		if (GetTempFileName(dir_name,ckT("tmp"),0,tmp_name) == 0)
+		{
+			// Fall back on random name generation.
+			lstrcpy(tmp_name,dir_name);
+			lstrcat(tmp_name,ckT("file"));
+			lstrcat(tmp_name,convert::ui32_to_str((tuint32)rand()));
+			lstrcat(tmp_name,ckT(".tmp"));
+		}
+
+		Path tmp_path(tmp_name);
+
+		if (File::Exist(tmp_path))
+			File::Remove(tmp_path);
+
+		return Directory(tmp_path);
+	}
 };

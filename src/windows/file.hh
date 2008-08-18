@@ -41,6 +41,8 @@ namespace ckcore
         File(const Path &file_path);
         ~File();
 
+		const tstring &Name() const;
+
         // Functions for internal manipulation.
         bool Open(FileMode file_mode);
         bool Close();
@@ -73,5 +75,6 @@ namespace ckcore
         static bool Access(const Path &file_path,FileMode file_mode);
 		static bool Hidden(const Path &file_path);
         static tint64 Size(const Path &file_path);
+		static File Temp();
     };
 };

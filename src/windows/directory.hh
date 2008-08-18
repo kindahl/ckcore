@@ -71,6 +71,8 @@ namespace ckcore
         Directory(const Path &dir_path);
         ~Directory();
 
+		const tstring &Name() const;
+
         Iterator Begin() const;
         Iterator End() const;
 
@@ -85,6 +87,7 @@ namespace ckcore
         static bool Exist(const Path &dir_path);
         static bool Time(const Path &dir_path,struct tm &access_time,
                          struct tm &modify_time,struct tm &create_time);
+		static Directory Temp();
     };
 };
 
