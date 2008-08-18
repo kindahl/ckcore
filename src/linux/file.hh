@@ -57,6 +57,7 @@ namespace ckcore
         bool Time(struct tm &access_time,struct tm &modify_time,
                   struct tm &create_time) const;
         bool Access(FileMode file_mode) const;
+		bool Hidden() const;
         tint64 Size();
 
         // Static (conveniance and performance) functions, they are not allowed
@@ -69,6 +70,7 @@ namespace ckcore
         static bool Time(const Path &file_path,struct tm &access_time,
                          struct tm &modify_time,struct tm &create_time);
         static bool Access(const Path &file_path,FileMode file_mode);
+		static bool Hidden(const Path &file_path);
         static tint64 Size(const Path &file_path);
     };
 };
