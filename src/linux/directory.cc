@@ -20,6 +20,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <sys/stat.h>
+#include "../convert.hh"
 #include "directory.hh"
 
 namespace ckcore
@@ -153,6 +154,15 @@ namespace ckcore
         dir_handles_.clear();
     }
 
+	/**
+	 * Returns the full directory path name.
+	 * @return The full directory path name.
+	 */
+	const tstring &Directory::Name() const
+	{
+		return dir_path_.Name();
+	}
+
     /**
      * Creates an iterator pointing to the first file or directory in the
      * current directory.
@@ -284,5 +294,23 @@ namespace ckcore
 
         return true;
     }
+
+	Directory Directory::Temp()
+	{
+		tchar *tmp_name = tmpnam(NULL);
+        if (tmp_name != NULL)
+        {
+            return Directory(tmp_name);
+        }
+        else
+        {
+            tchar tmp_name2[260];
+            strcpy(tmp_name2,ckT("/tmp/file"));
+            strcat(tmp_name2,convert::ui32_to_str(rand()));
+            strcat(tmp_name2,ckT(".tmp"));
+
+            return Directory(tmp_name2);
+        }
+	}
 };
 

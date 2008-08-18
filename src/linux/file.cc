@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include "../convert.hh"
 #include "file.hh"
 
 namespace ckcore
@@ -39,6 +40,15 @@ namespace ckcore
     {
         Close();
     }
+
+	/**
+	 * Returns the full file path name.
+	 * @return The full file path name.
+	 */
+	const tstring &File::Name() const
+	{
+		return file_path_.Name();
+	}
 
     /**
      * Opens the file in the requested mode.
@@ -427,5 +437,23 @@ namespace ckcore
 
         return file_stat.st_size;
     }
+
+	File File::Temp()
+	{
+		tchar *tmp_name = tmpnam(NULL);
+		if (tmp_name != NULL)
+		{
+			return File(tmp_name);
+		}
+		else
+		{
+			tchar tmp_name2[260];
+			strcpy(tmp_name2,ckT("/tmp/file"));
+			strcat(tmp_name2,convert::ui32_to_str(rand()));
+			strcat(tmp_name2,ckT(".tmp"));
+
+			return File(tmp_name2);
+		}
+	}
 };
 
