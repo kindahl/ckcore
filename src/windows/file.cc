@@ -323,6 +323,16 @@ namespace ckcore
         return Access(file_path_,file_mode);
     }
 
+	/**
+	 * Checks if the file is hidden or not.
+	 * @return If successfull and if the file is hidden true is returned,
+	 *		   otherwise false is returned.
+	 */
+	bool File::Hidden() const
+	{
+		return Hidden(file_path_);
+	}
+
     /**
      * Calcualtes the size of the file.
      * @return If successfull the size of the file, otherwise -1 is returned.
@@ -465,6 +475,20 @@ namespace ckcore
 
         return false;
     }
+
+	/**
+	 * Checks if the specified file is hidden or not.
+	 * @return If successfull and if the file is hidden true is returned,
+	 *		   otherwise false is returned.
+	 */
+	bool File::Hidden(const Path &file_path)
+	{
+		unsigned long attr = GetFileAttributes(file_path.Name().c_str());
+		if (attr == INVALID_FILE_ATTRIBUTES)
+			return false;
+
+		return (attr & FILE_ATTRIBUTE_HIDDEN) != 0;
+	}
 
     /**
      * Calcualtes the size of the specified file.
