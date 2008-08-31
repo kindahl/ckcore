@@ -17,9 +17,9 @@
  */
 
 #include "stdafx.hh"
-#include "directory.hh"
 #include "util.hh"
-#include "../convert.hh"
+#include "ckcore/convert.hh"
+#include "ckcore/directory.hh"
 
 namespace ckcore
 {

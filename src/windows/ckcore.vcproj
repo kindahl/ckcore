@@ -43,7 +43,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;CKCORE_EXPORTS"
+				AdditionalIncludeDirectories="..\..\include\"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;CKCORE_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -107,7 +108,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;CKCORE_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;CKCORE_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -170,7 +171,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;CKCORE_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;CKCORE_EXPORTS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
@@ -247,7 +248,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;CKCORE_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;CKCORE_EXPORTS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
@@ -575,70 +576,74 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\bufferedstream.hh"
+				RelativePath="..\..\include\ckcore\bufferedstream.hh"
 				>
 			</File>
 			<File
-				RelativePath="..\convert.hh"
+				RelativePath="..\..\include\ckcore\convert.hh"
 				>
 			</File>
 			<File
-				RelativePath="..\crcstream.hh"
+				RelativePath="..\..\include\ckcore\crcstream.hh"
 				>
 			</File>
 			<File
-				RelativePath="..\directory.hh"
+				RelativePath="..\..\include\ckcore\directory.hh"
 				>
 			</File>
 			<File
-				RelativePath="..\file.hh"
+				RelativePath="..\..\include\ckcore\file.hh"
 				>
 			</File>
 			<File
-				RelativePath="..\filestream.hh"
+				RelativePath="..\..\include\ckcore\filestream.hh"
 				>
 			</File>
 			<File
-				RelativePath="..\nullstream.hh"
+				RelativePath="..\..\include\ckcore\log.hh"
 				>
 			</File>
 			<File
-				RelativePath="..\path.hh"
+				RelativePath="..\..\include\ckcore\nullstream.hh"
 				>
 			</File>
 			<File
-				RelativePath="..\progress.hh"
+				RelativePath="..\..\include\ckcore\path.hh"
 				>
 			</File>
 			<File
-				RelativePath="..\progresser.hh"
+				RelativePath="..\..\include\ckcore\progress.hh"
 				>
 			</File>
 			<File
-				RelativePath="..\stream.hh"
+				RelativePath="..\..\include\ckcore\progresser.hh"
 				>
 			</File>
 			<File
-				RelativePath="..\string.hh"
+				RelativePath="..\..\include\ckcore\stream.hh"
 				>
 			</File>
 			<File
-				RelativePath="..\system.hh"
+				RelativePath="..\..\include\ckcore\string.hh"
 				>
 			</File>
 			<File
-				RelativePath="..\types.hh"
+				RelativePath="..\..\include\ckcore\system.hh"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\ckcore\types.hh"
 				>
 			</File>
 			<Filter
 				Name="windows"
 				>
 				<File
-					RelativePath=".\directory.hh"
+					RelativePath="..\..\include\ckcore\windows\directory.hh"
 					>
 				</File>
 				<File
-					RelativePath=".\file.hh"
+					RelativePath="..\..\include\ckcore\windows\file.hh"
 					>
 				</File>
 				<File
@@ -646,7 +651,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\util.hh"
+					RelativePath="..\..\include\ckcore\windows\util.hh"
 					>
 				</File>
 			</Filter>

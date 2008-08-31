@@ -18,6 +18,9 @@
 
 #include <stdarg.h>
 #include <cstring>
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
 #include "ckcore/string.hh"
 
 namespace ckcore
@@ -147,7 +150,7 @@ namespace ckcore
         wchar_t *ansi_to_utf16(const char *ansi,wchar_t *utf,int utf_len)
         {
 #ifdef _WINDOWS
-            int converted = MultiByteToWideChar(::AreFileApisANSI() ? CP_ACP : CP_OEMCP,MB_PRECOMPOSED,
+            int converted = MultiByteToWideChar(AreFileApisANSI() ? CP_ACP : CP_OEMCP,MB_PRECOMPOSED,
                 ansi,(int)strlen(ansi) + 1,utf,utf_len);
 
             // Trunkate UTF-16 string if buffer is too small.
@@ -177,7 +180,7 @@ namespace ckcore
         char *utf16_to_ansi(const wchar_t *utf,char *ansi,int ansi_len)
         {
 #ifdef _WINDOWS
-            int converted = WideCharToMultiByte(::AreFileApisANSI() ? CP_ACP : CP_OEMCP,0,
+            int converted = WideCharToMultiByte(AreFileApisANSI() ? CP_ACP : CP_OEMCP,0,
                 utf,(int)lstrlenW(utf) + 1,ansi,ansi_len,NULL,NULL);
 
             // Trunkate the ANSI string of buffer is too small.
@@ -196,4 +199,3 @@ namespace ckcore
         }
     };
 };
-
