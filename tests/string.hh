@@ -47,10 +47,10 @@ public:
 		ckcore::tuint32 i1 = 0,i2 = 0;
 		ckcore::tchar ext[64];
 
-		TS_ASSERT_EQUALS(asscanf(str4,"VTS_%u_%u.%[^\0]",&i1,&i2,ext),3);
+		TS_ASSERT_EQUALS(asscanf(str4,ckT("VTS_%u_%u.%[^\0]"),&i1,&i2,ext),3);
 		TS_ASSERT_EQUALS(i1,7);
 		TS_ASSERT_EQUALS(i2,53);
-		TS_ASSERT(!ckcore::string::astrcmp(ext,"IFO"));
+		TS_ASSERT(!ckcore::string::astrcmp(ext,ckT("IFO")));
 	}
 };
 
