@@ -17,8 +17,8 @@
  */
 
 #include <string.h>
-#include "system.hh"
-#include "bufferedstream.hh"
+#include "ckcore/system.hh"
+#include "ckcore/bufferedstream.hh"
 
 namespace ckcore
 {

@@ -17,29 +17,33 @@
  */
 
 /**
- * @file src/convert.hh
- * @brief Type conversion functions.
+ * @file src/log.hh
+ * @brief Defines a data logging interface.
  */
 
 #pragma once
-#include "types.hh"
+#include "ckcore/types.hh"
 
 namespace ckcore
 {
-    namespace convert
+    /**
+     * @brief Interface for data logging.
+     */
+    class Log
     {
-		void sprintf(tchar *buffer,size_t size,const tchar *format,...);
+    public:
+		/**
+		 * Prints a message string to the logging system.
+		 * @param [in] format The message format or the message itself.
+		 */
+		virtual void Print(const tchar *format,...) = 0;
 
-		const tchar *b_to_str(bool value);
-		const tchar *i32_to_str(tint32 value);
-		const tchar *ui32_to_str(tuint32 value);
-		const tchar *i64_to_str(tint64 value);
-		const tchar *ui64_to_str(tuint64 value);
-
-		tuint32 be_to_le32(tuint32 value);
-		tuint16 be_to_le16(tuint16 value);
-
-		void tm_to_dostime(struct tm &time,unsigned short &dos_date,
-						   unsigned short &dos_time);
+        /**
+         * Prints a message string followed by a new line to the logging
+         * system.
+         * @param [in] format The message format or message itself.
+         */
+		virtual void PrintLine(const tchar *format,...);
     };
 };
+

@@ -22,13 +22,34 @@
  */
 
 #pragma once
-#include "types.hh"
+#include "ckcore/types.hh"
+
+// No nice:
+#ifdef _WINDOWS
+#ifdef _UNICODE
+//#define ckcore::string::asscanf swscanf
+#define asscanf	swscanf
+#else
+//#define ckcore::string::asscanf sscanf
+#define asscanf sscanf
+#endif
+#else
+//#define ckcore:string::asscanf sscanf
+#define asscanf sscanf
+#endif
 
 namespace ckcore
 {
     namespace string
     {
-		int compare(const tchar *str1,const tchar *str2);
+		int astrcmp(const tchar *str1,const tchar *str2);
+		int astrncmp(const tchar *str1,const tchar *str2,size_t n);
+		size_t astrlen(const tchar *str);
+		tchar *astrcpy(tchar *str1,const tchar *str2);
+		tchar *astrncpy(tchar *str1,const tchar *str2,size_t n);
+
+        wchar_t *ansi_to_utf16(const char *ansi,wchar_t *utf,int utf_len);
+        char *utf16_to_ansi(const wchar_t *utf,char *ansi,int ansi_len);
     };
 };
 

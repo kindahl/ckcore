@@ -21,10 +21,10 @@
 #include <windows.h>
 #include <intrin.h>
 #endif
-#ifdef _LINUX
+#ifdef _UNIX
 #include <sys/time.h>
 #endif
-#include "system.hh"
+#include "ckcore/system.hh"
 
 namespace ckcore
 {

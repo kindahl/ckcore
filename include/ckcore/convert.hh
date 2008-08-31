@@ -17,49 +17,29 @@
  */
 
 /**
- * @file src/types.hh
- * @brief Defines custom types used by the library.
+ * @file src/convert.hh
+ * @brief Type conversion functions.
  */
 
 #pragma once
-#include <string>
+#include "ckcore/types.hh"
 
 namespace ckcore
 {
-#ifdef _WINDOWS
-#ifdef _UNICODE
-    typedef wchar_t tchar;
-	typedef std::wstring tstring;
-#ifndef ckT
-#define ckT(quote) L##quote
-#endif
-#else
-	typedef char tchar;
-	typedef std::string tstring;
-#ifndef ckT
-#define ckT
-#endif
-#endif
-    typedef __int64 tint64;
-    typedef unsigned __int64 tuint64;
-    typedef long tint32;
-    typedef unsigned long tuint32;
-	typedef short tint16;
-	typedef unsigned short tuint16;
-#endif
+    namespace convert
+    {
+		void sprintf(tchar *buffer,size_t size,const tchar *format,...);
 
-#ifdef _LINUX
-    typedef char tchar;
-    typedef long long tint64;
-    typedef unsigned long long tuint64;
-    typedef int tint32;
-    typedef unsigned int tuint32;
-	typedef short tint16;
-	typedef unsigned short tuint16;
-    typedef std::string tstring;
-#ifndef ckT
-#define ckT
-#endif
-#endif
+		const tchar *b_to_str(bool value);
+		const tchar *i32_to_str(tint32 value);
+		const tchar *ui32_to_str(tuint32 value);
+		const tchar *i64_to_str(tint64 value);
+		const tchar *ui64_to_str(tuint64 value);
+
+		tuint32 be_to_le32(tuint32 value);
+		tuint16 be_to_le16(tuint16 value);
+
+		void tm_to_dostime(struct tm &time,unsigned short &dos_date,
+						   unsigned short &dos_time);
+    };
 };
-

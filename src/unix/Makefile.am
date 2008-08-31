@@ -1,0 +1,7 @@
+EXTRA_DIST = ../../include/ckcore/unix/directory.hh \
+			 ../../include/ckcore/unix/file.hh
+
+library_includedir = $(includedir)/ckcore/unix
+library_include_HEADERS = ../../include/ckcore/unix/directory.hh \
+						  ../../include/ckcore/unix/file.hh
+

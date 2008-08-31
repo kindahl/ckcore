@@ -19,8 +19,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#include "../convert.hh"
-#include "file.hh"
+#include "ckcore/convert.hh"
+#include "ckcore/file.hh"
 
 namespace ckcore
 {

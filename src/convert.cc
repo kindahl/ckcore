@@ -17,7 +17,7 @@
  */
 
 #include <stdarg.h>
-#include "convert.hh"
+#include "ckcore/convert.hh"
 
 namespace ckcore
 {

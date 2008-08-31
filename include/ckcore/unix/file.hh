@@ -17,24 +17,23 @@
  */
 
 /**
- * @file src/windows/file.hh
- * @brief Defines the Windows file class.
+ * @file src/linux/file.hh
+ * @brief Defines the Linux file class.
  */
 #pragma once
-#include <windows.h>
-#include "../file.hh"
-#include "../types.hh"
-#include "../path.hh"
+#include "ckcore/file.hh"
+#include "ckcore/types.hh"
+#include "ckcore/path.hh"
 
 namespace ckcore
 {
     /**
-     * @brief The class for dealing with files on Windows.
+     * @brief The class for dealing with files on Unix.
      */
     class File : public FileBase
     {
     private:
-        HANDLE file_handle_;
+        int file_handle_;
         Path file_path_;
 
     public:
@@ -49,8 +48,8 @@ namespace ckcore
         bool Test() const;
         tint64 Seek(tint64 distance,FileWhence whence);
         tint64 Tell() const;
-        tint64 Read(void *buffer,tuint32 count);
-        tint64 Write(const void *buffer,tuint32 count);
+        tint64 Read(void *buffer,unsigned long count);
+        tint64 Write(const void *buffer,unsigned long count);
 
         // Functions for external manipulation (does not require file to be
         // opened).
@@ -78,3 +77,4 @@ namespace ckcore
 		static File Temp();
     };
 };
+

@@ -19,8 +19,8 @@
 #include <cxxtest/TestSuite.h>
 #include <stdlib.h>
 #include <algorithm>
-#include "../src/types.hh"
-#include "../src/directory.hh"
+#include "ckcore/types.hh"
+#include "ckcore/directory.hh"
 
 class DirectoryTestSuite : public CxxTest::TestSuite
 {

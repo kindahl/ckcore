@@ -18,8 +18,8 @@
 
 #include <cxxtest/TestSuite.h>
 #include <stdlib.h>
-#include "../src/types.hh"
-#include "../src/file.hh"
+#include "ckcore/types.hh"
+#include "ckcore/file.hh"
 
 class FileTestSuite : public CxxTest::TestSuite
 {

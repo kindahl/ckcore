@@ -17,7 +17,7 @@
  */
 
 #include <stdarg.h>
-#include "progresser.hh"
+#include "ckcore/progresser.hh"
 
 namespace ckcore
 {
@@ -41,11 +41,11 @@ namespace ckcore
 		progress_.SetProgress((unsigned char)(((double)count_/total_) * 100));
 	}
 
-	/**
-	 * Transmits a message to the progress interface. This message is
-	 * intended to be displayed to the end user.
-	 * @param [in] type The type of message.
-	 * @param [in] format The message format.
+	/*
+	 * Transmits a message to the progress interface. This message i
+	 * intended to be displayed to the end user
+	 * @param [in] type The type of message
+	 * @param [in] format The message format
 	 */
 	void Progresser::Notify(Progress::MessageType type,const tchar *format,...)
 	{
@@ -57,10 +57,10 @@ namespace ckcore
 		va_end(ap);
 	}
 
-	/**
-	 * Checks wether the operation has been cancelled or not.
-	 * @return If the process has been cancelled true is returned, if not
-	 *		   cancelled false is returned.
+	/*
+	 * Checks wether the operation has been cancelled or not
+	 * @return If the process has been cancelled true is returned, if no
+	 *		   cancelled false is returned
 	 */
 	bool Progresser::Cancelled()
 	{

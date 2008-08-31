@@ -1,9 +1,9 @@
 #include <iostream>
-#include "../src/types.hh"
-#include "../src/file.hh"
-#include "../src/filestream.hh"
-#include "../src/bufferedstream.hh"
-#include "../src/system.hh"
+#include "ckcore/types.hh"
+#include "ckcore/file.hh"
+#include "ckcore/filestream.hh"
+#include "ckcore/bufferedstream.hh"
+#include "ckcore/system.hh"
 
 int main(int argc,const char *argv[])
 {

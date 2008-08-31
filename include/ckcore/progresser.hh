@@ -22,8 +22,8 @@
  */
 
 #pragma once
-#include "types.hh"
-#include "progress.hh"
+#include "ckcore/types.hh"
+#include "ckcore/progress.hh"
 
 namespace ckcore
 {

@@ -18,8 +18,8 @@
 
 #include <cxxtest/TestSuite.h>
 #include <stdlib.h>
-#include "../src/types.hh"
-#include "../src/path.hh"
+#include "ckcore/types.hh"
+#include "ckcore/path.hh"
 
 class PathTestSuite : public CxxTest::TestSuite
 {

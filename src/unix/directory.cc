@@ -20,8 +20,8 @@
 #include <fcntl.h>
 #include <string.h>
 #include <sys/stat.h>
-#include "../convert.hh"
-#include "directory.hh"
+#include "ckcore/convert.hh"
+#include "ckcore/directory.hh"
 
 namespace ckcore
 {

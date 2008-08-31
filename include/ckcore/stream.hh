@@ -22,9 +22,9 @@
  */
 
 #pragma once
-#include "types.hh"
-#include "progress.hh"
-#include "progresser.hh"
+#include "ckcore/types.hh"
+#include "ckcore/progress.hh"
+#include "ckcore/progresser.hh"
 
 namespace ckcore
 {

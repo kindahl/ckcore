@@ -6,7 +6,7 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
-
+ * 
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,47 +17,30 @@
  */
 
 /**
- * @file src/file.hh
- * @brief Defines the virtual file base class.
+ * @file src/nullstream.hh
+ * @brief Implementation of stream interface for writing to null device.
  */
 
 #pragma once
+#include "ckcore/types.hh"
+#include "ckcore/stream.hh"
 
 namespace ckcore
 {
     /**
-     * @brief The virtual base class for using files.
+     * @brief Stream class for writing to the null device.
      */
-    class FileBase
+    class NullStream : public OutStream
     {
-    public:
-        /**
-         * Defines modes which describes how to open files.
-         */
-        enum FileMode
-        {
-            ckOPEN_READ,
-            ckOPEN_WRITE,
-			ckOPEN_READWRITE
-        };
+    private:
+        tuint64 written_;
 
-        /**
-         * Defines directives what to use as base offset when performing seek
-         * operations.
-         */
-        enum FileWhence
-        {
-            ckFILE_CURRENT,
-            ckFILE_BEGIN,
-			ckFILE_END
-        };
+    public:
+        NullStream();
+
+        tuint64 Written();
+
+        tint64 Write(void *buffer,tuint32 count);
     };
 };
 
-#ifdef _WINDOWS
-#include "windows/file.hh"
-#endif
-
-#ifdef _LINUX
-#include "linux/file.hh"
-#endif

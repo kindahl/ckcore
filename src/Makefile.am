@@ -1,16 +1,34 @@
-EXTRA_DIST = bufferedstream.hh convert.hh crcstream.hh directory.hh file.hh \
-			 filestream.hh nullstream.hh path.hh stream.hh string.hh system.hh \
-			 types.hh
-SUBDIRS = linux
+EXTRA_DIST = ../include/ckcore/bufferedstream.hh ../include/ckcore/convert.hh \
+			 ../include/ckcore/crcstream.hh ../include/ckcore/directory.hh \
+			 ../include/ckcore/file.hh ../include/ckcore/filestream.hh \
+             ../include/ckcore/log.hh ../include/ckcore/nullstream.hh \
+			 ../include/ckcore/path.hh ../include/ckcore/progress.hh \
+			 ../include/ckcore/progresser.hh ../include/ckcore/stream.hh \
+			 ../include/ckcore/string.hh ../include/ckcore/system.hh \
+			 ../include/ckcore/types.hh
+INCLUDES = -I../include
+SUBDIRS = unix
 
 lib_LTLIBRARIES = libckcore.la
 
-libckcore_la_SOURCES = linux/directory.cc linux/file.cc bufferedstream.cc \
+libckcore_la_SOURCES = unix/directory.cc unix/file.cc bufferedstream.cc \
 					   convert.cc crcstream.cc filestream.cc nullstream.cc \
 					   path.cc stream.cc string.cc system.cc
 
 library_includedir = $(includedir)/ckcore
-library_include_HEADERS = bufferedstream.hh convert.hh crcstream.hh \
-						  directory.hh file.hh filestream.hh nullstream.hh \
-						  path.hh stream.hh string.hh system.hh types.hh
+library_include_HEADERS = ../include/ckcore/bufferedstream.hh \
+						  ../include/ckcore/convert.hh \
+						  ../include/ckcore/crcstream.hh \
+						  ../include/ckcore/directory.hh \
+						  ../include/ckcore/file.hh \
+						  ../include/ckcore/filestream.hh \
+						  ../include/ckcore/log.hh \
+						  ../include/ckcore/nullstream.hh \
+						  ../include/ckcore/path.hh \
+						  ../include/ckcore/progress.hh \
+						  ../include/ckcore/progresser.hh \
+						  ../include/ckcore/stream.hh \
+						  ../include/ckcore/string.hh \
+						  ../include/ckcore/system.hh \
+						  ../include/ckcore/types.hh
 

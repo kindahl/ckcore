@@ -17,33 +17,37 @@
  */
 
 /**
- * @file src/filestream.hh
- * @brief Implementation of stream interfaces for dealing with files.
+ * @file src/bufferedstream.hh
+ * @brief Buffered implementation of stream interfaces.
  */
 
 #pragma once
-#include "types.hh"
-#include "stream.hh"
-#include "file.hh"
-#include "path.hh"
+#include "ckcore/types.hh"
+#include "ckcore/stream.hh"
+#include "ckcore/path.hh"
 
 namespace ckcore
 {
     /**
-     * @brief Stream class for reading files.
+     * @brief Buffered stream class for reading streams.
      */
-    class FileInStream : public InStream
+    class BufferedInStream : public InStream
     {
     private:
-        File file_;
-        tint64 size_;
-        tint64 read_;
+        InStream &stream_;
+
+        unsigned char *buffer_;
+        tuint32 buffer_size_;
+        tuint32 buffer_pos_;
+
+        // The number of valid bytes of data the buffer contains.
+        unsigned long buffer_data_;
 
     public:
-        FileInStream(const Path &file_path);
+        BufferedInStream(InStream &stream);
+        BufferedInStream(InStream &stream,tuint32 buffer_size);
+        virtual ~BufferedInStream();
 
-        bool Open();
-        bool Close();
         bool End();
 		bool Seek(tuint32 distance,StreamWhence whence);
 
@@ -52,20 +56,24 @@ namespace ckcore
     };
 
     /**
-     * @brief Stream class for writing files.
+     * @brief Buffered stream class for reading streams.
      */
-    class FileOutStream : public OutStream
+    class BufferedOutStream : public OutStream
     {
     private:
-        File file_;
+        OutStream &stream_;
+
+        unsigned char *buffer_;
+        tuint32 buffer_size_;
+        tuint32 buffer_pos_;
 
     public:
-        FileOutStream(const Path &file_path);
-
-        bool Open();
-        bool Close();
+        BufferedOutStream(OutStream &stream);
+        BufferedOutStream(OutStream &stream,tuint32 buffer_size);
+        ~BufferedOutStream();
 
         tint64 Write(void *buffer,tuint32 count);
+        tint64 Flush();
     };
 };
 

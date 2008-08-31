@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "nullstream.hh"
+#include "ckcore/nullstream.hh"
 
 namespace ckcore
 {

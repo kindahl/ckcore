@@ -22,8 +22,8 @@
  */
 
 #pragma once
-#include "types.hh"
-#include "stream.hh"
+#include "ckcore/types.hh"
+#include "ckcore/stream.hh"
 
 namespace ckcore
 {

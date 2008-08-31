@@ -17,28 +17,53 @@
  */
 
 /**
- * @file src/nullstream.hh
- * @brief Implementation of stream interface for writing to null device.
+ * @file src/filestream.hh
+ * @brief Implementation of stream interfaces for dealing with files.
  */
 
 #pragma once
-#include "types.hh"
-#include "stream.hh"
+#include "ckcore/types.hh"
+#include "ckcore/stream.hh"
+#include "ckcore/file.hh"
+#include "ckcore/path.hh"
 
 namespace ckcore
 {
     /**
-     * @brief Stream class for writing to the null device.
+     * @brief Stream class for reading files.
      */
-    class NullStream : public OutStream
+    class FileInStream : public InStream
     {
     private:
-        tuint64 written_;
+        File file_;
+        tint64 size_;
+        tint64 read_;
 
     public:
-        NullStream();
+        FileInStream(const Path &file_path);
 
-        tuint64 Written();
+        bool Open();
+        bool Close();
+        bool End();
+		bool Seek(tuint32 distance,StreamWhence whence);
+
+        tint64 Read(void *buffer,tuint32 count);
+		tint64 Size();
+    };
+
+    /**
+     * @brief Stream class for writing files.
+     */
+    class FileOutStream : public OutStream
+    {
+    private:
+        File file_;
+
+    public:
+        FileOutStream(const Path &file_path);
+
+        bool Open();
+        bool Close();
 
         tint64 Write(void *buffer,tuint32 count);
     };

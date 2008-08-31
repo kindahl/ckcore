@@ -19,12 +19,12 @@
 #include <cxxtest/TestSuite.h>
 #include <stdlib.h>
 #include <algorithm>
-#include "../src/types.hh"
-#include "../src/filestream.hh"
-#include "../src/bufferedstream.hh"
-#include "../src/crcstream.hh"
-#include "../src/nullstream.hh"
-#include "../src/system.hh"
+#include "ckcore/types.hh"
+#include "ckcore/filestream.hh"
+#include "ckcore/bufferedstream.hh"
+#include "ckcore/crcstream.hh"
+#include "ckcore/nullstream.hh"
+#include "ckcore/system.hh"
 
 class StreamTestSuite : public CxxTest::TestSuite
 {

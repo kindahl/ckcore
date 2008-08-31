@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "system.hh"
-#include "stream.hh"
+#include "ckcore/system.hh"
+#include "ckcore/stream.hh"
 
 namespace ckcore
 {

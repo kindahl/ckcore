@@ -22,8 +22,8 @@
  */
 #pragma once
 #include <map>
-#include "../file.hh"
-#include "../path.hh"
+#include "ckcore/file.hh"
+#include "ckcore/path.hh"
 
 namespace ckcore
 {

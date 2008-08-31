@@ -22,7 +22,7 @@
  */
 
 #pragma once
-#include "types.hh"
+#include "ckcore/types.hh"
 
 namespace ckcore
 {

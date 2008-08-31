@@ -6,7 +6,7 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -17,15 +17,47 @@
  */
 
 /**
- * @file src/windows/util.hh
- * @brief Defines Windows utility functions.
+ * @file src/file.hh
+ * @brief Defines the virtual file base class.
  */
+
 #pragma once
-#include "../file.hh"
-#include "../types.hh"
-#include "../path.hh"
 
 namespace ckcore
 {
-	void SysTimeToTm(SYSTEMTIME &stime,struct tm &time);
+    /**
+     * @brief The virtual base class for using files.
+     */
+    class FileBase
+    {
+    public:
+        /**
+         * Defines modes which describes how to open files.
+         */
+        enum FileMode
+        {
+            ckOPEN_READ,
+            ckOPEN_WRITE,
+			ckOPEN_READWRITE
+        };
+
+        /**
+         * Defines directives what to use as base offset when performing seek
+         * operations.
+         */
+        enum FileWhence
+        {
+            ckFILE_CURRENT,
+            ckFILE_BEGIN,
+			ckFILE_END
+        };
+    };
 };
+
+#ifdef _WINDOWS
+#include "ckcore/windows/file.hh"
+#endif
+
+#ifdef _UNIX
+#include "ckcore/unix/file.hh"
+#endif
