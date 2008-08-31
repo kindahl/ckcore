@@ -43,7 +43,7 @@ namespace ckcore
          * system.
          * @param [in] format The message format or message itself.
          */
-		virtual void PrintLine(const tchar *format,...);
+		virtual void PrintLine(const tchar *format,...) = 0;
     };
 };
 
