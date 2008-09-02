@@ -52,7 +52,7 @@ namespace ckcore
         buffer_data_(0)
     {
         if (buffer_size_ == 0)
-            buffer_size_ = 4096;
+            buffer_size_ = 8192;
 
         buffer_ = new unsigned char[buffer_size_];
 
@@ -196,7 +196,7 @@ namespace ckcore
     {
         buffer_size_ = System::Cache(System::ckLEVEL_1);
         if (buffer_size_ == 0)
-            buffer_size_ = 4096;
+            buffer_size_ = 8192;
 
         buffer_ = new unsigned char[buffer_size_];
 
@@ -215,7 +215,7 @@ namespace ckcore
         stream_(stream),buffer_(NULL),buffer_size_(buffer_size),buffer_pos_(0)
     {
         if (buffer_size_ == 0)
-            buffer_size_ = 4096;
+            buffer_size_ = 8192;
 
         buffer_ = new unsigned char[buffer_size_];
 
