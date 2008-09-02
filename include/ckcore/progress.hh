@@ -48,9 +48,9 @@ namespace ckcore
 
         /**
          * Notifies change in progress.
-         * @param [in] progress The progress in percent.
+         * @param [in] percent The progress in percent.
          */
-		virtual void SetProgress(unsigned char progress) {};
+		virtual void SetProgress(unsigned char percent) {};
 
         /**
          * Enables or disables marquee progress reporting
