@@ -198,7 +198,10 @@ namespace ckcore
         if (file_handle_ != -1)
         {
             struct stat file_stat;
-            return fstat(file_handle_,&file_stat) == 0;
+            if (fstat(file_handle_,&file_stat) != 0)
+                return false;
+
+            return (file_stat.st_mode & S_IFDIR) == 0;
         }
 
         return Exist(file_path_);
@@ -323,7 +326,10 @@ namespace ckcore
     bool File::Exist(const Path &file_path)
     {
         struct stat file_stat;
-        return stat(file_path.Name().c_str(),&file_stat) == 0;
+        if (stat(file_path.Name().c_str(),&file_stat) != 0)
+            return false;
+
+        return (file_stat.st_mode & S_IFDIR) == 0;
     }
 
     /**

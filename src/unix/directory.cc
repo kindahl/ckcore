@@ -208,7 +208,10 @@ namespace ckcore
     bool Directory::Exist() const
     {
         struct stat file_stat;
-        return stat(dir_path_.Name().c_str(),&file_stat) == 0;
+        if (stat(dir_path_.Name().c_str(),&file_stat) != 0)
+            return false;
+
+        return (file_stat.st_mode & S_IFDIR) > 0;
     }
 
     /**
@@ -263,7 +266,10 @@ namespace ckcore
     bool Directory::Exist(const Path &dir_path)
     {
         struct stat file_stat;
-        return stat(dir_path.Name().c_str(),&file_stat) == 0;
+        if (stat(dir_path.Name().c_str(),&file_stat) != 0)
+            return false;
+
+        return (file_stat.st_mode & S_IFDIR) > 0;
     }
 
     /**
