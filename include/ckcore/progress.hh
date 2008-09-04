@@ -35,6 +35,8 @@ namespace ckcore
     class Progress
     {
     public:
+        virtual ~Progress() {};
+
 		/**
 		 * Defines different message types.
 		 */

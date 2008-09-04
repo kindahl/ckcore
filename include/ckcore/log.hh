@@ -32,6 +32,8 @@ namespace ckcore
     class Log
     {
     public:
+        virtual ~Log() {};
+
 		/**
 		 * Prints a message string to the logging system.
 		 * @param [in] format The message format or the message itself.

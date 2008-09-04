@@ -34,6 +34,8 @@ namespace ckcore
     class InStream
     {
     public:
+        virtual ~InStream() {};
+
 		/**
          * Defines directives what to use as base offset when performing seek
          * operations.
@@ -86,6 +88,8 @@ namespace ckcore
     class OutStream
     {
     public:
+        virtual ~OutStream() {};
+
         /**
          * Writes raw data to the stream.
          * @param [in] buffer Pointer to the beginning of the bufferi
