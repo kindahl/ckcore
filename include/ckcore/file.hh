@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/file.hh
+ * @file include/ckcore/file.hh
  * @brief Defines the virtual file base class.
  */
 

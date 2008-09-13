@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/types.hh
+ * @file include/ckcore/types.hh
  * @brief Defines custom types used by the library.
  */
 

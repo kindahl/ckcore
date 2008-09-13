@@ -14,6 +14,7 @@ lib_LTLIBRARIES = libckcore.la
 libckcore_la_SOURCES = unix/directory.cc unix/file.cc bufferedstream.cc \
 					   convert.cc crcstream.cc filestream.cc nullstream.cc \
 					   path.cc progresser.cc stream.cc string.cc system.cc
+libckcore_la_LDFLAGS = -version-info $(CKCORE_VERSION)
 
 library_includedir = $(includedir)/ckcore
 library_include_HEADERS = ../include/ckcore/bufferedstream.hh \

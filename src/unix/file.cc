@@ -18,6 +18,8 @@
 
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 #include "ckcore/convert.hh"
 #include "ckcore/file.hh"
@@ -444,6 +446,12 @@ namespace ckcore
         return file_stat.st_size;
     }
 
+    /**
+     * Creates a File object describing a temporary file on the hard drive. The
+     * file path is pointing to an unique file name in the default temporary
+     * directory of the current system. The file is not automatically created.
+     * @return File object to a temporary file.
+     */
 	File File::Temp()
 	{
 		tchar *tmp_name = tmpnam(NULL);

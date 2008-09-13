@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/progress.hh
+ * @file include/ckcore/progress.hh
  * @brief Defines the progress interface.
  */
 

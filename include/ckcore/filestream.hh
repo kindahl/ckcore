@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/filestream.hh
+ * @file include/ckcore/filestream.hh
  * @brief Implementation of stream interfaces for dealing with files.
  */
 

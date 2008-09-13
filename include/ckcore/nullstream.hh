@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/nullstream.hh
+ * @file include/ckcore/nullstream.hh
  * @brief Implementation of stream interface for writing to null device.
  */
 

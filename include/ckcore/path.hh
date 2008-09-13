@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/path.hh
+ * @file include/ckcore/path.hh
  * @brief Defines the path name class.
  */
 #pragma once

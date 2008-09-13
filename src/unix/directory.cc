@@ -17,6 +17,7 @@
  */
 
 #include <unistd.h>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -301,6 +302,13 @@ namespace ckcore
         return true;
     }
 
+    /**
+     * Creates a Directory object describing a temporary directory on the hard
+     * drive. The directory path is pointing to an unique directory name in the
+     * default temporary directory of the current system. The directory is not
+     * automatically created.
+     * @return Directory object to a temporary directory.
+     */
 	Directory Directory::Temp()
 	{
 		tchar *tmp_name = tmpnam(NULL);

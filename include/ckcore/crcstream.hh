@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/crcstream.hh
+ * @file include/ckcore/crcstream.hh
  * @brief Stream class for calculating CRC checksums.
  */
 

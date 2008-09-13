@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/log.hh
+ * @file include/ckcore/log.hh
  * @brief Defines a data logging interface.
  */
 

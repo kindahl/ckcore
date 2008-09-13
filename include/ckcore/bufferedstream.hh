@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/bufferedstream.hh
+ * @file include/ckcore/bufferedstream.hh
  * @brief Buffered implementation of stream interfaces.
  */
 

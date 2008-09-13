@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/progresser.hh
+ * @file include/ckcore/progresser.hh
  * @brief Defines the class for progressing progress interfaces.
  */
 

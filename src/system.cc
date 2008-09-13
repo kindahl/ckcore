@@ -111,15 +111,8 @@ namespace ckcore
 		d = t4;
 #endif
 #else
-        /*asm("cpuid"
-            :"=a"(a),
-             "=b"(b),
-             "=c"(c),
-             "=d"(d)
-            :"a"(func),
-             "c"(arg));*/
-
-		// fPIC compatible version.
+		// 32-bit PIC compatible version.
+#ifdef __i386__ && ifdef __PIC__
         asm("pushl %%ebx\n"
 			"cpuid\n"
 			"movl %%ebx,%1\n"
@@ -130,6 +123,15 @@ namespace ckcore
              "=d"(d)
             :"a"(func),
              "c"(arg));
+#else
+        asm("cpuid"
+            :"=a"(a),
+             "=b"(b),
+             "=c"(c),
+             "=d"(d)
+            :"a"(func),
+             "c"(arg));
+#endif
 #endif
     }
 

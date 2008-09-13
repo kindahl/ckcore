@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/linux/file.hh
+ * @file include/ckcore/unix/file.hh
  * @brief Defines the Linux file class.
  */
 #pragma once

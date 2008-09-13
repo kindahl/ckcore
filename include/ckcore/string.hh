@@ -17,14 +17,14 @@
  */
 
 /**
- * @file src/string.hh
+ * @file include/ckcore/string.hh
  * @brief String helper functions.
  */
 
 #pragma once
 #include "ckcore/types.hh"
 
-// No nice:
+// Not very nice since they are not in the namespace.
 #ifdef _WINDOWS
 #ifdef _UNICODE
 //#define ckcore::string::asscanf swscanf
@@ -35,6 +35,13 @@
 #endif
 #else
 //#define ckcore:string::asscanf sscanf
+/**
+ * Wrapper around sscanf function.
+ * @param [in] str The input string to scan.
+ * @param [in] format The input string format.
+ * @return If successfull the function returns the number of arguments matched
+ *         and assigned, if the function failed EOF (macro) is returned.
+ */
 #define asscanf sscanf
 #endif
 

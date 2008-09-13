@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/stream.hh
+ * @file include/ckcore/stream.hh
  * @brief Defines the stream interfaces.
  */
 

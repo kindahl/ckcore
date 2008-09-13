@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/linux/directory.hh
+ * @file include/ckcore/unix/directory.hh
  * @brief Defines the Linux directory class.
  */
 #pragma once

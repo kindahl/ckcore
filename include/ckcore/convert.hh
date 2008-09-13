@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/convert.hh
+ * @file include/ckcore/convert.hh
  * @brief Type conversion functions.
  */
 

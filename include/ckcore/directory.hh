@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/directory.hh
+ * @file include/ckcore/directory.hh
  * @brief Includes the platform specific directory class.
  */
 

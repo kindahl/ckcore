@@ -17,7 +17,7 @@
  */
 
 /**
- * @file src/system.hh
+ * @file include/ckcore/system.hh
  * @brief Defines the system class.
  */
 
