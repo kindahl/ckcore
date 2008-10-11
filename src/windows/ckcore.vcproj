@@ -682,6 +682,15 @@
 							Outputs="$(IntDir)\cpuid64.obj"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|x64"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+							CommandLine="ml64.exe /c /nologo /Fo &quot;$(IntDir)&quot;\cpuid64.obj /Zi &quot;$(InputPath)&quot;"
+							Outputs="$(IntDir)\cpuid64.obj"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\directory.cc"
