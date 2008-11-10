@@ -385,6 +385,10 @@
 				RelativePath="..\..\tests\stream.hh"
 				>
 			</File>
+			<File
+				RelativePath="..\..\tests\string.hh"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
