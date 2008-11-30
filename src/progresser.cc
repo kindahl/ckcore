@@ -47,14 +47,9 @@ namespace ckcore
 	 * @param [in] type The type of message
 	 * @param [in] format The message format
 	 */
-	void Progresser::Notify(Progress::MessageType type,const tchar *format,...)
+	void Progresser::Notify(Progress::MessageType type,const tchar *message)
 	{
-		va_list ap;
-		va_start(ap,format);
-
-		progress_.Notify(type,format,ap);
-
-		va_end(ap);
+		progress_.Notify(type,message);
 	}
 
 	/**
