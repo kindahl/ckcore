@@ -75,6 +75,7 @@ namespace ckcore
 		static bool Hidden(const Path &file_path);
         static tint64 Size(const Path &file_path);
 		static File Temp();
+		static File Temp(const Path &file_path);
     };
 };
 

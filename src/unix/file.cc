@@ -483,7 +483,7 @@ namespace ckcore
 		if (tmp_name != NULL)
 		{
 			Path full_path = file_path;
-			full_path += (Path(tmp_name).BaseName();
+			full_path += Path(tmp_name).BaseName().c_str();
 			return File(full_path);
 		}
 		else

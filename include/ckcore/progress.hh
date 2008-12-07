@@ -63,7 +63,7 @@ namespace ckcore
 
 		/**
 		 * Sets the status message describing the current operation.
-		 * @param [in] format The status message format.
+		 * @param [in] status The status message.
 		 */
 		virtual void SetStatus(const tchar *status) = 0;
 
@@ -71,7 +71,7 @@ namespace ckcore
 		 * Transmits a message to the interface implementor. This message is
 		 * intended to be displayed to the end user.
 		 * @param [in] type The type of message.
-		 * @param [in] format The message format.
+		 * @param [in] message The message.
 		 */
 		virtual void Notify(MessageType type,const tchar *message) = 0;
 

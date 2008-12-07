@@ -43,9 +43,9 @@ namespace ckcore
 
 	/**
 	 * Transmits a message to the progress interface. This message i
-	 * intended to be displayed to the end user
-	 * @param [in] type The type of message
-	 * @param [in] format The message format
+	 * intended to be displayed to the end user.
+	 * @param [in] type The type of message.
+	 * @param [in] message The message.
 	 */
 	void Progresser::Notify(Progress::MessageType type,const tchar *message)
 	{
@@ -53,9 +53,9 @@ namespace ckcore
 	}
 
 	/**
-	 * Checks wether the operation has been cancelled or not
+	 * Checks wether the operation has been cancelled or not.
 	 * @return If the process has been cancelled true is returned, if no
-	 *		   cancelled false is returned
+	 *		   cancelled false is returned.
 	 */
 	bool Progresser::Cancelled()
 	{

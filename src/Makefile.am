@@ -23,6 +23,7 @@ library_include_HEADERS = ../include/ckcore/bufferedstream.hh \
 						  ../include/ckcore/directory.hh \
 						  ../include/ckcore/file.hh \
 						  ../include/ckcore/filestream.hh \
+						  ../include/ckcore/linereader.hh \
 						  ../include/ckcore/log.hh \
 						  ../include/ckcore/nullstream.hh \
 						  ../include/ckcore/path.hh \
