@@ -30,8 +30,9 @@ namespace ckcore
     BufferedInStream::BufferedInStream(InStream &stream) : stream_(stream),
         buffer_(NULL),buffer_size_(0),buffer_pos_(0),buffer_data_(0)
     {
-        buffer_size_ = System::Cache(System::ckLEVEL_1);
-        if (buffer_size_ == 0)
+		// UPDATE: Hangs the application on some systems.
+        /*buffer_size_ = System::Cache(System::ckLEVEL_1);
+        if (buffer_size_ == 0)*/
             buffer_size_ = 8192;
 
         buffer_ = new unsigned char[buffer_size_];
@@ -194,8 +195,9 @@ namespace ckcore
     BufferedOutStream::BufferedOutStream(OutStream &stream) : stream_(stream),
         buffer_(NULL),buffer_size_(0),buffer_pos_(0)
     {
-        buffer_size_ = System::Cache(System::ckLEVEL_1);
-        if (buffer_size_ == 0)
+		// UPDATE: Hangs the application on some systems.
+        /*buffer_size_ = System::Cache(System::ckLEVEL_1);
+        if (buffer_size_ == 0)*/
             buffer_size_ = 8192;
 
         buffer_ = new unsigned char[buffer_size_];

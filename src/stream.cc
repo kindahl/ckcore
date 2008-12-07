@@ -33,9 +33,11 @@ namespace ckcore
          */
         bool copy(InStream &from,OutStream &to)
         {
-            tuint32 buffer_size = System::Cache(System::ckLEVEL_1);
+			// UPDATE: Hangs the application on some systems.
+			tuint32 buffer_size = 8192;
+            /*tuint32 buffer_size = System::Cache(System::ckLEVEL_1);
             if (buffer_size == 0)
-                buffer_size = 8192;
+                buffer_size = 8192;*/
 
             unsigned char *buffer = new unsigned char[buffer_size];
             if (buffer == NULL)
@@ -75,9 +77,11 @@ namespace ckcore
          */
         bool copy(InStream &from,OutStream &to,Progress &progress)
         {
-            tuint32 buffer_size = System::Cache(System::ckLEVEL_1);
+			// UPDATE: Hangs the application on some systems.
+			tuint32 buffer_size = 8192;
+            /*tuint32 buffer_size = System::Cache(System::ckLEVEL_1);
             if (buffer_size == 0)
-                buffer_size = 8192;
+                buffer_size = 8192;*/
 
             unsigned char *buffer = new unsigned char[buffer_size];
             if (buffer == NULL)
@@ -137,9 +141,11 @@ namespace ckcore
          */
         bool copy(InStream &from,OutStream &to,Progresser &progresser)
         {
-            tuint32 buffer_size = System::Cache(System::ckLEVEL_1);
+			// UPDATE: Hangs the application on some systems.
+			tuint32 buffer_size = 8192;
+            /*tuint32 buffer_size = System::Cache(System::ckLEVEL_1);
             if (buffer_size == 0)
-                buffer_size = 8192;
+                buffer_size = 8192;*/
 
             unsigned char *buffer = new unsigned char[buffer_size];
             if (buffer == NULL)

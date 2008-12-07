@@ -687,7 +687,7 @@
 						>
 						<Tool
 							Name="VCCustomBuildTool"
-							CommandLine="ml64.exe /c /nologo /Fo &quot;$(IntDir)&quot;\cpuid64.obj /Zi &quot;$(InputPath)&quot;"
+							CommandLine="ml64.exe /c /nologo /Fo &quot;$(IntDir)&quot;\cpuid64.obj /Zi &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 							Outputs="$(IntDir)\cpuid64.obj"
 						/>
 					</FileConfiguration>

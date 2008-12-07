@@ -541,4 +541,19 @@ namespace ckcore
 
 		return File(tmp_name);
 	}
+
+	/**
+	 * Creates a File object of a temporary file. The file path is generated
+	 * to be placed in the specified path.
+	 * @param [in] file_path The path to where the temporary file should be
+	 *                       stored.
+	 * @return File object of temp file.
+	 */
+	File File::Temp(const Path &file_path)
+	{
+		tchar tmp_name[260];
+		GetTempFileName(file_path.Name().c_str(),ckT("tmp"),0,tmp_name);
+
+		return File(tmp_name);
+	}
 };
