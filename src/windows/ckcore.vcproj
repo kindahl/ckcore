@@ -773,6 +773,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\ckcore\linereader.hh"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\ckcore\log.hh"
 				>
 			</File>
