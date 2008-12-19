@@ -38,9 +38,9 @@ namespace ckcore
     public:
         NullStream();
 
-        tuint64 Written();
+        tuint64 written();
 
-        tint64 Write(void *buffer,tuint32 count);
+        tint64 write(void *buffer,tuint32 count);
     };
 };
 

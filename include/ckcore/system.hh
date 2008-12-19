@@ -43,17 +43,17 @@ namespace ckcore
         };
 
     private:
-        static void Cpuid(unsigned long func,unsigned long arg,
+        static void cpuid(unsigned long func,unsigned long arg,
                           unsigned long &a,unsigned long &b,
                           unsigned long &c,unsigned long &d);
 
-        static unsigned long CacheIntel(CacheLevel level);
-        static unsigned long CacheAmd(CacheLevel level);
+        static unsigned long cache_size_intel(CacheLevel level);
+        static unsigned long cache_size_amd(CacheLevel level);
 
     public:
-        static tuint64 Time();
-        static tuint64 Ticks();
-        static unsigned long Cache(CacheLevel level);
+        static tuint64 time();
+        static tuint64 ticks();
+        static unsigned long cache_size(CacheLevel level);
     };
 };
 

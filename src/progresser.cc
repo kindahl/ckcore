@@ -35,10 +35,10 @@ namespace ckcore
 	 * Updates the progress depending on the number of units processed.
 	 * @param [in] count The number of units processed..
      */
-	void Progresser::Update(tuint64 count)
+	void Progresser::update(tuint64 count)
 	{
 		count_ += count;
-		progress_.SetProgress((unsigned char)(((double)count_/total_) * 100));
+		progress_.set_progress((unsigned char)(((double)count_/total_) * 100));
 	}
 
 	/**
@@ -47,12 +47,12 @@ namespace ckcore
 	 * @param [in] type The type of message.
 	 * @param [in] format The message format.
 	 */
-	void Progresser::Notify(Progress::MessageType type,const tchar *format,...)
+	void Progresser::notify(Progress::MessageType type,const tchar *format,...)
 	{
 		va_list ap;
 		va_start(ap,format);
 
-		progress_.Notify(type,format,ap);
+		progress_.notify(type,format,ap);
 
 		va_end(ap);
 	}
@@ -62,9 +62,9 @@ namespace ckcore
 	 * @return If the process has been cancelled true is returned, if no
 	 *		   cancelled false is returned.
 	 */
-	bool Progresser::Cancelled()
+	bool Progresser::cancelled()
 	{
-		return progress_.Cancelled();
+		return progress_.cancelled();
 	}
 };
 

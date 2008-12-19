@@ -38,18 +38,18 @@ public:
 		// Test reading.
         for (int i = 0; i < 100; i++)
         {
-            TS_ASSERT(is1.Open());
-            TS_ASSERT(fs.Open());
+            TS_ASSERT(is1.open());
+            TS_ASSERT(fs.open());
 
             size_t buffer_size = (rand() % 2100) + 50;
             unsigned char *buffer1 = new unsigned char[buffer_size];
             unsigned char *buffer2 = new unsigned char[buffer_size];
 
             ckcore::tint64 read1 = 0,read2 = 0;
-            while (!is1.End() && !is2.End())
+            while (!is1.end() && !is2.end())
             {
-                ckcore::tint64 res1 = is1.Read(buffer1,(ckcore::tuint32)buffer_size);
-                ckcore::tint64 res2 = is2.Read(buffer2,(ckcore::tuint32)buffer_size);
+                ckcore::tint64 res1 = is1.read(buffer1,(ckcore::tuint32)buffer_size);
+                ckcore::tint64 res2 = is2.read(buffer2,(ckcore::tuint32)buffer_size);
 
                 TS_ASSERT(res1 != -1);
                 TS_ASSERT(res2 != -1);
@@ -60,46 +60,46 @@ public:
                 read2 += res2;
             }
 
-            TS_ASSERT_EQUALS(is1.End(),is2.End());
+            TS_ASSERT_EQUALS(is1.end(),is2.end());
             TS_ASSERT_EQUALS(read1,8253);
             TS_ASSERT_EQUALS(read2,8253);
 
-            TS_ASSERT(is1.Close());
-            TS_ASSERT(fs.Close());
+            TS_ASSERT(is1.close());
+            TS_ASSERT(fs.close());
 
             delete [] buffer1;
             delete [] buffer2;
         }
 
 		// Test seeking.
-		TS_ASSERT(is1.Open());
-        TS_ASSERT(fs.Open());
+		TS_ASSERT(is1.open());
+        TS_ASSERT(fs.open());
 
 		for (int i = 0; i < 100; i++)
         {
-			// Reset stream pointer.
-			TS_ASSERT(is1.Seek(0,ckcore::InStream::ckSTREAM_BEGIN));
-			TS_ASSERT(is2.Seek(0,ckcore::InStream::ckSTREAM_BEGIN));
+			// reset stream pointer.
+			TS_ASSERT(is1.seek(0,ckcore::InStream::ckSTREAM_BEGIN));
+			TS_ASSERT(is2.seek(0,ckcore::InStream::ckSTREAM_BEGIN));
 
             size_t buffer_size = (rand() % 2100) + 50;
             unsigned char *buffer1 = new unsigned char[buffer_size];
             unsigned char *buffer2 = new unsigned char[buffer_size];
 			
 			ckcore::tint64 read1 = 0,read2 = 0,count = 0;
-            while (!is1.End() && !is2.End())
+            while (!is1.end() && !is2.end())
             {
 				// After reading one time seek instead.
 				if (count == 1)
 				{
-					TS_ASSERT(is1.Seek((ckcore::tuint32)buffer_size,ckcore::InStream::ckSTREAM_CURRENT));
-					TS_ASSERT(is2.Seek((ckcore::tuint32)buffer_size,ckcore::InStream::ckSTREAM_CURRENT));
+					TS_ASSERT(is1.seek((ckcore::tuint32)buffer_size,ckcore::InStream::ckSTREAM_CURRENT));
+					TS_ASSERT(is2.seek((ckcore::tuint32)buffer_size,ckcore::InStream::ckSTREAM_CURRENT));
 					read1 += buffer_size;
 					read2 += buffer_size;
 				}
 				else
 				{
-					ckcore::tint64 res1 = is1.Read(buffer1,(ckcore::tuint32)buffer_size);
-					ckcore::tint64 res2 = is2.Read(buffer2,(ckcore::tuint32)buffer_size);
+					ckcore::tint64 res1 = is1.read(buffer1,(ckcore::tuint32)buffer_size);
+					ckcore::tint64 res2 = is2.read(buffer2,(ckcore::tuint32)buffer_size);
 
 					TS_ASSERT(res1 != -1);
 					TS_ASSERT(res2 != -1);
@@ -113,7 +113,7 @@ public:
 				count++;
             }
 
-            TS_ASSERT_EQUALS(is1.End(),is2.End());
+            TS_ASSERT_EQUALS(is1.end(),is2.end());
             TS_ASSERT_EQUALS(read1,8253);
             TS_ASSERT_EQUALS(read2,8253);
 
@@ -132,20 +132,20 @@ public:
         // Run 100 tests with different buffer sizes to capture buffer edge errors.
         for (int i = 0; i < 100; i++)
         {
-            TS_ASSERT(is1.Open());
-            TS_ASSERT(fs.Open());
+            TS_ASSERT(is1.open());
+            TS_ASSERT(fs.open());
 
             size_t buffer_size = (rand() % 2100) + 50;
             unsigned char *buffer1 = new unsigned char[buffer_size];
             unsigned char *buffer2 = new unsigned char[buffer_size];
 
             ckcore::tint64 written = 0;
-            while (!is1.End())
+            while (!is1.end())
             {
-                ckcore::tint64 res1 = is1.Read(buffer1,(ckcore::tuint32)buffer_size);
+                ckcore::tint64 res1 = is1.read(buffer1,(ckcore::tuint32)buffer_size);
                 TS_ASSERT(res1 != -1);
 
-                ckcore::tint64 res2 = os.Write(buffer1,(ckcore::tuint32)res1);
+                ckcore::tint64 res2 = os.write(buffer1,(ckcore::tuint32)res1);
                 TS_ASSERT(res2 != -1);
 
                 TS_ASSERT_EQUALS(res1,res2);
@@ -153,22 +153,22 @@ public:
                 written += res2;
             }
 
-            os.Flush();
+            os.flush();
 
             TS_ASSERT_EQUALS(written,8253);
 
-            TS_ASSERT(is1.Close());
-            TS_ASSERT(fs.Close());
+            TS_ASSERT(is1.close());
+            TS_ASSERT(fs.close());
 
             // Perform the same operation as in the input stream test.
-            TS_ASSERT(is1.Open());
-            TS_ASSERT(is2.Open());
+            TS_ASSERT(is1.open());
+            TS_ASSERT(is2.open());
 
             ckcore::tint64 read1 = 0,read2 = 0;
-            while (!is1.End() && !is2.End())
+            while (!is1.end() && !is2.end())
             {
-                ckcore::tint64 res1 = is1.Read(buffer1,(ckcore::tuint32)buffer_size);
-                ckcore::tint64 res2 = is2.Read(buffer2,(ckcore::tuint32)buffer_size);
+                ckcore::tint64 res1 = is1.read(buffer1,(ckcore::tuint32)buffer_size);
+                ckcore::tint64 res2 = is2.read(buffer2,(ckcore::tuint32)buffer_size);
 
                 TS_ASSERT(res1 != -1);
                 TS_ASSERT(res2 != -1);
@@ -179,14 +179,14 @@ public:
                 read2 += res2;
             }
 
-            TS_ASSERT_EQUALS(is1.End(),is2.End());
+            TS_ASSERT_EQUALS(is1.end(),is2.end());
             TS_ASSERT_EQUALS(read1,8253);
             TS_ASSERT_EQUALS(read2,8253);
 
-            TS_ASSERT(is1.Close());
-            TS_ASSERT(is2.Close());
+            TS_ASSERT(is1.close());
+            TS_ASSERT(is2.close());
 
-            TS_ASSERT(ckcore::File::Remove(ckT("data/file/new")));
+            TS_ASSERT(ckcore::File::remove(ckT("data/file/new")));
 
             delete [] buffer1;
             delete [] buffer2;
@@ -196,106 +196,106 @@ public:
     void testCrcStream()
     {
         ckcore::FileInStream is1(ckT("data/file/8253bytes"));
-        TS_ASSERT(is1.Open());
+        TS_ASSERT(is1.open());
         ckcore::FileInStream is2(ckT("data/file/123bytes"));
-        TS_ASSERT(is2.Open());
+        TS_ASSERT(is2.open());
         ckcore::FileInStream is3(ckT("data/file/53bytes"));
-        TS_ASSERT(is3.Open());
+        TS_ASSERT(is3.open());
         ckcore::FileInStream is4(ckT("data/file/0bytes"));
-        TS_ASSERT(is4.Open());
+        TS_ASSERT(is4.open());
 
         // CRC-32.
         ckcore::CrcStream crc32(ckcore::CrcStream::ckCRC_32);
 
         ckcore::stream::copy(is1,crc32);
-        TS_ASSERT_EQUALS(crc32.Checksum(),0x33d5a2ec);
-        crc32.Reset();
+        TS_ASSERT_EQUALS(crc32.checksum(),0x33d5a2ec);
+        crc32.reset();
 
         ckcore::stream::copy(is2,crc32);
-        TS_ASSERT_EQUALS(crc32.Checksum(),0xfa2e73f4);
-        crc32.Reset();
+        TS_ASSERT_EQUALS(crc32.checksum(),0xfa2e73f4);
+        crc32.reset();
 
         ckcore::stream::copy(is3,crc32);
-        TS_ASSERT_EQUALS(crc32.Checksum(),0x30e06b16);
-        crc32.Reset();
+        TS_ASSERT_EQUALS(crc32.checksum(),0x30e06b16);
+        crc32.reset();
 
         ckcore::stream::copy(is4,crc32);
-        TS_ASSERT_EQUALS(crc32.Checksum(),0x00000000);
-        crc32.Reset();
+        TS_ASSERT_EQUALS(crc32.checksum(),0x00000000);
+        crc32.reset();
 
-        is1.Close();
-        is1.Open();
-        is2.Close();
-        is2.Open();
-        is3.Close();
-        is3.Open();
-        is4.Close();
-        is4.Open();
+        is1.close();
+        is1.open();
+        is2.close();
+        is2.open();
+        is3.close();
+        is3.open();
+        is4.close();
+        is4.open();
 
         // CRC-16 (CCITT polynomial).
         ckcore::CrcStream crc16udf(ckcore::CrcStream::ckCRC_CCITT);
 
         ckcore::stream::copy(is1,crc16udf);
-        TS_ASSERT_EQUALS(crc16udf.Checksum(),0x8430);
-        crc16udf.Reset();
+        TS_ASSERT_EQUALS(crc16udf.checksum(),0x8430);
+        crc16udf.reset();
 
         ckcore::stream::copy(is2,crc16udf);
-        TS_ASSERT_EQUALS(crc16udf.Checksum(),0x8bfe);
-        crc16udf.Reset();
+        TS_ASSERT_EQUALS(crc16udf.checksum(),0x8bfe);
+        crc16udf.reset();
 
         ckcore::stream::copy(is3,crc16udf);
-        TS_ASSERT_EQUALS(crc16udf.Checksum(),0xef2a);
-        crc16udf.Reset();
+        TS_ASSERT_EQUALS(crc16udf.checksum(),0xef2a);
+        crc16udf.reset();
 
         ckcore::stream::copy(is4,crc16udf);
-        TS_ASSERT_EQUALS(crc16udf.Checksum(),0x0000);
-        crc16udf.Reset();
+        TS_ASSERT_EQUALS(crc16udf.checksum(),0x0000);
+        crc16udf.reset();
 
         // Test from the UDF 1.50 reference.
         unsigned char bytes[] = { 0x70, 0x6A, 0x77 };
-        crc16udf.Write(bytes,3);
-        TS_ASSERT_EQUALS(crc16udf.Checksum(),0x3299);
+        crc16udf.write(bytes,3);
+        TS_ASSERT_EQUALS(crc16udf.checksum(),0x3299);
 
-        is1.Close();
-        is1.Open();
-        is2.Close();
-        is2.Open();
-        is3.Close();
-        is3.Open();
-        is4.Close();
-        is4.Open();
+        is1.close();
+        is1.open();
+        is2.close();
+        is2.open();
+        is3.close();
+        is3.open();
+        is4.close();
+        is4.open();
 
         // CRC-16 (IBM polynomial).
         ckcore::CrcStream crc16ibm(ckcore::CrcStream::ckCRC_16);
 
         ckcore::stream::copy(is1,crc16ibm);
-        TS_ASSERT_EQUALS(crc16ibm.Checksum(),0x398e);
-        crc16ibm.Reset();
+        TS_ASSERT_EQUALS(crc16ibm.checksum(),0x398e);
+        crc16ibm.reset();
 
         ckcore::stream::copy(is2,crc16ibm);
-        TS_ASSERT_EQUALS(crc16ibm.Checksum(),0xd3bb);
-        crc16ibm.Reset();
+        TS_ASSERT_EQUALS(crc16ibm.checksum(),0xd3bb);
+        crc16ibm.reset();
 
         ckcore::stream::copy(is3,crc16ibm);
-        TS_ASSERT_EQUALS(crc16ibm.Checksum(),0xb7d4);
-        crc16ibm.Reset();
+        TS_ASSERT_EQUALS(crc16ibm.checksum(),0xb7d4);
+        crc16ibm.reset();
 
         ckcore::stream::copy(is4,crc16ibm);
-        TS_ASSERT_EQUALS(crc16ibm.Checksum(),0x0000);
-        crc16ibm.Reset();
+        TS_ASSERT_EQUALS(crc16ibm.checksum(),0x0000);
+        crc16ibm.reset();
     }
 
     void testNullStream()
     {
         ckcore::NullStream ns;
-        ns.Write(NULL,42);
-        TS_ASSERT_EQUALS(ns.Written(),42);
+        ns.write(NULL,42);
+        TS_ASSERT_EQUALS(ns.written(),42);
         
-        ns.Write(NULL,1);
-        TS_ASSERT_EQUALS(ns.Written(),43);
+        ns.write(NULL,1);
+        TS_ASSERT_EQUALS(ns.written(),43);
         
-        ns.Write(NULL,754);
-        TS_ASSERT_EQUALS(ns.Written(),797);
+        ns.write(NULL,754);
+        TS_ASSERT_EQUALS(ns.written(),797);
     }
 };
 

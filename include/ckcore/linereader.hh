@@ -66,8 +66,8 @@ namespace ckcore
         LineReader(InStream &stream) : stream_(stream),encoding_(ckENCODING_ANSI)
         {
             unsigned char bom[4];
-            tint64 read = stream.Read(bom,4);
-            stream_.Seek(0,InStream::ckSTREAM_BEGIN);
+            tint64 read = stream.read(bom,4);
+            stream_.seek(0,InStream::ckSTREAM_BEGIN);
 
             if (read >= 2)
             {
@@ -75,14 +75,14 @@ namespace ckcore
                 if (bom[0] == 0xfe && bom[1] == 0xff)
                 {
                     encoding_ = ckENCODING_UTF16BE;
-                    stream_.Seek(2,InStream::ckSTREAM_CURRENT);
+                    stream_.seek(2,InStream::ckSTREAM_CURRENT);
                 }
 
                 // Check if UTF-16 (little endian).
                 if (bom[0] == 0xff && bom[1] == 0xfe)
                 {
                     encoding_ = ckENCODING_UTF16LE;
-                    stream_.Seek(2,InStream::ckSTREAM_CURRENT);
+                    stream_.seek(2,InStream::ckSTREAM_CURRENT);
                 }
 
                 if (read >= 3)
@@ -91,28 +91,28 @@ namespace ckcore
                     if (bom[0] == 0xf7 && bom[1] == 0x64 && bom[2] == 0x4c)
                     {
                         encoding_ = ckENCODING_UTF1;
-                        stream_.Seek(3,InStream::ckSTREAM_CURRENT);
+                        stream_.seek(3,InStream::ckSTREAM_CURRENT);
                     }
 
                     // Check if UTF-8.
                     if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf)
                     {
                         encoding_ = ckENCODING_UTF8;
-                        stream_.Seek(3,InStream::ckSTREAM_CURRENT);
+                        stream_.seek(3,InStream::ckSTREAM_CURRENT);
                     }
 
                     // Check if SCSU.
                     if (bom[0] == 0x0e && bom[1] == 0xfe && bom[2] == 0xff)
                     {
                         encoding_ = ckENCODING_SCSU;
-                        stream_.Seek(3,InStream::ckSTREAM_CURRENT);
+                        stream_.seek(3,InStream::ckSTREAM_CURRENT);
                     }
 
                     // Check if BOCU-1.
                     if (bom[0] == 0xfb && bom[1] == 0xee && bom[2] == 0x28)
                     {
                         encoding_ = ckENCODING_BOCU1;
-                        stream_.Seek(3,InStream::ckSTREAM_CURRENT);
+                        stream_.seek(3,InStream::ckSTREAM_CURRENT);
                     }
 
                     if (read == 4)
@@ -121,26 +121,26 @@ namespace ckcore
                         if (bom[0] == 0x00 && bom[1] == 0x00 && bom[2] == 0xfe && bom[3] == 0xff)
                         {
                             encoding_ = ckENCODING_UTF32BE;
-                            stream_.Seek(4,InStream::ckSTREAM_CURRENT);
+                            stream_.seek(4,InStream::ckSTREAM_CURRENT);
                         }
 
                         // Check if UTF-32 (little endian).
                         if (bom[0] == 0xff && bom[1] == 0xfe && bom[2] == 0x00 && bom[3] == 0x00)
                         {
                             encoding_ = ckENCODING_UTF32LE;
-                            stream_.Seek(2,InStream::ckSTREAM_CURRENT); // We have already skipped two bytes for UTF-16.
+                            stream_.seek(2,InStream::ckSTREAM_CURRENT); // We have already skipped two bytes for UTF-16.
                         }
 
                         // Check if UTF-EBCDIC.
                         if (bom[0] == 0xdd && bom[1] == 0x73 && bom[2] == 0x66 && bom[3] == 0x73)
                         {
                             encoding_ = ckENCODING_UTFEBCDIC;
-                            stream_.Seek(4,InStream::ckSTREAM_CURRENT);
+                            stream_.seek(4,InStream::ckSTREAM_CURRENT);
                         }
 
                         // Check if BOCU-1 (extended).
                         if (bom[0] == 0xfb && bom[1] == 0xee && bom[2] == 0x28 && bom[3] == 0xff)
-                            stream_.Seek(1,InStream::ckSTREAM_CURRENT); // We have already skipped three bytes for BOCU-1.
+                            stream_.seek(1,InStream::ckSTREAM_CURRENT); // We have already skipped three bytes for BOCU-1.
                     }
                 }
             }
@@ -150,7 +150,7 @@ namespace ckcore
          * Returns the type of encoding used in the input stream.
          * @return The type of encoding used in the input stream.
          */
-        Encoding Encoding()
+        Encoding encoding()
         {
             return encoding_;
         }
@@ -160,17 +160,17 @@ namespace ckcore
          * @return If positioned at end of the stream true is returned,
          *         otherwise false is returned.
          */
-        bool End()
+        bool end()
         {
-            return stream_.End() && next_str_.size() == 0;
+            return stream_.end() && next_str_.size() == 0;
         }
 
         /**
-         * Reads a new line from the input stream.
+         * reads a new line from the input stream.
          * @return The new line read from the input stream. If the end has been
          *         reached an empty string is returned.
          */
-        std::basic_string<T> ReadLine()
+        std::basic_string<T> read_line()
         {
             std::basic_string<T> line;
             bool has_cr = false;
@@ -183,10 +183,10 @@ namespace ckcore
             }
 
             // Loop until we find line breaks or the end of stream.
-            while (!stream_.End())
+            while (!stream_.end())
             {
                 T c;
-                tint64 read = stream_.Read(&c,sizeof(T));
+                tint64 read = stream_.read(&c,sizeof(T));
                 if (read != sizeof(T))
                     return line;
 
@@ -200,7 +200,7 @@ namespace ckcore
 
                     // Check if the carriage return is followed by a linefeed.
                     T next;
-                    read = stream_.Read(&next,sizeof(T));
+                    read = stream_.read(&next,sizeof(T));
                     if (read == sizeof(T) && next != '\n')
                         next_str_.push_back(next);
 

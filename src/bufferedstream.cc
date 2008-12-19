@@ -80,9 +80,9 @@ namespace ckcore
      * @return If positioned at end of the stream true is returned,
      *         otherwise false is returned.
      */
-    bool BufferedInStream::End()
+    bool BufferedInStream::end()
     {
-        return stream_.End() && buffer_data_ == 0;
+        return stream_.end() && buffer_data_ == 0;
     }
 
 	/**
@@ -95,12 +95,12 @@ namespace ckcore
      *                    final stream pointer position.
      * @return If successfull true is returned, otherwise false is returned.
      */
-	bool BufferedInStream::Seek(tuint32 distance,StreamWhence whence)
+	bool BufferedInStream::seek(tuint32 distance,StreamWhence whence)
 	{
 		// Reset the internal state if necessary.
 		if (whence == ckSTREAM_BEGIN)
 		{
-			if (!stream_.Seek(0,ckSTREAM_BEGIN))
+			if (!stream_.seek(0,ckSTREAM_BEGIN))
 				return false;
 
 			buffer_pos_ = 0;
@@ -116,9 +116,9 @@ namespace ckcore
 		unsigned char *temp_buffer = new unsigned char[buffer_size];
 		while (distance > 0)
 		{
-			tuint32 read = distance > buffer_size ? buffer_size : distance;
+			tuint32 read_bytes = distance > buffer_size ? buffer_size : distance;
 
-			tint64 res = Read(temp_buffer,read);
+			tint64 res = read(temp_buffer,read_bytes);
 			if (res == -1)
 			{
 				delete [] temp_buffer;
@@ -140,12 +140,12 @@ namespace ckcore
      *         function returns the number of butes read (this may be zero
      *         when the end of the file has been reached).
      */
-    tint64 BufferedInStream::Read(void *buffer,tuint32 count)
+    tint64 BufferedInStream::read(void *buffer,tuint32 count)
     {
         // If we have failed to allocate the internal buffer, just redirect the
         // read call.
         if (buffer_size_ == 0)
-            return stream_.Read(buffer,count);
+            return stream_.read(buffer,count);
 
         tuint32 pos = 0;
 
@@ -160,10 +160,10 @@ namespace ckcore
             buffer_data_ = 0;
 
             // Fetch more data from the input stream.
-            if (stream_.End())
+            if (stream_.end())
                 return pos;
 
-            tint64 result = stream_.Read(buffer_,buffer_size_);
+            tint64 result = stream_.read(buffer_,buffer_size_);
             if (result == -1)
                 return pos == 0 ? -1 : pos;
 
@@ -182,9 +182,9 @@ namespace ckcore
 	 * @return If successfull the size in bytes of the stream data is returned,
 	 *		   if unsuccessfull -1 is returned.
 	 */
-	tint64 BufferedInStream::Size()
+	tint64 BufferedInStream::size()
 	{
-		return stream_.Size();
+		return stream_.size();
 	}
 
     /**
@@ -247,12 +247,12 @@ namespace ckcore
      * @return If the operation failed -1 is returned, otherwise the
      *         function returns the number of bytes written.
      */
-    tint64 BufferedOutStream::Write(void *buffer,tuint32 count)
+    tint64 BufferedOutStream::write(void *buffer,tuint32 count)
     {
         // If we failed to allocate the internal buffer, just redirect the
         // write call.
         if (buffer_size_ == 0)
-            return stream_.Write(buffer,count);
+            return stream_.write(buffer,count);
 
         tuint32 pos = 0;
 
@@ -264,7 +264,7 @@ namespace ckcore
             pos += remain;
 
             // Flush.
-            if (stream_.Write(buffer_,buffer_size_) == -1)
+            if (stream_.write(buffer_,buffer_size_) == -1)
                 return pos == 0 ? -1 : pos;
 
             buffer_pos_ = 0;
@@ -284,13 +284,13 @@ namespace ckcore
      * @return If the operation failed -1 is returned, otherwise the number of
      *         bytes that where flushed is returned.
      */
-    tint64 BufferedOutStream::Flush()
+    tint64 BufferedOutStream::flush()
     {
         // If we don't have a buffer we can't flush.
         if (buffer_size_ == 0)
             return 0;
 
-        tint64 result = stream_.Write(buffer_,buffer_pos_);
+        tint64 result = stream_.write(buffer_,buffer_pos_);
         if (result != -1)
             buffer_pos_ = 0;
 

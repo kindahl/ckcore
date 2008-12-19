@@ -64,15 +64,15 @@ namespace ckcore
         tuint32 checksum_;      // Current checksum.
         tuint32 table_[256];
 
-        tuint32 Reflect(tuint32 crc,unsigned char length);
+        tuint32 reflect(tuint32 crc,unsigned char length);
 
     public:
         CrcStream(CrcType type);
 
-        void Reset();
-        tuint32 Checksum();
+        void reset();
+        tuint32 checksum();
 
-        tint64 Write(void *buffer,tuint32 count);
+        tint64 write(void *buffer,tuint32 count);
     };
 };
 

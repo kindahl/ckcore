@@ -33,7 +33,7 @@ namespace ckcore
      * started.
      * @return The number of milliseconds since the system was started.
      */
-    tuint64 System::Time()
+    tuint64 System::time()
     {
 #ifdef _WINDOWS
         return GetTickCount();
@@ -50,7 +50,7 @@ namespace ckcore
      * @return The number of executed clock cycles since the system was
      *         started.
      */
-    tuint64 System::Ticks()
+    tuint64 System::ticks()
     {
 #ifdef _WINDOWS
 		return __rdtsc();
@@ -75,7 +75,7 @@ namespace ckcore
 #endif
 #endif
 
-    void System::Cpuid(unsigned long func,unsigned long arg,
+    void System::cpuid(unsigned long func,unsigned long arg,
                        unsigned long &a,unsigned long &b,
                        unsigned long &c,unsigned long &d)
     {
@@ -141,13 +141,13 @@ namespace ckcore
      * @return If successfull the size of the cache is returned in bytes, if
      *         unsuccessfull 0 is returned.
      */
-    unsigned long System::CacheIntel(CacheLevel level)
+    unsigned long System::cache_size_intel(CacheLevel level)
     {
         unsigned long reg = 0;
         while (true)
         {
             unsigned long a,b,c,d;
-            Cpuid(4,reg++,a,b,c,d);
+            cpuid(4,reg++,a,b,c,d);
 
             // Check if we have found the last cache.
             unsigned char cur_type = (unsigned char)a & 0x1f;
@@ -176,18 +176,18 @@ namespace ckcore
      * @return If successfull the size of the cache is returned in bytes, if
      *         unsuccessfull 0 is returned.
      */
-    unsigned long System::CacheAmd(CacheLevel level)
+    unsigned long System::cache_size_amd(CacheLevel level)
     {
         unsigned long a,b,c,d;
 
         if (level == System::ckLEVEL_1)
         {
-            Cpuid(0x80000005,0,a,b,c,d);
+            cpuid(0x80000005,0,a,b,c,d);
             return ((c >> 24) & 0xff) * 1024;
         }
         else if (level == System::ckLEVEL_2)
         {
-            Cpuid(0x80000006,0,a,b,c,d);
+            cpuid(0x80000006,0,a,b,c,d);
             return ((c >> 16) & 0xffff) * 1024;
         }
 
@@ -201,11 +201,11 @@ namespace ckcore
      * @return If successfull the size of the cache is returned in bytes, if
      *         unsuccessfull 0 is returned.
      */
-    unsigned long System::Cache(CacheLevel level)
+    unsigned long System::cache_size(CacheLevel level)
     {
         // Obtain processor vendor identifier.
         unsigned long a,b,c,d;
-        Cpuid(0,0,a,b,c,d);
+        cpuid(0,0,a,b,c,d);
 
         char vendor[13];
         memcpy(vendor    ,&b,4);
@@ -214,9 +214,9 @@ namespace ckcore
         vendor[12] = '\0';
 
         if (!strcmp(vendor,"GenuineIntel"))
-            return CacheIntel(level);
+            return cache_size_intel(level);
         else if (!strcmp(vendor,"AuthenticAMD"))
-            return CacheAmd(level);
+            return cache_size_amd(level);
 
         return 0;
     }

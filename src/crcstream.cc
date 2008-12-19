@@ -20,7 +20,7 @@
 
 namespace ckcore
 {
-    tuint32 CrcStream::Reflect(tuint32 crc,unsigned char length)
+    tuint32 CrcStream::reflect(tuint32 crc,unsigned char length)
     {
         tuint32 result = 0;
 
@@ -76,7 +76,7 @@ namespace ckcore
 
         for (int i = 0; i < 256; i++)
         {
-            crc = (reflect_ ? Reflect(i,8) : i) << (order_ - 8);
+            crc = (reflect_ ? reflect(i,8) : i) << (order_ - 8);
 
             for (int j = 0; j < 8; j++)
             {
@@ -86,17 +86,14 @@ namespace ckcore
                     crc = (crc << 1);
             }
 
-            table_[i] = (reflect_ ? Reflect(crc,order_) : crc) & mask_;
-
-            /*if (i < 16)
-                printf("\n0x%.8X",table_[i]);*/
+            table_[i] = (reflect_ ? reflect(crc,order_) : crc) & mask_;
         }
     }
 
     /**
      * Resets the internal CRC checksum.
      */
-    void CrcStream::Reset()
+    void CrcStream::reset()
     {
         checksum_ = initial_;
     }
@@ -105,7 +102,7 @@ namespace ckcore
      * Returns the internal checksum.
      * @return The internal checksum.
      */
-    tuint32 CrcStream::Checksum()
+    tuint32 CrcStream::checksum()
     {
         //return ~checksum_ & mask_;
         return (checksum_ ^ final_)/* & mask_*/;
@@ -119,7 +116,7 @@ namespace ckcore
      * @param [in] count The number of bytes in the buffer.
      * @return The number of bytes processed (always the same as count).
      */
-    tint64 CrcStream::Write(void *buffer,tuint32 count)
+    tint64 CrcStream::write(void *buffer,tuint32 count)
     {
         for (unsigned long i = 0; i < count; i++)
         {

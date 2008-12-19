@@ -40,42 +40,42 @@ namespace ckcore
         File(const Path &file_path);
         ~File();
 
-		const tstring &Name() const;
+		const tstring &name() const;
 
         // Functions for internal manipulation.
-        bool Open(FileMode file_mode);
-        bool Close();
-        bool Test() const;
-        tint64 Seek(tint64 distance,FileWhence whence);
-        tint64 Tell() const;
-        tint64 Read(void *buffer,unsigned long count);
-        tint64 Write(const void *buffer,unsigned long count);
+        bool open(FileMode file_mode);
+        bool close();
+        bool test() const;
+        tint64 seek(tint64 distance,FileWhence whence);
+        tint64 tell() const;
+        tint64 read(void *buffer,unsigned long count);
+        tint64 write(const void *buffer,unsigned long count);
 
         // Functions for external manipulation (does not require file to be
         // opened).
-        bool Exist() const;
-        bool Remove();
-        bool Rename(const Path &new_file_path);
-        bool Time(struct tm &access_time,struct tm &modify_time,
+        bool exist() const;
+        bool remove();
+        bool rename(const Path &new_file_path);
+        bool time(struct tm &access_time,struct tm &modify_time,
                   struct tm &create_time) const;
-        bool Access(FileMode file_mode) const;
-		bool Hidden() const;
-        tint64 Size();
+        bool access(FileMode file_mode) const;
+		bool hidden() const;
+        tint64 size();
 
         // Static (conveniance and performance) functions, they are not allowed
         // to be wrappers around the non-static functions for performance
         // reasons.
-        static bool Exist(const Path &file_path);
-        static bool Remove(const Path &file_path);
-        static bool Rename(const Path &old_file_path,
+        static bool exist(const Path &file_path);
+        static bool remove(const Path &file_path);
+        static bool rename(const Path &old_file_path,
                            const Path &new_file_path);
-        static bool Time(const Path &file_path,struct tm &access_time,
+        static bool time(const Path &file_path,struct tm &access_time,
                          struct tm &modify_time,struct tm &create_time);
-        static bool Access(const Path &file_path,FileMode file_mode);
-		static bool Hidden(const Path &file_path);
-        static tint64 Size(const Path &file_path);
-		static File Temp();
-		static File Temp(const Path &file_path);
+        static bool access(const Path &file_path,FileMode file_mode);
+		static bool hidden(const Path &file_path);
+        static tint64 size(const Path &file_path);
+		static File temp();
+		static File temp(const Path &file_path);
     };
 };
 

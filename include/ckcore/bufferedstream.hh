@@ -48,11 +48,11 @@ namespace ckcore
         BufferedInStream(InStream &stream,tuint32 buffer_size);
         virtual ~BufferedInStream();
 
-        bool End();
-		bool Seek(tuint32 distance,StreamWhence whence);
+        bool end();
+		bool seek(tuint32 distance,StreamWhence whence);
 
-        tint64 Read(void *buffer,tuint32 count);
-		tint64 Size();
+        tint64 read(void *buffer,tuint32 count);
+		tint64 size();
     };
 
     /**
@@ -72,8 +72,8 @@ namespace ckcore
         BufferedOutStream(OutStream &stream,tuint32 buffer_size);
         ~BufferedOutStream();
 
-        tint64 Write(void *buffer,tuint32 count);
-        tint64 Flush();
+        tint64 write(void *buffer,tuint32 count);
+        tint64 flush();
     };
 };
 

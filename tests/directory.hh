@@ -25,28 +25,28 @@
 class DirectoryTestSuite : public CxxTest::TestSuite
 {
 public:
-    void testCreateRemove()
+    void testcreateremove()
     {
         ckcore::Directory dir1(ckT("data/new"));
-        TS_ASSERT(dir1.Create());
-        TS_ASSERT(dir1.Remove());
+        TS_ASSERT(dir1.create());
+        TS_ASSERT(dir1.remove());
 
         ckcore::Directory dir2(ckT("data/new/"));
-        TS_ASSERT(dir2.Create());
-        TS_ASSERT(dir2.Remove());
+        TS_ASSERT(dir2.create());
+        TS_ASSERT(dir2.remove());
 
         ckcore::Directory dir3(ckT("data/new/new"));
-        TS_ASSERT(dir3.Create());
-        TS_ASSERT(dir3.Remove());
+        TS_ASSERT(dir3.create());
+        TS_ASSERT(dir3.remove());
 
         ckcore::Directory dir4(ckT("data/new/new/"));
-        TS_ASSERT(dir4.Create());
-        TS_ASSERT(dir4.Remove());
+        TS_ASSERT(dir4.create());
+        TS_ASSERT(dir4.remove());
 
-        // This is just for clean up since the above calls to Remove does not
+        // This is just for clean up since the above calls to remove does not
         // remove more than one directory entry.
         ckcore::Directory dir5(ckT("data/new"));
-        TS_ASSERT(dir5.Remove());
+        TS_ASSERT(dir5.remove());
     }
 
     void testIterator()
@@ -67,14 +67,14 @@ public:
         files2.push_back(ckT("123bytes"));
         files2.push_back(ckT("8253bytes"));
 
-        for (it = dir1.Begin(); it != dir1.End(); it++)
+        for (it = dir1.begin(); it != dir1.end(); it++)
         {
             it_file = std::find(files1.begin(),files1.end(),*it);
             if (it_file != files1.end())
                 files1.erase(it_file);
         }
 
-        for (it = dir2.Begin(); it != dir2.End(); it++)
+        for (it = dir2.begin(); it != dir2.end(); it++)
         {
             it_file = std::find(files2.begin(),files2.end(),*it);
             if (it_file != files2.end())

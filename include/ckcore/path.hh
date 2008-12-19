@@ -44,7 +44,7 @@ namespace ckcore
             size_t pos_end_;
             const Path *path_;
 
-            void Next();
+            void next();
 
         public:
             Iterator();
@@ -64,15 +64,15 @@ namespace ckcore
         Path(const tchar *path_name);
         ~Path();
 
-        Iterator Begin() const;
-        Iterator End() const;
+        Iterator begin() const;
+        Iterator end() const;
 
-        bool Valid() const;
-        const tstring &Name() const;
-        tstring RootName() const;
-        tstring DirName() const;
-        tstring BaseName() const;
-        tstring ExtName() const;
+        bool valid() const;
+        const tstring &name() const;
+        tstring root_name() const;
+        tstring dir_name() const;
+        tstring base_name() const;
+        tstring ext_name() const;
 
         bool operator==(const Path &p) const;
         bool operator!=(const Path &p) const;

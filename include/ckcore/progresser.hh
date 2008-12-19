@@ -42,10 +42,10 @@ namespace ckcore
 	public:
 		Progresser(Progress &progress,tuint64 total);
 
-		void Update(tuint64 count);
-		void Notify(Progress::MessageType type,const tchar *format,...);
+		void update(tuint64 count);
+		void notify(Progress::MessageType type,const tchar *format,...);
 
-		bool Cancelled();
+		bool cancelled();
 	};
 };
 

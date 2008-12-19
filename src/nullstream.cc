@@ -31,7 +31,7 @@ namespace ckcore
      * Returns the number of bytes written to the stream.
      * @return The number of bytes written.
      */
-    tuint64 NullStream::Written()
+    tuint64 NullStream::written()
     {
         return written_;
     }
@@ -43,7 +43,7 @@ namespace ckcore
      * @param [in] count The number of bytes to write.
      * @return The function returns count.
      */
-    tint64 NullStream::Write(void *buffer,tuint32 count)
+    tint64 NullStream::write(void *buffer,tuint32 count)
     {
         written_ += count;
         return count;

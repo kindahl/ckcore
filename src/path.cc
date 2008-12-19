@@ -34,10 +34,10 @@ namespace ckcore
     Path::Iterator::Iterator(const Path &path) : at_end_(false),pos_start_(-1),
         pos_end_(0),path_(&path)
     {
-        Next();
+        next();
     }
 
-    void Path::Iterator::Next()
+    void Path::Iterator::next()
     {
         if (pos_end_ == path_->path_name_.size() ||
             pos_end_ == path_->path_name_.size() - 1)
@@ -89,7 +89,7 @@ namespace ckcore
     Path::Iterator &Path::Iterator::operator++()
     {
         pos_start_ = pos_end_;
-        Next();
+        next();
 
         return *this;
     }
@@ -101,7 +101,7 @@ namespace ckcore
     Path::Iterator &Path::Iterator::operator++(int)
     {
         pos_start_ = pos_end_;
-        Next();         
+        next();         
 
         return *this;
     }
@@ -152,7 +152,7 @@ namespace ckcore
      * Creates an iterator pointing at the beginning of the path name.
      * @return An Iterator object pointing at the beginning of the path name.
      */
-    Path::Iterator Path::Begin() const
+    Path::Iterator Path::begin() const
     {
         return Path::Iterator(*this);
     }
@@ -161,7 +161,7 @@ namespace ckcore
      * Creates and iterator pointing at the end of the path name.
      * @return An Iterator object pointing at the end of the path name.
      */
-    Path::Iterator Path::End() const
+    Path::Iterator Path::end() const
     {
         return Path::Iterator();
     }
@@ -171,7 +171,7 @@ namespace ckcore
      * characters.
      * @return If the path name is valid true is returned, otherwise false.
      */
-    bool Path::Valid() const
+    bool Path::valid() const
     {
 #ifdef _WINDOWS
         for (size_t i = 0; i < path_name_.size(); i++)
@@ -200,7 +200,7 @@ namespace ckcore
      * Returns the full path name.
      * @return The full path name.
      */
-    const tstring &Path::Name() const
+    const tstring &Path::name() const
     {
         return path_name_;
     }
@@ -209,7 +209,7 @@ namespace ckcore
      * Returns anything before and including the first path delimiter.
      * @return The path root name.
      */
-    tstring Path::RootName() const
+    tstring Path::root_name() const
     {
 #ifdef _WINDOWS
         if (path_name_.size() > 2 && path_name_[1] == ':')
@@ -227,7 +227,7 @@ namespace ckcore
      * trailing path delimiter.
      * @return A string containing the dir name of the path name.
      */
-    tstring Path::DirName() const
+    tstring Path::dir_name() const
     {
         size_t end = path_name_.size() - 1;
 #ifdef _WINDOWS
@@ -249,7 +249,7 @@ namespace ckcore
      * Calculates the base name of the path name.
      * @return A string containing the base name of the path name.
      */
-    tstring Path::BaseName() const
+    tstring Path::base_name() const
     {
         size_t end = path_name_.size() - 1;
 #ifdef _WINDOWS
@@ -273,9 +273,9 @@ namespace ckcore
      * character is not included in the returned extension name.
      * @return A string containing the extension name.
      */
-    tstring Path::ExtName() const
+    tstring Path::ext_name() const
     {
-        tstring base_name = BaseName();
+        tstring base_name = Path::base_name();
         size_t delim = base_name.rfind('.');
         if (delim == -1)
             return tstring(ckT(""));
@@ -291,10 +291,10 @@ namespace ckcore
      */
     bool Path::operator==(const Path &p) const
     {
-        Iterator it1 = Begin();
-        Iterator it2 = p.Begin();
+        Iterator it1 = begin();
+        Iterator it2 = p.begin();
 
-        while (it1 != End() && it2 != p.End())
+        while (it1 != end() && it2 != p.end())
         {
             if (it1 != it2)
                 return false;
@@ -302,7 +302,7 @@ namespace ckcore
             it1++,it2++;
         }
 
-        return it1 == End() && it2 == p.End();
+        return it1 == end() && it2 == p.end();
     }
 
     /**

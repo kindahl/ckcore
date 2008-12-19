@@ -54,21 +54,21 @@ namespace ckcore
          *         function returns the number of butes read (this may be zero
          *         when the end of the file has been reached).
          */
-        virtual tint64 Read(void *buffer,tuint32 count) = 0;
+        virtual tint64 read(void *buffer,tuint32 count) = 0;
 
 		/**
 		 * Calculates the size of the data provided by the stream.
 		 * @return If successfull the size in bytes of the stream data is returned,
 		 *		   if unsuccessfull -1 is returned.
 		 */
-		virtual tint64 Size() = 0;
+		virtual tint64 size() = 0;
 
         /**
          * Checks if the end of the stream has been reached.
          * @return If positioned at end of the stream true is returned,
          *         otherwise false is returned.
          */
-        virtual bool End() = 0;
+        virtual bool end() = 0;
 
 		/**
 		 * Repositions the internal stream pointer to the specified offset accoding
@@ -79,7 +79,7 @@ namespace ckcore
 		 *                    final stream pointer position.
 		 * @return If successfull true is returned, oterwise false is returned.
 		 */
-		virtual bool Seek(tuint32 distance,StreamWhence whence) = 0;
+		virtual bool seek(tuint32 distance,StreamWhence whence) = 0;
     };
 
     /**
@@ -99,7 +99,7 @@ namespace ckcore
          *         function returns the number of bytes written (this may be
          *         zero).
          */
-        virtual tint64 Write(void *buffer,tuint32 count) = 0;
+        virtual tint64 write(void *buffer,tuint32 count) = 0;
     };
 
     namespace stream

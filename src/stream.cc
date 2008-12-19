@@ -44,16 +44,16 @@ namespace ckcore
                 return false;
 
             tint64 res = 0;
-            while (!from.End())
+            while (!from.end())
             {
-                res = from.Read(buffer,buffer_size);
+                res = from.read(buffer,buffer_size);
                 if (res == -1)
                 {
                     delete [] buffer;
                     return false;
                 }
 
-                res = to.Write(buffer,(tuint32)res);
+                res = to.write(buffer,(tuint32)res);
                 if (res == -1)
                 {
                     delete [] buffer;
@@ -88,24 +88,24 @@ namespace ckcore
                 return false;
 
 			// Initialize progress.
-			tint64 total = from.Size(),written = 0;
-			progress.SetMarquee(total == -1);
+			tint64 total = from.size(),written = 0;
+			progress.set_marquee(total == -1);
 
             tint64 res = 0;
-            while (!from.End())
+            while (!from.end())
             {
 				// Check if we should cancel.
-				if (progress.Cancelled())
+				if (progress.cancelled())
 					return false;
 
-                res = from.Read(buffer,buffer_size);
+                res = from.read(buffer,buffer_size);
                 if (res == -1)
                 {
                     delete [] buffer;
                     return false;
                 }
 
-                res = to.Write(buffer,(tuint32)res);
+                res = to.write(buffer,(tuint32)res);
                 if (res == -1)
                 {
                     delete [] buffer;
@@ -116,13 +116,13 @@ namespace ckcore
 				if (total != -1)
 				{
 					written += res;
-					progress.SetProgress((unsigned char)((written * 100)/total));
+					progress.set_progress((unsigned char)((written * 100)/total));
 				}
             }
 
 			// Set to 100 in case of rounding errors.
 			if (total != -1)
-				progress.SetProgress(100);
+				progress.set_progress(100);
 
             delete [] buffer;
             return true;
@@ -152,20 +152,20 @@ namespace ckcore
                 return false;
 
             tint64 res = 0;
-            while (!from.End())
+            while (!from.end())
             {
 				// Check if we should cancel.
-				if (progresser.Cancelled())
+				if (progresser.cancelled())
 					return false;
 
-                res = from.Read(buffer,buffer_size);
+                res = from.read(buffer,buffer_size);
                 if (res == -1)
                 {
                     delete [] buffer;
                     return false;
                 }
 
-                res = to.Write(buffer,(tuint32)res);
+                res = to.write(buffer,(tuint32)res);
                 if (res == -1)
                 {
                     delete [] buffer;
@@ -173,7 +173,7 @@ namespace ckcore
                 }
 
 				// Update progress.
-				progresser.Update(res);
+				progresser.update(res);
             }
 
             delete [] buffer;

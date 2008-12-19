@@ -40,22 +40,21 @@ namespace ckcore
     Directory::Iterator::Iterator(const Directory &dir) : dir_handle_(NULL),
         cur_ent_(NULL)
     {
-        //dir_handle_ = opendir(dir.dir_path_.Name().c_str());
         if (dir.dir_handles_.count(this) > 0)
         {
             dir_handle_ = const_cast<Directory &>(dir).dir_handles_[this];
         }
         else
         {
-            dir_handle_ = opendir(dir.dir_path_.Name().c_str());
+            dir_handle_ = opendir(dir.dir_path_.name().c_str());
             const_cast<Directory &>(dir).dir_handles_[this] = dir_handle_;
         }
 
         if (dir_handle_ != NULL)
-            Next();
+            next();
     }
 
-    void Directory::Iterator::Next()
+    void Directory::Iterator::next()
     {
         cur_ent_ = readdir(dir_handle_);
 
@@ -88,7 +87,7 @@ namespace ckcore
     Directory::Iterator &Directory::Iterator::operator++()
     {
         if (cur_ent_ != NULL)
-            Next();
+            next();
 
         return *this;
     }
@@ -101,7 +100,7 @@ namespace ckcore
     Directory::Iterator &Directory::Iterator::operator++(int)
     {
         if (cur_ent_ != NULL)
-            Next();
+            next();
 
         return *this;
     }
@@ -159,9 +158,9 @@ namespace ckcore
 	 * Returns the full directory path name.
 	 * @return The full directory path name.
 	 */
-	const tstring &Directory::Name() const
+	const tstring &Directory::name() const
 	{
-		return dir_path_.Name();
+		return dir_path_.name();
 	}
 
     /**
@@ -169,7 +168,7 @@ namespace ckcore
      * current directory.
      * @return An Iteator object pointing to the first file or directory.
      */
-    Directory::Iterator Directory::Begin() const
+    Directory::Iterator Directory::begin() const
     {
         return Directory::Iterator(*this);
     }
@@ -179,7 +178,7 @@ namespace ckcore
      * directory in the current directory.
      * @return An Iteator object pointing beyond the last file or directory.
      */
-    Directory::Iterator Directory::End() const
+    Directory::Iterator Directory::end() const
     {
         return Directory::Iterator();
     }
@@ -188,28 +187,28 @@ namespace ckcore
      * Creates the directory unless it already exist.
      * @return If successfull true is returned, otherwise false.
      */
-    bool Directory::Create() const
+    bool Directory::create() const
     {
-        return Create(dir_path_);
+        return create(dir_path_);
     }
 
     /**
      * Removes the directory if it exist.
      * @return If successfull true is returned, otherwise false.
      */
-    bool Directory::Remove() const
+    bool Directory::remove() const
     {
-        return rmdir(dir_path_.Name().c_str()) == 0;
+        return rmdir(dir_path_.name().c_str()) == 0;
     }
 
     /**
      * Tests if the current directory exist.
      * @return If the directory exist true is returned, otherwise false.
      */
-    bool Directory::Exist() const
+    bool Directory::exist() const
     {
         struct stat file_stat;
-        if (stat(dir_path_.Name().c_str(),&file_stat) != 0)
+        if (stat(dir_path_.name().c_str(),&file_stat) != 0)
             return false;
 
         return (file_stat.st_mode & S_IFDIR) > 0;
@@ -223,25 +222,25 @@ namespace ckcore
      * @param [out] create_time Time of creation (last status change on Linux).
      * @return If successfull true is returned, otherwise false.
      */
-    bool Directory::Time(struct tm &access_time,struct tm &modify_time,
+    bool Directory::time(struct tm &access_time,struct tm &modify_time,
                          struct tm &create_time) const
     {
-        return Time(dir_path_,access_time,modify_time,create_time);
+        return time(dir_path_,access_time,modify_time,create_time);
     }
 
     /**
      * Creates the specified directory unless it already exist.
      * @return If successfull true is returned, otherwise false.
      */
-    bool Directory::Create(const Path &dir_path)
+    bool Directory::create(const Path &dir_path)
     {
-        tstring cur_path = dir_path.RootName();
+        tstring cur_path = dir_path.root_name();
 
         Path::Iterator it;
-        for (it = dir_path.Begin(); it != dir_path.End(); it++)
+        for (it = dir_path.begin(); it != dir_path.end(); it++)
         {
             cur_path += *it + "/";
-            if (!Exist(cur_path.c_str()))
+            if (!exist(cur_path.c_str()))
             {
                 if (mkdir(cur_path.c_str(),S_IRUSR | S_IWUSR | S_IXUSR) != 0)
                     return false;
@@ -255,19 +254,19 @@ namespace ckcore
      * Removes the specified directory if it exist.
      * @return If successfull true is returned, otherwise false.
      */
-    bool Directory::Remove(const Path &dir_path)
+    bool Directory::remove(const Path &dir_path)
     {
-        return rmdir(dir_path.Name().c_str()) == 0;
+        return rmdir(dir_path.name().c_str()) == 0;
     }
 
     /**
      * Tests if the specified directory exist.
      * @return If the directory exist true is returned, otherwise false.
      */
-    bool Directory::Exist(const Path &dir_path)
+    bool Directory::exist(const Path &dir_path)
     {
         struct stat file_stat;
-        if (stat(dir_path.Name().c_str(),&file_stat) != 0)
+        if (stat(dir_path.name().c_str(),&file_stat) != 0)
             return false;
 
         return (file_stat.st_mode & S_IFDIR) > 0;
@@ -282,11 +281,11 @@ namespace ckcore
      * @param [out] create_time Time of creation (last status change on Linux).
      * @return If successfull true is returned, otherwise false.
      */
-    bool Directory::Time(const Path &dir_path,struct tm &access_time,
+    bool Directory::time(const Path &dir_path,struct tm &access_time,
                          struct tm &modify_time,struct tm &create_time)
     {
         struct stat dir_stat;
-        if (stat(dir_path.Name().c_str(),&dir_stat) == -1)
+        if (stat(dir_path.name().c_str(),&dir_stat) == -1)
             return false;
 
         // Convert to local time.
@@ -309,7 +308,7 @@ namespace ckcore
      * automatically created.
      * @return Directory object to a temporary directory.
      */
-	Directory Directory::Temp()
+	Directory Directory::temp()
 	{
 		tchar *tmp_name = tmpnam(NULL);
         if (tmp_name != NULL)

@@ -38,14 +38,14 @@ namespace ckcore
 		 * Prints a message string to the logging system.
 		 * @param [in] format The message format or the message itself.
 		 */
-		virtual void Print(const tchar *format,...) = 0;
+		virtual void print(const tchar *format,...) = 0;
 
         /**
          * Prints a message string followed by a new line to the logging
          * system.
          * @param [in] format The message format or message itself.
          */
-		virtual void PrintLine(const tchar *format,...) = 0;
+		virtual void print_line(const tchar *format,...) = 0;
     };
 };
 

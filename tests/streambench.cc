@@ -13,14 +13,14 @@ int main(int argc,const char *argv[])
         return 1;
     }
 
-    if (!ckcore::File::Exist(argv[1]))
+    if (!ckcore::File::exist(argv[1]))
     {
         std::cerr << "Error: The specified file does not exist." << std::endl;
         return 1;
     }
 
     ckcore::FileInStream fs(argv[1]);
-    if (!fs.Open())
+    if (!fs.open())
     {
         std::cerr << "Error: Unable to open input file." << std::endl;
         return 1;
@@ -28,13 +28,13 @@ int main(int argc,const char *argv[])
 
     ckcore::BufferedInStream is(fs);
 
-    ckcore::tuint64 last_time = ckcore::System::Time();
+    ckcore::tuint64 last_time = ckcore::System::time();
     ckcore::tuint64 last_read = 0;
 
     unsigned char buffer[100];
-    while (!is.End())
+    while (!is.end())
     {
-        ckcore::tint64 res = is.Read(buffer,sizeof(buffer));
+        ckcore::tint64 res = is.read(buffer,sizeof(buffer));
         if (res == -1)
         {
             std::cerr << "Error: Reading failed." << std::endl;
@@ -44,7 +44,7 @@ int main(int argc,const char *argv[])
         last_read += res;
 
         // Check if a second has passed.
-        ckcore::tuint64 cur_time = ckcore::System::Time();
+        ckcore::tuint64 cur_time = ckcore::System::time();
         if (cur_time - last_time > 1000)
         {
             std::cout << "Speed: " << last_read/(1024*1024) << " MiB/s." << std::endl;

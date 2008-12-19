@@ -52,20 +52,20 @@ namespace ckcore
          * Notifies change in progress.
          * @param [in] percent The progress in percent.
          */
-		virtual void SetProgress(unsigned char percent) {};
+		virtual void set_progress(unsigned char percent) {};
 
         /**
          * Enables or disables marquee progress reporting
 		 * @param [in] enable Set to true to enable marquee mode or set to false to
 		 *			   disable the marquee mode.
          */
-        virtual void SetMarquee(bool enable) {};
+        virtual void set_marquee(bool enable) {};
 
 		/**
 		 * Sets the status message describing the current operation.
 		 * @param [in] format The status message format.
 		 */
-		virtual void SetStatus(const tchar *format,...) = 0;
+		virtual void set_status(const tchar *format,...) = 0;
 
 		/**
 		 * Transmits a message to the interface implementor. This message is
@@ -73,14 +73,14 @@ namespace ckcore
 		 * @param [in] type The type of message.
 		 * @param [in] format The message format.
 		 */
-		virtual void Notify(MessageType type,const tchar *format,...) = 0;
+		virtual void notify(MessageType type,const tchar *format,...) = 0;
 
 		/**
 		 * Checks wether the operation has been cancelled or not.
 		 * @return If the process has been cancelled true is returned, if not
 		 *		   cancelled false is returned.
 		 */
-		virtual bool Cancelled() = 0;
+		virtual bool cancelled() = 0;
     };
 };
 

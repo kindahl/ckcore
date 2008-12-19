@@ -24,7 +24,7 @@ namespace ckcore
      * Constructs a FileInStream object.
      */
     FileInStream::FileInStream(const Path &file_path) : file_(file_path),
-        size_(file_.Size()),read_(0)
+        size_(file_.size()),read_(0)
     {
     }
 
@@ -32,10 +32,10 @@ namespace ckcore
      * Opens the file for access through the stream.
      * @return If successfull true is returned, otherwise false.
      */
-    bool FileInStream::Open()
+    bool FileInStream::open()
     {
-        size_ = file_.Size();
-        return file_.Open(FileBase::ckOPEN_READ);
+        size_ = file_.size();
+        return file_.open(FileBase::ckOPEN_READ);
     }
 
     /**
@@ -43,9 +43,9 @@ namespace ckcore
      * a call this call will fail.
      * @return If successfull true is returned, otherwise false.
      */
-    bool FileInStream::Close()
+    bool FileInStream::close()
     {
-        if (file_.Close())
+        if (file_.close())
         {
             read_ = 0;
             return true;
@@ -59,7 +59,7 @@ namespace ckcore
      * @return If positioned at end of the stream true is returned,
      *         otherwise false is returned.
      */
-    bool FileInStream::End()
+    bool FileInStream::end()
     {
         return read_ >= size_;
     }
@@ -73,7 +73,7 @@ namespace ckcore
      *                    final file pointer position.
      * @return If successfull true is returned, otherwise false is returned.
      */
-	bool FileInStream::Seek(tuint32 distance,StreamWhence whence)
+	bool FileInStream::seek(tuint32 distance,StreamWhence whence)
 	{
 		FileBase::FileWhence file_whence;
 		switch (whence)
@@ -87,7 +87,7 @@ namespace ckcore
 				break;
 		}
 
-		tint64 result = file_.Seek(distance,file_whence);
+		tint64 result = file_.seek(distance,file_whence);
 		if (result != -1)
 		{
 			read_ = result;
@@ -105,9 +105,9 @@ namespace ckcore
      *         function returns the number of butes read (this may be zero
      *         when the end of the file has been reached).
      */
-    tint64 FileInStream::Read(void *buffer,tuint32 count)
+    tint64 FileInStream::read(void *buffer,tuint32 count)
     {
-        tint64 result = file_.Read(buffer,count);
+        tint64 result = file_.read(buffer,count);
         if (result != -1)
             read_ += result;
 
@@ -119,7 +119,7 @@ namespace ckcore
 	 * @return If successfull the size in bytes of the file is returned,
 	 *		   if unsuccessfull -1 is returned.
 	 */
-	tint64 FileInStream::Size()
+	tint64 FileInStream::size()
 	{
 		return size_;
 	}
@@ -135,9 +135,9 @@ namespace ckcore
      * Opens the file for access through the stream.
      * @return If successfull true is returned, otherwise false.
      */
-    bool FileOutStream::Open()
+    bool FileOutStream::open()
     {
-        return file_.Open(FileBase::ckOPEN_WRITE);
+        return file_.open(FileBase::ckOPEN_WRITE);
     }
 
     /**
@@ -145,9 +145,9 @@ namespace ckcore
      * a call this call will fail.
      * @return If successfull true is returned, otherwise false.
      */
-    bool FileOutStream::Close()
+    bool FileOutStream::close()
     {
-        return file_.Close();
+        return file_.close();
     }
 
     /**
@@ -159,9 +159,9 @@ namespace ckcore
      *         function returns the number of bytes written (this may be
      *         zero).
      */
-    tint64 FileOutStream::Write(void *buffer,tuint32 count)
+    tint64 FileOutStream::write(void *buffer,tuint32 count)
     {
-        return file_.Write(buffer,count);
+        return file_.write(buffer,count);
     }
 };
 

@@ -28,131 +28,131 @@ public:
     {
         // Read ANSI encoded file with no ending line break.
         ckcore::FileInStream fis(ckT("data/linereader/text_ansi.txt"));
-        TS_ASSERT(fis.Open());
+        TS_ASSERT(fis.open());
 
         ckcore::LineReader<char> lr(fis);
-        TS_ASSERT_EQUALS(lr.Encoding(),ckcore::LineReader<char>::ckENCODING_ANSI);
-        TS_ASSERT(!lr.End());
+        TS_ASSERT_EQUALS(lr.encoding(),ckcore::LineReader<char>::ckENCODING_ANSI);
+        TS_ASSERT(!lr.end());
 
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 1",6);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 2",6);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 3",6);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 4",6);
-        TS_ASSERT(lr.End());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 1",6);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 2",6);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 3",6);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 4",6);
+        TS_ASSERT(lr.end());
 
-        TS_ASSERT(fis.Close());
+        TS_ASSERT(fis.close());
 	}
 
     void testAnsiElb()
     {
         // Read ANSI encoded file with ending line break.
         ckcore::FileInStream fis(ckT("data/linereader/text_ansi_elb.txt"));
-        TS_ASSERT(fis.Open());
+        TS_ASSERT(fis.open());
 
         ckcore::LineReader<char> lr(fis);
-        TS_ASSERT_EQUALS(lr.Encoding(),ckcore::LineReader<char>::ckENCODING_ANSI);
-        TS_ASSERT(!lr.End());
+        TS_ASSERT_EQUALS(lr.encoding(),ckcore::LineReader<char>::ckENCODING_ANSI);
+        TS_ASSERT(!lr.end());
 
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 1",6);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 2",6);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 3",6);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 4",6);
-        TS_ASSERT(lr.End());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 1",6);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 2",6);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 3",6);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 4",6);
+        TS_ASSERT(lr.end());
 
-        TS_ASSERT(fis.Close());
+        TS_ASSERT(fis.close());
 	}
 
     void testUtf8()
     {
         // Read UTF-8 encoded file with no ending line break.
         ckcore::FileInStream fis(ckT("data/linereader/text_utf8.txt"));
-        TS_ASSERT(fis.Open());
+        TS_ASSERT(fis.open());
 
         ckcore::LineReader<char> lr(fis);
-        TS_ASSERT_EQUALS(lr.Encoding(),ckcore::LineReader<char>::ckENCODING_UTF8);
-        TS_ASSERT(!lr.End());
+        TS_ASSERT_EQUALS(lr.encoding(),ckcore::LineReader<char>::ckENCODING_UTF8);
+        TS_ASSERT(!lr.end());
 
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 1",6);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 2",6);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 3",6);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 4",6);
-        TS_ASSERT(lr.End());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 1",6);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 2",6);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 3",6);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 4",6);
+        TS_ASSERT(lr.end());
 
-        TS_ASSERT(fis.Close());
+        TS_ASSERT(fis.close());
 	}
 
     void testUtf8Elb()
     {
         // Read UTF-8 encoded file with ending line break.
         ckcore::FileInStream fis(ckT("data/linereader/text_utf8_elb.txt"));
-        TS_ASSERT(fis.Open());
+        TS_ASSERT(fis.open());
 
         ckcore::LineReader<char> lr(fis);
-        TS_ASSERT_EQUALS(lr.Encoding(),ckcore::LineReader<char>::ckENCODING_UTF8);
-        TS_ASSERT(!lr.End());
+        TS_ASSERT_EQUALS(lr.encoding(),ckcore::LineReader<char>::ckENCODING_UTF8);
+        TS_ASSERT(!lr.end());
 
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 1",6);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 2",6);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 3",6);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"Line 4",6);
-        TS_ASSERT(lr.End());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 1",6);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 2",6);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 3",6);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"Line 4",6);
+        TS_ASSERT(lr.end());
 
-        TS_ASSERT(fis.Close());
+        TS_ASSERT(fis.close());
 	}
 
     void testUtfLe16()
     {
         // Read UTF-16 encoded file with no ending line break.
         ckcore::FileInStream fis(ckT("data/linereader/text_utf16le.txt"));
-        TS_ASSERT(fis.Open());
+        TS_ASSERT(fis.open());
 
         ckcore::LineReader<short> lr(fis);
-        TS_ASSERT_EQUALS(lr.Encoding(),ckcore::LineReader<short>::ckENCODING_UTF16LE);
-        TS_ASSERT(!lr.End());
+        TS_ASSERT_EQUALS(lr.encoding(),ckcore::LineReader<short>::ckENCODING_UTF16LE);
+        TS_ASSERT(!lr.end());
 
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"L\0i\0n\0e\0 \0\x31\0",12);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"L\0i\0n\0e\0 \0\x32\0",12);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"L\0i\0n\0e\0 \0\x33\0",12);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"L\0i\0n\0e\0 \0\x34\0",12);
-        TS_ASSERT(lr.End());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"L\0i\0n\0e\0 \0\x31\0",12);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"L\0i\0n\0e\0 \0\x32\0",12);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"L\0i\0n\0e\0 \0\x33\0",12);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"L\0i\0n\0e\0 \0\x34\0",12);
+        TS_ASSERT(lr.end());
 
-        TS_ASSERT(fis.Close());
+        TS_ASSERT(fis.close());
 	}
 
     void testUtf16LeElb()
     {
         // Read UTF-16 encoded file with ending line break.
         ckcore::FileInStream fis(ckT("data/linereader/text_utf16le_elb.txt"));
-        TS_ASSERT(fis.Open());
+        TS_ASSERT(fis.open());
 
         ckcore::LineReader<short> lr(fis);
-        TS_ASSERT_EQUALS(lr.Encoding(),ckcore::LineReader<short>::ckENCODING_UTF16LE);
-        TS_ASSERT(!lr.End());
+        TS_ASSERT_EQUALS(lr.encoding(),ckcore::LineReader<short>::ckENCODING_UTF16LE);
+        TS_ASSERT(!lr.end());
 
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"L\0i\0n\0e\0 \0\x31\0",12);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"L\0i\0n\0e\0 \0\x32\0",12);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"L\0i\0n\0e\0 \0\x33\0",12);
-        TS_ASSERT(!lr.End());
-        TS_ASSERT_SAME_DATA(lr.ReadLine().c_str(),"L\0i\0n\0e\0 \0\x34\0",12);
-        TS_ASSERT(lr.End());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"L\0i\0n\0e\0 \0\x31\0",12);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"L\0i\0n\0e\0 \0\x32\0",12);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"L\0i\0n\0e\0 \0\x33\0",12);
+        TS_ASSERT(!lr.end());
+        TS_ASSERT_SAME_DATA(lr.read_line().c_str(),"L\0i\0n\0e\0 \0\x34\0",12);
+        TS_ASSERT(lr.end());
 
-        TS_ASSERT(fis.Close());
+        TS_ASSERT(fis.close());
 	}
 };

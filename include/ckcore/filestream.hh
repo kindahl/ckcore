@@ -42,13 +42,13 @@ namespace ckcore
     public:
         FileInStream(const Path &file_path);
 
-        bool Open();
-        bool Close();
-        bool End();
-		bool Seek(tuint32 distance,StreamWhence whence);
+        bool open();
+        bool close();
+        bool end();
+		bool seek(tuint32 distance,StreamWhence whence);
 
-        tint64 Read(void *buffer,tuint32 count);
-		tint64 Size();
+        tint64 read(void *buffer,tuint32 count);
+		tint64 size();
     };
 
     /**
@@ -62,10 +62,10 @@ namespace ckcore
     public:
         FileOutStream(const Path &file_path);
 
-        bool Open();
-        bool Close();
+        bool open();
+        bool close();
 
-        tint64 Write(void *buffer,tuint32 count);
+        tint64 write(void *buffer,tuint32 count);
     };
 };
 
