@@ -49,7 +49,7 @@ namespace ckcore
 			WIN32_FIND_DATA cur_ent_;
 			bool at_end_;
 
-            void Next();
+            void next();
 
         public:
             Iterator();
@@ -71,23 +71,23 @@ namespace ckcore
         Directory(const Path &dir_path);
         ~Directory();
 
-		const tstring &Name() const;
+		const tstring &name() const;
 
-        Iterator Begin() const;
-        Iterator End() const;
+        Iterator begin() const;
+        Iterator end() const;
 
-        bool Create() const;
-        bool Remove() const;
-        bool Exist() const;
-        bool Time(struct tm &access_time,struct tm &modify_time,
+        bool create() const;
+        bool remove() const;
+        bool exist() const;
+        bool time(struct tm &access_time,struct tm &modify_time,
                   struct tm &create_time) const;
 
-        static bool Create(const Path &dir_path);
-        static bool Remove(const Path &dir_path);
-        static bool Exist(const Path &dir_path);
-        static bool Time(const Path &dir_path,struct tm &access_time,
+        static bool create(const Path &dir_path);
+        static bool remove(const Path &dir_path);
+        static bool exist(const Path &dir_path);
+        static bool time(const Path &dir_path,struct tm &access_time,
                          struct tm &modify_time,struct tm &create_time);
-		static Directory Temp();
+		static Directory temp();
     };
 };
 

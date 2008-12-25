@@ -44,7 +44,7 @@ namespace ckcore
         }
         else
         {
-			tstring path = dir.dir_path_.Name();
+			tstring path = dir.dir_path_.name();
 			tchar last = path[path.size() - 1];
 
 			// Make sure we have a trailing delimiter.
@@ -67,12 +67,12 @@ namespace ckcore
 			if (!lstrcmp(cur_ent_.cFileName,ckT(".")) ||
 				!lstrcmp(cur_ent_.cFileName,ckT("..")))
 			{
-				Next();
+				next();
 			}
 		}
     }
 
-    void Directory::Iterator::Next()
+    void Directory::Iterator::next()
     {
 		while (!(at_end_ = !FindNextFile(dir_handle_,&cur_ent_)))
 		{
@@ -106,7 +106,7 @@ namespace ckcore
     Directory::Iterator &Directory::Iterator::operator++()
     {
         if (!at_end_)
-            Next();
+            next();
 
         return *this;
     }
@@ -119,7 +119,7 @@ namespace ckcore
     Directory::Iterator &Directory::Iterator::operator++(int)
     {
         if (!at_end_)
-            Next();
+            next();
 
         return *this;
     }
@@ -177,9 +177,9 @@ namespace ckcore
      * Returns the full directory path name.
      * @return The full directory path name.
      */
-	const tstring &Directory::Name() const
+	const tstring &Directory::name() const
 	{
-		return dir_path_.Name();
+		return dir_path_.name();
 	}
 
     /**
@@ -187,7 +187,7 @@ namespace ckcore
      * current directory.
      * @return An Iteator object pointing to the first file or directory.
      */
-    Directory::Iterator Directory::Begin() const
+    Directory::Iterator Directory::begin() const
     {
         return Directory::Iterator(*this);
     }
@@ -197,7 +197,7 @@ namespace ckcore
      * directory in the current directory.
      * @return An Iteator object pointing beyond the last file or directory.
      */
-    Directory::Iterator Directory::End() const
+    Directory::Iterator Directory::end() const
     {
         return Directory::Iterator();
     }
@@ -206,27 +206,27 @@ namespace ckcore
      * Creates the directory unless it already exist.
      * @return If successfull true is returned, otherwise false.
      */
-    bool Directory::Create() const
+    bool Directory::create() const
     {
-        return Create(dir_path_);
+        return create(dir_path_);
     }
 
     /**
      * Removes the directory if it exist.
      * @return If successfull true is returned, otherwise false.
      */
-    bool Directory::Remove() const
+    bool Directory::remove() const
     {
-		return RemoveDirectory(dir_path_.Name().c_str()) != FALSE;
+		return RemoveDirectory(dir_path_.name().c_str()) != FALSE;
     }
 
     /**
      * Tests if the current directory exist.
      * @return If the directory exist true is returned, otherwise false.
      */
-    bool Directory::Exist() const
+    bool Directory::exist() const
     {
-		unsigned long attr = GetFileAttributes(dir_path_.Name().c_str());
+		unsigned long attr = GetFileAttributes(dir_path_.name().c_str());
 
 		return (attr != -1) && (attr & FILE_ATTRIBUTE_DIRECTORY);
     }
@@ -239,25 +239,25 @@ namespace ckcore
      * @param [out] createckTime Time of creation (last status change on Linux).
      * @return If successfull true is returned, otherwise false.
      */
-    bool Directory::Time(struct tm &accessckTime,struct tm &modifyckTime,
+    bool Directory::time(struct tm &accessckTime,struct tm &modifyckTime,
                          struct tm &createckTime) const
     {
-		return Time(dir_path_,accessckTime,modifyckTime,createckTime);
+		return time(dir_path_,accessckTime,modifyckTime,createckTime);
     }
 
     /**
      * Creates the specified directory unless it already exist.
      * @return If successfull true is returned, otherwise false.
      */
-    bool Directory::Create(const Path &dir_path)
+    bool Directory::create(const Path &dir_path)
     {
 		tstring cur_path;
 
         Path::Iterator it;
-        for (it = dir_path.Begin(); it != dir_path.End(); it++)
+        for (it = dir_path.begin(); it != dir_path.end(); it++)
         {
             cur_path += *it + ckT("/");
-            if (!Exist(cur_path.c_str()))
+            if (!exist(cur_path.c_str()))
             {
 				if (CreateDirectory(cur_path.c_str(),NULL) == FALSE)
                     return false;
@@ -271,18 +271,18 @@ namespace ckcore
      * Removes the specified directory if it exist.
      * @return If successfull true is returned, otherwise false.
      */
-    bool Directory::Remove(const Path &dir_path)
+    bool Directory::remove(const Path &dir_path)
     {
-		return RemoveDirectory(dir_path.Name().c_str()) != FALSE;
+		return RemoveDirectory(dir_path.name().c_str()) != FALSE;
     }
 
     /**
      * Tests if the specified directory exist.
      * @return If the directory exist true is returned, otherwise false.
      */
-    bool Directory::Exist(const Path &dir_path)
+    bool Directory::exist(const Path &dir_path)
     {
-		unsigned long attr = GetFileAttributes(dir_path.Name().c_str());
+		unsigned long attr = GetFileAttributes(dir_path.name().c_str());
 
 		return (attr != -1) && (attr & FILE_ATTRIBUTE_DIRECTORY);
     }
@@ -296,11 +296,11 @@ namespace ckcore
      * @param [out] createckTime Time of creation (last status change on Linux).
      * @return If successfull true is returned, otherwise false.
      */
-    bool Directory::Time(const Path &dir_path,struct tm &accessckTime,
+    bool Directory::time(const Path &dir_path,struct tm &accessckTime,
                          struct tm &modifyckTime,struct tm &createckTime)
     {
 		WIN32_FILE_ATTRIBUTE_DATA file_info;
-		if (GetFileAttributesEx(dir_path.Name().c_str(),GetFileExInfoStandard,
+		if (GetFileAttributesEx(dir_path.name().c_str(),GetFileExInfoStandard,
 								&file_info) == FALSE)
 		{
 			return false;
@@ -331,7 +331,7 @@ namespace ckcore
 	 * generated to be placed in the systems default temporary directory.
 	 * @return Directory object of temp directory.
 	 */
-	Directory Directory::Temp()
+	Directory Directory::temp()
 	{
 		tchar dir_name[246];
 		if (GetTempPath(sizeof(dir_name) / sizeof(tchar),dir_name) == 0)
@@ -349,8 +349,8 @@ namespace ckcore
 
 		Path tmp_path(tmp_name);
 
-		if (File::Exist(tmp_path))
-			File::Remove(tmp_path);
+		if (File::exist(tmp_path))
+			File::remove(tmp_path);
 
 		return Directory(tmp_path);
 	}

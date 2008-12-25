@@ -37,16 +37,16 @@ namespace ckcore
      */
     File::~File()
     {
-        Close();
+        close();
     }
 
 	/**
      * Returns the full file path name.
      * @return The full file path name.
      */
-	const tstring &File::Name() const
+	const tstring &File::name() const
 	{
-		return file_path_.Name();
+		return file_path_.name();
 	}
 
     /**
@@ -56,18 +56,18 @@ namespace ckcore
      *                       exist.
      * @return If successfull true is returned, otherwise false.
      */
-    bool File::Open(FileMode file_mode)
+    bool File::open(FileMode file_mode)
     {
         // Check a file handle has already been opened, in that case try to close
         // it.
-        if (file_handle_ != INVALID_HANDLE_VALUE && !Close())
+        if (file_handle_ != INVALID_HANDLE_VALUE && !close())
             return false;
 
         // Open the file handle.
         switch (file_mode)
         {
             case ckOPEN_READ:
-                file_handle_ = CreateFile(file_path_.Name().c_str(),
+                file_handle_ = CreateFile(file_path_.name().c_str(),
 										  GENERIC_READ,
 										  FILE_SHARE_READ | FILE_SHARE_WRITE,
 										  NULL,OPEN_EXISTING,
@@ -75,14 +75,14 @@ namespace ckcore
                 break;
 
             case ckOPEN_WRITE:
-                file_handle_ = CreateFile(file_path_.Name().c_str(),
+                file_handle_ = CreateFile(file_path_.name().c_str(),
 										  GENERIC_WRITE,
 										  FILE_SHARE_READ,NULL,CREATE_ALWAYS,
 										  FILE_ATTRIBUTE_ARCHIVE,NULL);
                 break;
 
 			case ckOPEN_READWRITE:
-				file_handle_ = CreateFile(file_path_.Name().c_str(),
+				file_handle_ = CreateFile(file_path_.name().c_str(),
 										  GENERIC_WRITE,
 										  FILE_SHARE_READ,NULL,OPEN_EXISTING,
 										  FILE_ATTRIBUTE_ARCHIVE,NULL);
@@ -97,7 +97,7 @@ namespace ckcore
      * a call this call will fail.
      * @return If successfull true is returned, otherwise false.
      */
-    bool File::Close()
+    bool File::close()
     {
         if (file_handle_ == INVALID_HANDLE_VALUE)
             return false;
@@ -115,7 +115,7 @@ namespace ckcore
      * Checks whether the file has been opened or not.
      * @return If a file is open true is returned, otherwise false.
      */
-    bool File::Test() const
+    bool File::test() const
     {
         return file_handle_ != INVALID_HANDLE_VALUE;
     }
@@ -130,7 +130,7 @@ namespace ckcore
      * @return If successfull the resulting file pointer location is returned,
      *         otherwise -1 is returned.
      */
-    tint64 File::Seek(tint64 distance,FileWhence whence)
+    tint64 File::seek(tint64 distance,FileWhence whence)
     {
         if (file_handle_ == INVALID_HANDLE_VALUE)
             return -1;
@@ -164,7 +164,7 @@ namespace ckcore
      * @return If successfull the current file pointer position, otherwise -1
      *         is returned.
      */
-    tint64 File::Tell() const
+    tint64 File::tell() const
     {
         if (file_handle_ == INVALID_HANDLE_VALUE)
             return -1;
@@ -190,7 +190,7 @@ namespace ckcore
      *         returns the number of bytes read (this may be zero when the end
      *         of the file has been reached).
      */
-    tint64 File::Read(void *buffer,tuint32 count)
+    tint64 File::read(void *buffer,tuint32 count)
     {
         if (file_handle_ == INVALID_HANDLE_VALUE)
             return -1;
@@ -210,7 +210,7 @@ namespace ckcore
      * @return If the operation failed -1 is returned, otherwise the function
      *         returns the number of bytes written (this may be zero).
      */
-    tint64 File::Write(const void *buffer,tuint32 count)
+    tint64 File::write(const void *buffer,tuint32 count)
     {
         if (file_handle_ == INVALID_HANDLE_VALUE)
             return -1;
@@ -226,9 +226,9 @@ namespace ckcore
      * Checks whether the file exist or not.
      * @return If the file exist true is returned, otherwise false.
      */
-    bool File::Exist() const
+    bool File::exist() const
     {
-		return Exist(file_path_);
+		return exist(file_path_);
     }
 
     /**
@@ -237,11 +237,10 @@ namespace ckcore
      * @return If the file was successfully deleted true is returned, otherwise
      *         false is returned.
      */
-    bool File::Remove()
+    bool File::remove()
     {
-		Close();
-
-		return Remove(file_path_);
+		close();
+		return remove(file_path_);
     }
 
     /**
@@ -251,16 +250,16 @@ namespace ckcore
      * @return If the file was sucessfully renamed true is returned, otherwise
      *         false is returned.
      */
-    bool File::Rename(const Path &new_file_path)
+    bool File::rename(const Path &new_file_path)
     {
         // If a file already exist abort so it will not be overwritten. 
-        if (Exist(new_file_path))
+        if (exist(new_file_path))
             return false;
 
-        Close();
+        close();
 
-		if (MoveFile(file_path_.Name().c_str(),
-					 new_file_path.Name().c_str()) != FALSE)
+		if (MoveFile(file_path_.name().c_str(),
+					 new_file_path.name().c_str()) != FALSE)
 		{
 			file_path_ = new_file_path;
 			return true;
@@ -277,7 +276,7 @@ namespace ckcore
      * @param [out] create_time Time of creation (last status change on Linux).
      * @return If successfull true is returned, otherwise false.
      */
-    bool File::Time(struct tm &access_time,struct tm &modify_time,
+    bool File::time(struct tm &access_time,struct tm &modify_time,
                     struct tm &create_time) const
     {
         if (file_handle_ != INVALID_HANDLE_VALUE)
@@ -316,7 +315,7 @@ namespace ckcore
             return true;
         }
 
-        return Time(file_path_,access_time,modify_time,create_time);
+        return time(file_path_,access_time,modify_time,create_time);
     }
 
     /**
@@ -327,9 +326,9 @@ namespace ckcore
      *         specified file mode true is returned, otherwise false is
      *         returned.
      */
-    bool File::Access(FileMode file_mode) const
+    bool File::access(FileMode file_mode) const
     {
-        return Access(file_path_,file_mode);
+        return access(file_path_,file_mode);
     }
 
 	/**
@@ -337,21 +336,21 @@ namespace ckcore
 	 * @return If successfull and if the file is hidden true is returned,
 	 *		   otherwise false is returned.
 	 */
-	bool File::Hidden() const
+	bool File::hidden() const
 	{
-		return Hidden(file_path_);
+		return hidden(file_path_);
 	}
 
     /**
      * Calcualtes the size of the file.
      * @return If successfull the size of the file, otherwise -1 is returned.
      */
-    tint64 File::Size()
+    tint64 File::size()
     {
         // If the file is not open, use the static in this case optimized
         // function.
 		if (file_handle_ == INVALID_HANDLE_VALUE)
-			return Size(file_path_.Name().c_str());
+			return size(file_path_.name().c_str());
 
 		LARGE_INTEGER li;
 		li.QuadPart = 0;
@@ -368,9 +367,9 @@ namespace ckcore
      * @param [in] file_path The path to the file.
      * @return If the file exist true is returned, otherwise false.
      */
-    bool File::Exist(const Path &file_path)
+    bool File::exist(const Path &file_path)
     {
-		unsigned long attr = GetFileAttributes(file_path.Name().c_str());
+		unsigned long attr = GetFileAttributes(file_path.name().c_str());
 
 		return (attr != -1) && ((attr & FILE_ATTRIBUTE_DIRECTORY) == 0);
     }
@@ -382,9 +381,9 @@ namespace ckcore
      * @return If the file was successfully deleted true is returned, otherwise
      *         false is returned.
      */
-    bool File::Remove(const Path &file_path)
+    bool File::remove(const Path &file_path)
     {
-        return DeleteFile(file_path.Name().c_str()) != FALSE;
+        return DeleteFile(file_path.name().c_str()) != FALSE;
     }
 
     /**
@@ -395,13 +394,13 @@ namespace ckcore
      * @return If the file was sucessfully renamed true is returned, otherwise
      *         false is returned.
      */
-    bool File::Rename(const Path &old_file_path,const Path &new_file_path)
+    bool File::rename(const Path &old_file_path,const Path &new_file_path)
     {
-        if (Exist(new_file_path))
+        if (exist(new_file_path))
             return false;
 
-        return MoveFile(old_file_path.Name().c_str(),
-						new_file_path.Name().c_str()) != FALSE;
+        return MoveFile(old_file_path.name().c_str(),
+						new_file_path.name().c_str()) != FALSE;
     }
 
     /**
@@ -413,10 +412,10 @@ namespace ckcore
      * @param [out] create_time Time of creation (last status change on Linux).
      * @return If successfull true is returned, otherwise false.
      */
-    bool File::Time(const Path &file_path,struct tm &access_time,
+    bool File::time(const Path &file_path,struct tm &access_time,
                     struct tm &modify_time,struct tm &create_time)
     {
-		HANDLE file_handle = CreateFile(file_path.Name().c_str(),GENERIC_READ,
+		HANDLE file_handle = CreateFile(file_path.name().c_str(),GENERIC_READ,
 										FILE_SHARE_READ | FILE_SHARE_WRITE,
 										NULL,OPEN_EXISTING,
 										FILE_ATTRIBUTE_ARCHIVE,NULL);
@@ -469,16 +468,16 @@ namespace ckcore
      *         specified file mode true is returned, otherwise false is
      *         returned.
      */
-    bool File::Access(const Path &file_path,FileMode file_mode)
+    bool File::access(const Path &file_path,FileMode file_mode)
     {
         switch (file_mode)
         {
             case ckOPEN_READ:
-				return Exist(file_path);
+				return exist(file_path);
 
             case ckOPEN_WRITE:
 			case ckOPEN_READWRITE:
-				unsigned long attr = GetFileAttributes(file_path.Name().c_str());
+				unsigned long attr = GetFileAttributes(file_path.name().c_str());
 				return (attr != -1) && !(attr & FILE_ATTRIBUTE_READONLY);
         }
 
@@ -490,9 +489,9 @@ namespace ckcore
 	 * @return If successfull and if the file is hidden true is returned,
 	 *		   otherwise false is returned.
 	 */
-	bool File::Hidden(const Path &file_path)
+	bool File::hidden(const Path &file_path)
 	{
-		unsigned long attr = GetFileAttributes(file_path.Name().c_str());
+		unsigned long attr = GetFileAttributes(file_path.name().c_str());
 		if (attr == INVALID_FILE_ATTRIBUTES)
 			return false;
 
@@ -504,9 +503,9 @@ namespace ckcore
      * @param [in] file_path The path to the file.
      * @return If successfull the size of the file, otherwise -1 is returned.
      */
-    tint64 File::Size(const Path &file_path)
+    tint64 File::size(const Path &file_path)
     {
-		HANDLE file_handle = CreateFile(file_path.Name().c_str(),GENERIC_READ,
+		HANDLE file_handle = CreateFile(file_path.name().c_str(),GENERIC_READ,
 										FILE_SHARE_READ | FILE_SHARE_WRITE,
 										NULL,OPEN_EXISTING,
 										FILE_ATTRIBUTE_ARCHIVE,NULL);
@@ -531,7 +530,7 @@ namespace ckcore
 	 * to be placed in the systems default temporary directory.
 	 * @return File object of temp file.
 	 */
-	File File::Temp()
+	File File::temp()
 	{
 		tchar dir_name[246];
 		GetTempPath(sizeof(dir_name) / sizeof(tchar),dir_name);
@@ -549,10 +548,10 @@ namespace ckcore
 	 *                       stored.
 	 * @return File object of temp file.
 	 */
-	File File::Temp(const Path &file_path)
+	File File::temp(const Path &file_path)
 	{
 		tchar tmp_name[260];
-		GetTempFileName(file_path.Name().c_str(),ckT("tmp"),0,tmp_name);
+		GetTempFileName(file_path.name().c_str(),ckT("tmp"),0,tmp_name);
 
 		return File(tmp_name);
 	}
