@@ -18,7 +18,7 @@
 
 /**
  * @file include/ckcore/unix/directory.hh
- * @brief Defines the Linux directory class.
+ * @brief Defines the Unix directory class.
  */
 #pragma once
 #include <map>

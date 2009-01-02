@@ -18,7 +18,7 @@
 
 /**
  * @file include/ckcore/unix/file.hh
- * @brief Defines the Linux file class.
+ * @brief Defines the Unix file class.
  */
 #pragma once
 #include "ckcore/file.hh"

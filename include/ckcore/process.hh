@@ -17,48 +17,17 @@
  */
 
 /**
- * @file include/ckcore/file.hh
- * @brief Defines the virtual file base class.
+ * @file include/ckcore/process.hh
+ * @brief Defines the process class.
  */
 
 #pragma once
 
-namespace ckcore
-{
-    /**
-     * @brief The virtual base class for using files.
-     */
-    class FileBase
-    {
-    public:
-        /**
-         * Defines modes which describes how to open files.
-         */
-        enum FileMode
-        {
-            ckOPEN_READ,
-            ckOPEN_WRITE,
-			ckOPEN_READWRITE
-        };
-
-        /**
-         * Defines directives what to use as base offset when performing seek
-         * operations.
-         */
-        enum FileWhence
-        {
-            ckFILE_CURRENT,
-            ckFILE_BEGIN,
-			ckFILE_END
-        };
-    };
-};
-
 #ifdef _WINDOWS
-#include "ckcore/windows/file.hh"
+#include "ckcore/windows/process.hh"
 #endif
 
 #ifdef _UNIX
-#include "ckcore/unix/file.hh"
+#include "ckcore/unix/process.hh"
 #endif
 
