@@ -1,6 +1,7 @@
 #include <iostream>
 
 #ifdef _WINDOWS
+#include <string>
 #include <windows.h>
 #define sleep(x) Sleep(x*1000)
 #endif
@@ -53,9 +54,9 @@ int main(int argc,const char *argv[])
 
             std::string str;
             int i = 0;
-            std::cin >> str >> i;
+			std::cin >> str >> i;
 
-            if (str == "TEST" && i == 1)
+			if (str == "TEST" && i == 1)
                 std::cout << "RESPONSE 1" << std::endl;
             else
                 std::cout << "UNKNOWN" << std::endl;
