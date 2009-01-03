@@ -15,6 +15,8 @@ int main(int argc,const char *argv[])
             mode = 2;
         else if (!strcmp(argv[1],"-m3"))
             mode = 3;
+        else if (!strcmp(argv[1],"-m4"))
+            mode = 4;
     }
 
     std::cout << "SmallClient" << std::endl;
@@ -39,9 +41,24 @@ int main(int argc,const char *argv[])
             std::cerr << "2" << std::endl;
             break;
 
+        // Test killing a process.
         case 3:
 			std::cout << "Sleeping for 30 seconds" << std::endl;
 			sleep(30);
+            break;
+
+        // Test standard input.
+        case 4:
+            std::cout << "MESSAGE 1" << std::endl;
+
+            std::string str;
+            int i = 0;
+            std::cin >> str >> i;
+
+            if (str == "TEST" && i == 1)
+                std::cout << "RESPONSE 1" << std::endl;
+            else
+                std::cout << "UNKNOWN" << std::endl;
             break;
     }
 

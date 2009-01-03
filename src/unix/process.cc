@@ -341,6 +341,11 @@ namespace ckcore
         pthread_mutex_unlock(&process->mutex_exec_);
     }
 
+    /**
+     * Parses the specified command line into a vector of command line arguments.
+     * @param [in] cmd_line The full command line to parse.
+     * @return Vector of discrete command line arguments.
+     */
     std::vector<tstring> Process::parse_cmd_line(const tchar *cmd_line) const
     {
         std::vector<tstring> res;
@@ -416,8 +421,6 @@ namespace ckcore
         if (pipe(pipe_stdin_) == -1 || pipe(pipe_stdout_) == -1 || pipe(pipe_stderr_) == -1)
             return false;
 
-        fcntl(pipe_stdin_[FD_READ],F_SETFL,fcntl(pipe_stdin_[FD_READ],F_GETFL) | O_NONBLOCK);
-        fcntl(pipe_stdin_[FD_WRITE],F_SETFL,fcntl(pipe_stdin_[FD_WRITE],F_GETFL) | O_NONBLOCK);
         fcntl(pipe_stdout_[FD_READ],F_SETFL,fcntl(pipe_stdout_[FD_READ],F_GETFL) | O_NONBLOCK);
         fcntl(pipe_stdout_[FD_WRITE],F_SETFL,fcntl(pipe_stdout_[FD_WRITE],F_GETFL) | O_NONBLOCK);
         fcntl(pipe_stderr_[FD_READ],F_SETFL,fcntl(pipe_stderr_[FD_READ],F_GETFL) | O_NONBLOCK);
@@ -441,6 +444,14 @@ namespace ckcore
             {
                 close();
                 exit(-1);
+            }
+
+            // Close handles that we no longer need.
+            for (int i = 0; i < 2; i++)
+            {
+                ::close(pipe_stdin_[i]);
+                ::close(pipe_stdout_[i]);
+                ::close(pipe_stderr_[i]);
             }
 
             execv(path,arg_list);

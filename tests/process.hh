@@ -139,4 +139,24 @@ public:
 		TS_ASSERT(process.kill());
         TS_ASSERT(!process.finished());
 	}
+
+    void testWrite()
+    {
+		ProcessWrapper process;
+
+		ckcore::tstring cmd_line = SMALLCLIENT;
+		cmd_line += ckT(" -m4");	// Cause the client to read from standard input.
+
+        TS_ASSERT(!process.finished());
+        TS_ASSERT(!process.running());
+		TS_ASSERT(process.create(cmd_line.c_str()));
+        TS_ASSERT(!process.finished());
+        TS_ASSERT(process.running());
+        process.write((void *)"TEST 1\n",7);
+        process.wait();
+        TS_ASSERT_SAME_DATA(process.next().c_str(),"SmallClient",12);
+        TS_ASSERT_SAME_DATA(process.next().c_str(),"MESSAGE 1",9);
+        TS_ASSERT_SAME_DATA(process.next().c_str(),"RESPONSE 1",10);
+        TS_ASSERT(process.finished());
+    }
 };
