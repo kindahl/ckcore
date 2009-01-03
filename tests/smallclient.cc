@@ -1,5 +1,10 @@
 #include <iostream>
 
+#ifdef _WINDOWS
+#include <windows.h>
+#define sleep(x) Sleep(x*1000)
+#endif
+
 int main(int argc,const char *argv[])
 {
     int mode = 1;
@@ -35,6 +40,8 @@ int main(int argc,const char *argv[])
             break;
 
         case 3:
+			std::cout << "Sleeping for 30 seconds" << std::endl;
+			sleep(30);
             break;
     }
 

@@ -28,7 +28,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="Generating test program."
-				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh"
+				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh ../../tests/process.hh"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -196,7 +196,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="Generating test program."
-				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh"
+				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh ../../tests/process.hh"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -379,6 +379,10 @@
 			</File>
 			<File
 				RelativePath="..\..\tests\path.hh"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\process.hh"
 				>
 			</File>
 			<File

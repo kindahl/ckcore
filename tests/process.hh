@@ -21,6 +21,12 @@
 #include "ckcore/types.hh"
 #include "ckcore/process.hh"
 
+#ifdef _WINDOWS
+#define SMALLCLIENT		ckT("bin/smallclient.exe")
+#else
+#define SMALLCLIENT		ckT("./bin/smallclient")
+#endif
+
 class ProcessWrapper : public ckcore::Process
 {
 private:
@@ -59,10 +65,10 @@ public:
     {
         ProcessWrapper process;
 
-        std::vector<ckcore::tstring> args;
+		ckcore::tstring cmd_line = SMALLCLIENT;
 
         TS_ASSERT(!process.running());
-        TS_ASSERT(process.create(ckT("./bin/smallclient"),args));
+        TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
         TS_ASSERT_SAME_DATA(process.next().c_str(),"SmallClient",12);
         TS_ASSERT_SAME_DATA(process.next().c_str(),"MESSAGE 1",9);
@@ -72,27 +78,46 @@ public:
     {
         ProcessWrapper process;
 
-        std::vector<ckcore::tstring> args;
-        args.push_back(ckT("-m2"));
+		ckcore::tstring cmd_line = SMALLCLIENT;
+		cmd_line += ckT(" -m2");
 
         TS_ASSERT(!process.running());
-        TS_ASSERT(process.create(ckT("./bin/smallclient"),args));
+		TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
+
+#ifdef _WINDOWS
+		// The Windows implementation does not yet support interleaved writing.
+        TS_ASSERT_SAME_DATA(process.next().c_str(),"SmallClient",12);
+        TS_ASSERT_SAME_DATA(process.next().c_str(),"MESSAGE MESSAGE 1",17);
+		TS_ASSERT_SAME_DATA(process.next().c_str(),"2",1);
+#else
+		// The Windows implementation does not yet support interleaved writing.
         TS_ASSERT_SAME_DATA(process.next().c_str(),"SmallClient",12);
         TS_ASSERT_SAME_DATA(process.next().c_str(),"MESSAGE 1",9);
         TS_ASSERT_SAME_DATA(process.next().c_str(),"MESSAGE 2",9);
+#endif
 	}
 
     void testBadExec()
     {
         ProcessWrapper process;
 
-        std::vector<ckcore::tstring> args;
-        args.push_back(ckT("-l"));
+		ckcore::tstring cmd_line = ckT("ls -l");	// Does not exist in Unix as well as Windows.
 
         TS_ASSERT(!process.running());
-        TS_ASSERT(process.create(ckT("ls"),args));
+		TS_ASSERT(!process.create(cmd_line.c_str()));
         TS_ASSERT(!process.running());
 	}
-};
 
+	void testKill()
+	{
+		ProcessWrapper process;
+
+		ckcore::tstring cmd_line = SMALLCLIENT;
+		cmd_line += ckT(" -m3");	// Cause the client to sleep for 30 seconds.
+
+        TS_ASSERT(!process.running());
+		TS_ASSERT(process.create(cmd_line.c_str()));
+		TS_ASSERT(process.kill());
+	}
+};

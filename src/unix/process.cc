@@ -401,7 +401,7 @@ namespace ckcore
         }
 
         // Give the client application a chance to start.
-        sleep(200);
+        usleep(200 * 1000);
 
         return true;
     }
@@ -442,7 +442,7 @@ namespace ckcore
 
         // Make sure that the state is valid.
         while (state_ != STATE_STOPPED)
-            sleep(2);
+            usleep(100 * 1000);
 
         return true;
     }

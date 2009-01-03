@@ -58,15 +58,16 @@ namespace ckcore
         HANDLE pipe_output_;            // Pipe handle for both standard output and standard error.
 
         HANDLE process_handle_;
-        HANDLE stop_event_;
         HANDLE thread_handle_;
+		HANDLE start_event_;
+        HANDLE stop_event_;
         volatile unsigned long thread_id_;  // Thread identifier.
         volatile State state_;              // Process state.
 
         std::string line_buffer_;       // For buffering partial standard output lines before commiting them.
 
         void close();
-        bool read_output(int fd);
+        bool read_output(HANDLE handle);
 
         // For multi-threading.
         HANDLE mutex_;
@@ -77,9 +78,10 @@ namespace ckcore
         Process();
         virtual ~Process();
 
-        bool create(const tchar *path,std::vector<tstring> &args);
+        bool create(const tchar *cmd_line);
         bool running() const;
         bool wait() const;
+		bool kill() const;
 
         // OutStream interface.
         tint64 write(void *buffer,tuint32 count);

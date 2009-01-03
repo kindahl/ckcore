@@ -701,6 +701,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\process.cc"
+					>
+				</File>
+				<File
 					RelativePath=".\stdafx.cc"
 					>
 					<FileConfiguration
@@ -789,6 +793,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\ckcore\process.hh"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\ckcore\progress.hh"
 				>
 			</File>
@@ -821,6 +829,10 @@
 				</File>
 				<File
 					RelativePath="..\..\include\ckcore\windows\file.hh"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\ckcore\windows\process.hh"
 					>
 				</File>
 				<File

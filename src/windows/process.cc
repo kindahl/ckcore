@@ -16,11 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <unistd.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <signal.h>
-#include <map>
+#include "stdafx.hh"
 #include "ckcore/stream.hh"
 #include "ckcore/process.hh"
 
@@ -31,12 +27,20 @@ namespace ckcore
      */
     Process::Process() : invalid_inheritor_(false),
         pipe_stdin_(NULL),pipe_output_(NULL),
-        process_handle_(NULL),stop_event_(NULL),thread_handle_(NULL),
+        process_handle_(NULL),thread_handle_(NULL),
+		start_event_(NULL),stop_event_(NULL),
         thread_id_(0),state_(STATE_STOPPED),
         mutex_(NULL),mutex_exec_(NULL)
     {
         mutex_ = CreateMutex(NULL,FALSE,NULL);
         mutex_exec_ = CreateMutex(NULL,FALSE,NULL);
+
+		// Create the start event that will notify the create function when the
+		// listening thread has been started.
+		start_event_ = CreateEvent(NULL,true,false,NULL);
+
+		// Create the stop event that will be used to kill the listening thread.
+		stop_event_ = CreateEvent(NULL,true,false,NULL);
     }
 
     /**
@@ -50,6 +54,20 @@ namespace ckcore
             ReleaseMutex(mutex_exec_);
 
         close();
+
+		// Destroy start event.
+		if (start_event_ != NULL)
+		{
+			CloseHandle(start_event_);
+			start_event_ = NULL;
+		}
+
+		// Destroy stop event.
+		if (stop_event_ != NULL)
+        {
+            CloseHandle(stop_event_);
+            stop_event_ = NULL;
+        }
 
         // Closes mutexes.
         if (mutex_exec_ != NULL)
@@ -82,17 +100,11 @@ namespace ckcore
                 SetEvent(stop_event_);
 
                 if (WaitForSingleObject(thread_handle_,5000) == WAIT_TIMEOUT)
-                    TerminateThread(thread_handle_,-2);
+					TerminateThread(thread_handle_,-2);
             }
 
             CloseHandle(thread_handle_);
             thread_handle_ = NULL;
-        }
-
-        if (stop_event_ != NULL)
-        {
-            CloseHandle(stop_event_);
-            stop_event_ = NULL;
         }
 
         if (process_handle_ != NULL)
@@ -113,14 +125,11 @@ namespace ckcore
             pipe_output_ = NULL;
         }
 
-        /*if (g_hCloseHandle != NULL)
-        {
-            ::CloseHandle(g_hCloseHandle);
-            g_hCloseHandle = NULL;
-        }*/
-
         // Reset state.
-        thread_id_ = -1;
+		ResetEvent(start_event_);
+		ResetEvent(stop_event_);
+
+        thread_id_ = 0;
         state_ = STATE_STOPPED;
 
         if (locked)
@@ -132,21 +141,21 @@ namespace ckcore
      * @return If successful true is returned, if unsuccessful false is
      *         returned.
      */
-    bool Process::read_output(int fd)
+    bool Process::read_output(HANDLE handle)
     {
         char buffer[READ_BUFFER_SIZE];
 
         while (true)
         {
             unsigned long bytes_avail = 0;
-            if (!PeekNamedPipe(pipe_output_,NULL,0,NULL,&bytes_avail,NULL))
+            if (!PeekNamedPipe(handle,NULL,0,NULL,&bytes_avail,NULL))
                 break;
 
             if (bytes_avail == 0)
                 return true;
 
             unsigned long read = 0;
-            if (!ReadFile(pipe_output_,buffer,min(bytes_avail,READ_BUFFER_SIZE - 1),&read,NULL) || read == 0)
+            if (!ReadFile(handle,buffer,min(bytes_avail,READ_BUFFER_SIZE - 1),&read,NULL) || read == 0)
                 break;
 
             buffer[read] = '\0';
@@ -190,22 +199,26 @@ namespace ckcore
         // Prevent the object from being destroyed while running the separate thread.
         WaitForSingleObject(process->mutex_exec_,INFINITE);
 
-        HANDLE handles[2];
-        handles[0] = progress->process_handle_;
-        handles[1] = progress->stop_event_;
+		// Now when we have the mutex we can notify the thread creator that we have
+		// started.
+		SetEvent(process->start_event_);
 
-        line_buffer_.resize(0);
+        HANDLE handles[2];
+        handles[0] = process->process_handle_;
+        handles[1] = process->stop_event_;
+
+        process->line_buffer_.resize(0);
 
         while (true)
         {
-            if (!progress->read_output())
+            if (!process->read_output(process->pipe_output_))
                 break;
 
             unsigned long wait_res = WaitForMultipleObjects(2,handles,false,100);
             
             if (wait_res == WAIT_OBJECT_0)
             {
-                progress->read_output();
+                process->read_output(process->pipe_output_);
                 break;
             }
             else if (wait_res == WAIT_OBJECT_0 + 1)       // Check if the stop event has been signaled.
@@ -221,16 +234,16 @@ namespace ckcore
         process->close();
 
         ReleaseMutex(process->mutex_exec_);
+		return 0;
     }
 
     /**
      * Creates a new process.
-     * @param [in] path Path to the file to execute.
-     * @param [in] args A list of program arguments to pass to the executable.
+     * @param [in] cmd_line The complete command line to execute.
      * @return If successful true is returned, if unsuccessful false is
      *         returned.
      */
-    bool Process::create(const tchar *path,std::vector<tstring> &args)
+    bool Process::create(const tchar *cmd_line)
     {
         // Check if a process is already running.
         if (running())
@@ -239,69 +252,122 @@ namespace ckcore
         // Close prevous data.
         close();
 
-        // Prepare argument list.
-        char *arg_list[MAX_ARG_COUNT + 2];
-        size_t num_args = args.size() > MAX_ARG_COUNT ? MAX_ARG_COUNT : args.size();
+		HANDLE output_read_temp = NULL,output_write = NULL;
+		HANDLE input_write_temp = NULL,input_read = NULL;
+		HANDLE error_write = NULL;
 
-        arg_list[0] = (char *)path;
-        
-        for (size_t i = 0; i < num_args; i++)
-            arg_list[i + 1] = (char *)args[i].c_str();
+		SECURITY_ATTRIBUTES sa;
+		sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+		sa.lpSecurityDescriptor = NULL;
+		sa.bInheritHandle = true;
 
-        arg_list[num_args + 1] = (char *)NULL;
+		// Create the child output pipe.
+		if (!CreatePipe(&output_read_temp,&output_write,&sa,0))
+			return false;
 
-        // Create pipes.
-        if (pipe(pipe_stdin_) == -1 || pipe(pipe_stdout_) == -1 || pipe(pipe_stderr_) == -1)
-            return false;
+		// Duplicate the output write handle since the application might close
+		// one of its handles.
+		if (!DuplicateHandle(GetCurrentProcess(),output_write,GetCurrentProcess(),
+			&error_write,0,true,DUPLICATE_SAME_ACCESS))
+		{
+			CloseHandle(output_read_temp);
+			CloseHandle(output_write);
 
-        fcntl(pipe_stdin_[FD_READ],F_SETFL,fcntl(pipe_stdin_[FD_READ],F_GETFL) | O_NONBLOCK);
-        fcntl(pipe_stdin_[FD_WRITE],F_SETFL,fcntl(pipe_stdin_[FD_WRITE],F_GETFL) | O_NONBLOCK);
-        fcntl(pipe_stdout_[FD_READ],F_SETFL,fcntl(pipe_stdout_[FD_READ],F_GETFL) | O_NONBLOCK);
-        fcntl(pipe_stdout_[FD_WRITE],F_SETFL,fcntl(pipe_stdout_[FD_WRITE],F_GETFL) | O_NONBLOCK);
-        fcntl(pipe_stderr_[FD_READ],F_SETFL,fcntl(pipe_stderr_[FD_READ],F_GETFL) | O_NONBLOCK);
-        fcntl(pipe_stderr_[FD_WRITE],F_SETFL,fcntl(pipe_stderr_[FD_WRITE],F_GETFL) | O_NONBLOCK);
+			return false;
+		}
 
-        // Change state to running (this will change on failure).
-        state_ = STATE_RUNNING;
+		// Create the child input pipe.
+		if (!CreatePipe(&input_read,&input_write_temp,&sa,0))
+		{
+			CloseHandle(output_read_temp);
+			CloseHandle(output_write);
+			CloseHandle(error_write);
 
-        // Fork process.
-        pid_ = fork();
-        if (pid_ == -1)
-            return false;
+			return false;
+		}
 
-        // Check if child process.
-        if (pid_ == 0)
-        {
-            // Redirect STDIN, STDOUT and STDERR.
-            if (dup2(pipe_stdin_[FD_READ],STDIN_FILENO) == -1 ||
-                dup2(pipe_stdout_[FD_WRITE],STDOUT_FILENO) == -1 ||
-                dup2(pipe_stderr_[FD_WRITE],STDERR_FILENO) == -1)
-            {
-                close();
-                exit(-1);
-            }
+		// Create new output read handle and the input write handles. The properties
+		// must be set to false, otherwise we can't close the handles since they will
+		// be inherited.
+		if (!DuplicateHandle(GetCurrentProcess(),output_read_temp,GetCurrentProcess(),
+			&pipe_output_,0,false,DUPLICATE_SAME_ACCESS))
+		{
+			CloseHandle(output_read_temp);
+			CloseHandle(output_write);
+			CloseHandle(error_write);
+			CloseHandle(input_write_temp);
+			CloseHandle(input_read);
 
-            execv(path,arg_list);
+			return false;
+		}
 
-            // A successful execv replaces this exit call.
-            close();
-            exit(-1);
-        }
+		if (!DuplicateHandle(GetCurrentProcess(),input_write_temp,GetCurrentProcess(),
+			&pipe_stdin_,0,false,DUPLICATE_SAME_ACCESS))
+		{
+			CloseHandle(output_read_temp);
+			CloseHandle(output_write);
+			CloseHandle(error_write);
+			CloseHandle(input_write_temp);
+			CloseHandle(input_read);
 
-        // Register child.
-        ProcessMonitor::instance().register_process(pid_,this);
+			CloseHandle(pipe_output_);
 
-        // Create listen thread.
-        pthread_t thread;
-        if (pthread_create(&thread,NULL,listen,this) != 0)
-        {
-            // If we failed, kill the process.
-            kill(pid_,SIGKILL);
-            return false;
-        }
+			return false;
+		}
 
-        // Give the client application a chance to start.
-        sleep(200);
+		// Now we can close the inherited pipes.
+		CloseHandle(output_read_temp);
+		CloseHandle(input_write_temp);
+
+		// Create the process.
+		PROCESS_INFORMATION pi;
+
+		STARTUPINFO si;
+		memset(&si,0,sizeof(STARTUPINFO));
+
+		si.cb = sizeof(STARTUPINFO);
+		si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+		si.hStdInput = input_read;
+		si.hStdOutput = output_write;
+		si.hStdError = error_write;
+		si.wShowWindow = SW_HIDE;
+
+		bool result = CreateProcess(NULL,const_cast<tchar *>(cmd_line),NULL,
+									NULL,true,CREATE_NEW_CONSOLE,NULL,NULL,
+									&si,&pi) != 0;
+
+		process_handle_ = pi.hProcess;
+
+		// Close any unnecessary handles.
+		::CloseHandle(pi.hThread);
+
+		CloseHandle(input_read);
+		CloseHandle(output_write);
+		CloseHandle(error_write);
+
+		if (!result)
+		{
+			CloseHandle(pipe_stdin_);
+			CloseHandle(pipe_output_);
+			pipe_stdin_ = NULL;
+			pipe_output_ = NULL;
+
+			return false;
+		}
+
+		// Create the listener thread.
+		thread_handle_ = CreateThread(NULL,0,listen,this,0,const_cast<unsigned long *>(&thread_id_));
+		if (thread_handle_ == NULL)
+		{
+			close();
+			return false;
+		}
+
+		state_ = STATE_RUNNING;
+
+		// Wait for the thread to start before returning.
+		if (WaitForSingleObject(start_event_,INFINITE) == WAIT_FAILED)
+			Sleep(200);
 
         return true;
     }
@@ -329,23 +395,40 @@ namespace ckcore
     bool Process::wait() const
     {
         bool locked = WaitForSingleObject(mutex_,INFINITE) == WAIT_OBJECT_0;
-        pid_t pid = pid_;
+        HANDLE thread_handle = thread_handle_;
         if (locked)
             ReleaseMutex(mutex_);
 
-        if (pid == -1 || !running())
+        if (thread_handle == NULL || !running())
             return false;
 
-        int status = 0;
-        if (waitpid(pid,&status,0) == -1)
-            return false;
+		if (WaitForSingleObject(thread_handle,INFINITE) == WAIT_FAILED)
+			return false;
 
         // Make sure that the state is valid.
         while (state_ != STATE_STOPPED)
-            sleep(2);
+            Sleep(100);
 
         return true;
     }
+
+	/**
+	 * Kills the process.
+     * @return If successful and a process is running true is returned,
+     *         otherwise false is returned.
+	 */
+	bool Process::kill() const
+	{
+		bool locked = WaitForSingleObject(mutex_,INFINITE) == WAIT_OBJECT_0;
+        HANDLE process_handle = process_handle_;
+        if (locked)
+            ReleaseMutex(mutex_);
+
+		if (process_handle == NULL || !running())
+            return false;
+
+		return TerminateProcess(process_handle,0) == TRUE;
+	}
 
     /**
      * Writes raw data to the process standard input.
