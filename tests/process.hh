@@ -31,8 +31,13 @@ class ProcessWrapper : public ckcore::Process
 {
 private:
     std::queue<std::string> line_buffer_;
+    bool finished_;
 
 public:
+    ProcessWrapper() : finished_(false)
+    {
+    }
+
     ~ProcessWrapper()
     {
         invalid_inheritor_ = true;
@@ -40,11 +45,17 @@ public:
 
     void event_finished()
     {
+        finished_ = true;
     }
 
     void event_output(const std::string &line)
     {
         line_buffer_.push(line);
+    }
+
+    bool finished() const
+    {
+        return finished_;
     }
 
     std::string next()
@@ -67,9 +78,11 @@ public:
 
 		ckcore::tstring cmd_line = SMALLCLIENT;
 
+        TS_ASSERT(!process.finished());
         TS_ASSERT(!process.running());
         TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
+        TS_ASSERT(process.finished());
         TS_ASSERT_SAME_DATA(process.next().c_str(),"SmallClient",12);
         TS_ASSERT_SAME_DATA(process.next().c_str(),"MESSAGE 1",9);
 	}
@@ -81,9 +94,11 @@ public:
 		ckcore::tstring cmd_line = SMALLCLIENT;
 		cmd_line += ckT(" -m2");
 
+        TS_ASSERT(!process.finished());
         TS_ASSERT(!process.running());
 		TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
+        TS_ASSERT(process.finished());
 
 #ifdef _WINDOWS
 		// The Windows implementation does not yet support interleaved writing.
@@ -104,9 +119,11 @@ public:
 
 		ckcore::tstring cmd_line = ckT("ls -l");	// Does not exist in Unix as well as Windows.
 
+        TS_ASSERT(!process.finished());
         TS_ASSERT(!process.running());
 		TS_ASSERT(!process.create(cmd_line.c_str()));
         TS_ASSERT(!process.running());
+        TS_ASSERT(!process.finished());
 	}
 
 	void testKill()
@@ -116,8 +133,10 @@ public:
 		ckcore::tstring cmd_line = SMALLCLIENT;
 		cmd_line += ckT(" -m3");	// Cause the client to sleep for 30 seconds.
 
+        TS_ASSERT(!process.finished());
         TS_ASSERT(!process.running());
 		TS_ASSERT(process.create(cmd_line.c_str()));
 		TS_ASSERT(process.kill());
+        TS_ASSERT(!process.finished());
 	}
 };

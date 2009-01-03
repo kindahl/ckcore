@@ -21,7 +21,8 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <map>
-#include "ckcore/stream.hh"
+#include "ckcore/file.hh"
+#include "ckcore/string.hh"
 #include "ckcore/process.hh"
 
 namespace ckcore
@@ -113,7 +114,7 @@ namespace ckcore
     /**
      * Constructs a Process object.
      */
-    Process::Process() : invalid_inheritor_(false),pid_(-1),state_(STATE_STOPPED)
+    Process::Process() : invalid_inheritor_(false),pid_(-1),state_(STATE_STOPPED),started_event_(false)
     {
         pipe_stdin_[0] = pipe_stdin_[1] = -1;
         pipe_stdout_[0] = pipe_stdout_[1] = -1;
@@ -121,6 +122,9 @@ namespace ckcore
 
         pthread_mutex_init(&mutex_,NULL);
         pthread_mutex_init(&mutex_exec_,NULL);
+
+        pthread_mutex_init(&started_mutex_,NULL);
+        pthread_cond_init(&started_cond_,NULL);
     }
 
     /**
@@ -129,7 +133,7 @@ namespace ckcore
     Process::~Process()
     {
         // Make sure that the execution is completed before destroying this object.
-        bool locked = pthread_mutex_lock(&mutex_exec_);
+        bool locked = pthread_mutex_lock(&mutex_exec_) == 0;
         if (locked)
             pthread_mutex_unlock(&mutex_exec_);
 
@@ -137,6 +141,9 @@ namespace ckcore
 
         pthread_mutex_destroy(&mutex_exec_);
         pthread_mutex_destroy(&mutex_);
+
+        pthread_mutex_destroy(&started_mutex_);
+        pthread_cond_destroy(&started_cond_);
     }
 
     /**
@@ -170,6 +177,11 @@ namespace ckcore
                 pipe_stderr_[i] = -1;
             }
         }
+
+        // Reset stop event.
+        pthread_mutex_lock(&started_mutex_);
+        started_event_ = false;
+        pthread_mutex_unlock(&started_mutex_);
 
         // Reset state.
         pid_ = -1;
@@ -271,6 +283,12 @@ namespace ckcore
         process->line_buffer_out_.resize(0);
         process->line_buffer_err_.resize(0);
 
+        // We can now signal that the process has started.
+        pthread_mutex_lock(&process->started_mutex_);
+        process->started_event_ = true;
+        pthread_cond_signal(&process->started_cond_);
+        pthread_mutex_unlock(&process->started_mutex_);
+
         // Loop while the program is running.
         while (process->state_ == STATE_RUNNING)
         {
@@ -323,14 +341,50 @@ namespace ckcore
         pthread_mutex_unlock(&process->mutex_exec_);
     }
 
+    std::vector<tstring> Process::parse_cmd_line(const tchar *cmd_line) const
+    {
+        std::vector<tstring> res;
+
+        std::string cur_arg;
+        bool in_quote = false;
+
+        size_t len = string::astrlen(cmd_line);
+        for (size_t i = 0; i < len; i++)
+        {
+            if (cmd_line[i] == '\"')
+            {
+                in_quote = !in_quote;
+            }
+            else
+            {
+                if (cmd_line[i] == ' ' && !in_quote)
+                {
+                    if (cur_arg.size() > 0)
+                    {
+                        res.push_back(cur_arg);
+                        cur_arg.resize(0);
+                    }
+                }
+                else
+                {
+                    cur_arg.push_back(cmd_line[i]);
+                }
+            }
+        }
+
+        if (cur_arg.size() > 0)
+            res.push_back(cur_arg);
+
+        return res;
+    }
+
     /**
      * Creates a new process.
-     * @param [in] path Path to the file to execute.
-     * @param [in] args A list of program arguments to pass to the executable.
+     * @param [in] cmd_line The complete command line to execute.
      * @return If successful true is returned, if unsuccessful false is
      *         returned.
      */
-    bool Process::create(const tchar *path,std::vector<tstring> &args)
+    bool Process::create(const tchar *cmd_line)
     {
         // Check if a process is already running.
         if (running())
@@ -339,16 +393,24 @@ namespace ckcore
         // Close prevous data.
         close();
 
+        std::vector<tstring> arg_vec = parse_cmd_line(cmd_line);
+
         // Prepare argument list.
-        char *arg_list[MAX_ARG_COUNT + 2];
-        size_t num_args = args.size() > MAX_ARG_COUNT ? MAX_ARG_COUNT : args.size();
+        char *arg_list[MAX_ARG_COUNT + 1];
 
-        arg_list[0] = (char *)path;
-        
+        size_t num_args = arg_vec.size() > MAX_ARG_COUNT ? MAX_ARG_COUNT : arg_vec.size();
+        if (num_args == 0)
+            return false;
+
         for (size_t i = 0; i < num_args; i++)
-            arg_list[i + 1] = (char *)args[i].c_str();
+            arg_list[i] = const_cast<tchar *>(arg_vec[i].c_str());
 
-        arg_list[num_args + 1] = (char *)NULL;
+        char *path = arg_list[0];
+        arg_list[num_args + 1] = static_cast<char *>(NULL);
+
+        // Check that the executable exist.
+        if (!File::exist(path))
+            return false;
 
         // Create pipes.
         if (pipe(pipe_stdin_) == -1 || pipe(pipe_stdout_) == -1 || pipe(pipe_stderr_) == -1)
@@ -396,12 +458,15 @@ namespace ckcore
         if (pthread_create(&thread,NULL,listen,this) != 0)
         {
             // If we failed, kill the process.
-            kill(pid_,SIGKILL);
+            ::kill(pid_,SIGKILL);
             return false;
         }
 
-        // Give the client application a chance to start.
-        usleep(200 * 1000);
+        // Wait until the process has started.
+        pthread_mutex_lock(&started_mutex_);
+        while (!started_event_)
+            pthread_cond_wait(&started_cond_,&started_mutex_);
+        pthread_mutex_unlock(&started_mutex_);
 
         return true;
     }
@@ -428,6 +493,21 @@ namespace ckcore
      */
     bool Process::wait() const
     {
+        // Make sure that the execution is completed before destroying this object.
+        bool locked = pthread_mutex_lock(const_cast<pthread_mutex_t *>(&mutex_exec_)) == 0;
+        if (locked)
+            pthread_mutex_unlock(const_cast<pthread_mutex_t *>(&mutex_exec_));
+
+        return true;
+    }
+
+    /**
+     * Kills the process.
+     * @return If successful and a process is running true is returned,
+     *         otherwise false is returned.
+     */
+    bool Process::kill() const
+    {
         bool locked = pthread_mutex_lock(const_cast<pthread_mutex_t *>(&mutex_)) == 0;
         pid_t pid = pid_;
         if (locked)
@@ -436,15 +516,7 @@ namespace ckcore
         if (pid == -1 || !running())
             return false;
 
-        int status = 0;
-        if (waitpid(pid,&status,0) == -1)
-            return false;
-
-        // Make sure that the state is valid.
-        while (state_ != STATE_STOPPED)
-            usleep(100 * 1000);
-
-        return true;
+        return ::kill(pid,SIGTERM) == 0;
     }
 
     /**

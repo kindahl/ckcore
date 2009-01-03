@@ -79,13 +79,21 @@ namespace ckcore
         pthread_mutex_t mutex_exec_;    // This mutex will be locked through the entire execution.
         static void *listen(void *param);
 
+        // For signaling that the process has been started.
+        pthread_mutex_t started_mutex_;
+        pthread_cond_t started_cond_;
+        bool started_event_;
+
+        std::vector<tstring> parse_cmd_line(const tchar *cmd_line) const;
+
     public:
         Process();
         virtual ~Process();
 
-        bool create(const tchar *path,std::vector<tstring> &args);
+        bool create(const tchar *cmd_line);
         bool running() const;
         bool wait() const;
+        bool kill() const;
 
         // OutStream interface.
         tint64 write(void *buffer,tuint32 count);
