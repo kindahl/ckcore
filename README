@@ -2,7 +2,7 @@ This is ckCore, a software library providing core functionallity. Supported
 functionality includes streams, files, directories, checksums and type
 conversion.
 
-Copyright (C) 2006-2008 Christian Kindahl
+Copyright (C) 2006-2009 Christian Kindahl
 
 This file is part of ckCore.
 

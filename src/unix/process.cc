@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -125,6 +125,10 @@ namespace ckcore
 
         pthread_mutex_init(&started_mutex_,NULL);
         pthread_cond_init(&started_cond_,NULL);
+
+		// Insert default delimiters.
+		block_delims_.insert('\n');
+		block_delims_.insert('\r');
     }
 
     /**
@@ -207,23 +211,36 @@ namespace ckcore
 
         buffer[read_bytes] = '\0';
 
-        // Split the buffer into lines.
+        // Split the buffer into blocks.
         for (ssize_t i = 0; i < read_bytes; i++)
         {
-            if (buffer[i] == '\n' || buffer[i] == '\r')
+			// Check if we have found a block delimiter.
+			bool is_delim = false;
+
+			std::set<char>::const_iterator it;
+			for (it = block_delims_.begin(); it != block_delims_.end(); it++)
+			{
+				if (buffer[i] == *it)
+				{
+					is_delim = true;
+					break;
+				}
+			}
+
+            if (is_delim)
             {
                 // Avoid flushing an empty buffer.
-                if (line_buffer_out_.size() > 0)
+                if (block_buffer_out_.size() > 0)
                 {
                     if (!invalid_inheritor_)
-                        event_output(line_buffer_out_);
+                        event_output(block_buffer_out_);
 
-                    line_buffer_out_.resize(0);
+                    block_buffer_out_.resize(0);
                 }
             }
             else
             {
-                line_buffer_out_.push_back(buffer[i]);
+                block_buffer_out_.push_back(buffer[i]);
             }
         }
 
@@ -246,23 +263,36 @@ namespace ckcore
 
         buffer[read_bytes] = '\0';
 
-        // Split the buffer into lines.
+        // Split the buffer into blocks.
         for (ssize_t i = 0; i < read_bytes; i++)
         {
-            if (buffer[i] == '\n' || buffer[i] == '\r')
+            // Check if we have found a block delimiter.
+			bool is_delim = false;
+
+			std::set<char>::const_iterator it;
+			for (it = block_delims_.begin(); it != block_delims_.end(); it++)
+			{
+				if (buffer[i] == *it)
+				{
+					is_delim = true;
+					break;
+				}
+			}
+
+            if (is_delim)
             {
                 // Avoid flushing an empty buffer.
-                if (line_buffer_err_.size() > 0)
+                if (block_buffer_err_.size() > 0)
                 {
                     if (!invalid_inheritor_)
-                        event_output(line_buffer_err_);
+                        event_output(block_buffer_err_);
 
-                    line_buffer_err_.resize(0);
+                    block_buffer_err_.resize(0);
                 }
             }
             else
             {
-                line_buffer_err_.push_back(buffer[i]);
+                block_buffer_err_.push_back(buffer[i]);
             }
         }
 
@@ -280,8 +310,8 @@ namespace ckcore
         // Prevent the object from being destroyed while running the separate thread.
         pthread_mutex_lock(&process->mutex_exec_);
 
-        process->line_buffer_out_.resize(0);
-        process->line_buffer_err_.resize(0);
+        process->block_buffer_out_.resize(0);
+        process->block_buffer_err_.resize(0);
 
         // We can now signal that the process has started.
         pthread_mutex_lock(&process->started_mutex_);
@@ -529,6 +559,28 @@ namespace ckcore
 
         return ::kill(pid,SIGTERM) == 0;
     }
+
+	/**
+	 * Adds a new block delimiter to be used when splitting process output
+	 * into blocks.
+	 * @param [in] delim The delimiter to add.
+	 */
+	void Process::add_block_delim(char delim)
+	{
+		block_delims_.insert(delim);
+	}
+
+	/**
+	 * Removes a block delimiter from being used when splitting process output
+	 * into blocks.
+	 * @param [in] delim The delimiter to remove.
+	 */
+	void Process::remove_block_delim(char delim)
+	{
+		std::set<char>::iterator it = block_delims_.find(delim);
+		if (it != block_delims_.end())
+			block_delims_.erase(it);
+	}
 
     /**
      * Writes raw data to the process standard input.

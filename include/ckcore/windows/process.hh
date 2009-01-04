@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,13 +22,14 @@
  */
 #pragma once
 #include <vector>
+#include <set>
 #include "ckcore/types.hh"
 #include "ckcore/stream.hh"
 
 namespace ckcore
 {
     /**
-     * @brief The class for creating processes on Unix.
+     * @brief The class for creating processes on Windows.
      */
     class Process : public OutStream
     {
@@ -64,7 +65,8 @@ namespace ckcore
         volatile unsigned long thread_id_;  // Thread identifier.
         volatile State state_;              // Process state.
 
-        std::string line_buffer_;       // For buffering partial standard output lines before commiting them.
+		std::set<char> block_delims_;
+        std::string block_buffer_;      // For buffering partial standard output blocks before commiting them.
 
         void close();
         bool read_output(HANDLE handle);
@@ -83,6 +85,9 @@ namespace ckcore
         bool wait() const;
 		bool kill() const;
 
+		void add_block_delim(char delim);
+		void remove_block_delim(char delim);
+
         // OutStream interface.
         tint64 write(void *buffer,tuint32 count);
 
@@ -92,11 +97,11 @@ namespace ckcore
         virtual void event_finished() = 0;
 
         /**
-         * Called when a line has been read from either standard output or
+         * Called when a block has been read from either standard output or
          * standard error.
-         * @param [in] line The line that has been read.
+         * @param [in] block The block that has been read.
          */
-        virtual void event_output(const std::string &line) = 0;
+        virtual void event_output(const std::string &block) = 0;
     };
 };
 

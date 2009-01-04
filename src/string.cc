@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,12 +38,8 @@ namespace ckcore
          */
 		int astrcmp(const tchar *str1,const tchar *str2)
 		{
-#ifdef _WINDOWS
-#ifdef _UNICODE
+#if defined(_WINDOWS) && defined(_UNICODE)
 			return wcscmp(str1,str2);
-#else
-			return strcmp(str1,str2);
-#endif
 #else
 			return strcmp(str1,str2);
 #endif
@@ -61,12 +57,8 @@ namespace ckcore
          */
 		int astrncmp(const tchar *str1,const tchar *str2,size_t n)
 		{
-#ifdef _WINDOWS
-#ifdef _UNICODE
+#if defined(_WINDOWS) && defined(_UNICODE)
 			return wcsncmp(str1,str2,n);
-#else
-			return strncmp(str1,str2,n);
-#endif
 #else
 			return strncmp(str1,str2,n);
 #endif
@@ -82,12 +74,8 @@ namespace ckcore
          */
 		size_t astrlen(const tchar *str)
 		{
-#ifdef _WINDOWS
-#ifdef _UNICODE
+#if defined(_WINDOWS) && defined(_UNICODE)
 			return wcslen(str);
-#else
-			return strlen(str);
-#endif
 #else
 			return strlen(str);
 #endif
@@ -104,12 +92,8 @@ namespace ckcore
          */
 		tchar *astrcpy(tchar *str1,const tchar *str2)
 		{
-#ifdef _WINDOWS
-#ifdef _UNICODE
+#if defined(_WINDOWS) && defined(_UNICODE)
 			return wcscpy(str1,str2);
-#else
-			return strcpy(str1,str2);
-#endif
 #else
 			return strcpy(str1,str2);
 #endif
@@ -127,12 +111,8 @@ namespace ckcore
          */
 		tchar *astrncpy(tchar *str1,const tchar *str2,size_t n)
 		{
-#ifdef _WINDOWS
-#ifdef _UNICODE
+#if defined(_WINDOWS) && defined(_UNICODE)
 			return wcsncpy(str1,str2,n);
-#else
-			return strncpy(str1,str2,n);
-#endif
 #else
 			return strncpy(str1,str2,n);
 #endif

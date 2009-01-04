@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,6 +41,10 @@ namespace ckcore
 
 		// Create the stop event that will be used to kill the listening thread.
 		stop_event_ = CreateEvent(NULL,true,false,NULL);
+
+		// Insert default delimiters.
+		block_delims_.insert('\n');
+		block_delims_.insert('\r');
     }
 
     /**
@@ -160,23 +164,36 @@ namespace ckcore
 
             buffer[read] = '\0';
 
-            // Split the buffer into lines.
+            // Split the buffer into blocks.
             for (unsigned long i = 0; i < read; i++)
             {
-                if (buffer[i] == '\n' || buffer[i] == '\r')
+				// Check if we have found a block delimiter.
+				bool is_delim = false;
+
+				std::set<char>::const_iterator it;
+				for (it = block_delims_.begin(); it != block_delims_.end(); it++)
+				{
+					if (buffer[i] == *it)
+					{
+						is_delim = true;
+						break;
+					}
+				}
+
+				if (is_delim)
                 {
                     // Avoid flushing an empty buffer.
-                    if (line_buffer_.size() >  0)
+                    if (block_buffer_.size() >  0)
                     {
                         if (!invalid_inheritor_)
-                            event_output(line_buffer_);
+                            event_output(block_buffer_);
 
-                        line_buffer_.resize(0);
+                        block_buffer_.resize(0);
                     }
                 }
                 else
                 {
-                    line_buffer_.push_back(buffer[i]);
+                    block_buffer_.push_back(buffer[i]);
                 }
             }
         }
@@ -207,7 +224,7 @@ namespace ckcore
         handles[0] = process->process_handle_;
         handles[1] = process->stop_event_;
 
-        process->line_buffer_.resize(0);
+        process->block_buffer_.resize(0);
 
         while (true)
         {
@@ -428,6 +445,28 @@ namespace ckcore
             return false;
 
 		return TerminateProcess(process_handle,0) == TRUE;
+	}
+
+	/**
+	 * Adds a new block delimiter to be used when splitting process output
+	 * into blocks.
+	 * @param [in] delim The delimiter to add.
+	 */
+	void Process::add_block_delim(char delim)
+	{
+		block_delims_.insert(delim);
+	}
+
+	/**
+	 * Removes a block delimiter from being used when splitting process output
+	 * into blocks.
+	 * @param [in] delim The delimiter to remove.
+	 */
+	void Process::remove_block_delim(char delim)
+	{
+		std::set<char>::iterator it = block_delims_.find(delim);
+		if (it != block_delims_.end())
+			block_delims_.erase(it);
 	}
 
     /**

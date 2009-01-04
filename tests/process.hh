@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2008 Christian Kindahl
+ * Copyright (C) 2006-2009 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@
 class ProcessWrapper : public ckcore::Process
 {
 private:
-    std::queue<std::string> line_buffer_;
+    std::queue<std::string> block_buffer_;
     bool finished_;
 
 public:
@@ -48,9 +48,9 @@ public:
         finished_ = true;
     }
 
-    void event_output(const std::string &line)
+    void event_output(const std::string &block)
     {
-        line_buffer_.push(line);
+        block_buffer_.push(block);
     }
 
     bool finished() const
@@ -60,11 +60,11 @@ public:
 
     std::string next()
     {
-        if (line_buffer_.size() == 0)
+        if (block_buffer_.size() == 0)
             return "";
 
-        std::string result = line_buffer_.front();
-        line_buffer_.pop();
+        std::string result = block_buffer_.front();
+        block_buffer_.pop();
         return result;
     }
 };
@@ -159,4 +159,21 @@ public:
         TS_ASSERT_SAME_DATA(process.next().c_str(),"RESPONSE 1",10);
         TS_ASSERT(process.finished());
     }
+
+	void testDelimiters()
+	{
+		ProcessWrapper process;
+		process.add_block_delim('G');
+
+		ckcore::tstring cmd_line = SMALLCLIENT;
+
+        TS_ASSERT(!process.finished());
+        TS_ASSERT(!process.running());
+        TS_ASSERT(process.create(cmd_line.c_str()));
+        process.wait();
+        TS_ASSERT(process.finished());
+        TS_ASSERT_SAME_DATA(process.next().c_str(),"SmallClient",12);
+        TS_ASSERT_SAME_DATA(process.next().c_str(),"MESSA",5);
+		TS_ASSERT_SAME_DATA(process.next().c_str(),"E 1",3);
+	}
 };

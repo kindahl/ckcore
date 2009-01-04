@@ -839,10 +839,6 @@
 					RelativePath=".\stdafx.hh"
 					>
 				</File>
-				<File
-					RelativePath="..\..\include\ckcore\windows\util.hh"
-					>
-				</File>
 			</Filter>
 		</Filter>
 		<Filter
