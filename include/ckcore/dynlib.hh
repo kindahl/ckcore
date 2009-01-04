@@ -22,6 +22,9 @@
  */
 
 #pragma once
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
 #include "ckcore/types.hh"
 #include "ckcore/path.hh"
 
