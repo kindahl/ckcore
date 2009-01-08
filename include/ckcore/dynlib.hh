@@ -50,6 +50,7 @@ namespace ckcore
 
         bool open();
         bool close();
+        bool test();
         void *symbol(const char *symbol_name) const;
 
         const Path &path() const;

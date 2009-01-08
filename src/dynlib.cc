@@ -79,6 +79,16 @@ namespace ckcore
     }
 
     /**
+     * Tests if the library is open.
+     * @return If the library has been opened true is returned, if not false is
+     *         returned.
+     */
+    bool DynamicLibrary::test()
+    {
+        return handle_ != NULL;
+    }
+
+    /**
      * Returns a pointer to the specified symbol in the memory. On Windows the
      * symbol must be a procedure.
      * @param [in] symbol_name The name of the symbol.
