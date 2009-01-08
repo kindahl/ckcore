@@ -95,5 +95,14 @@ namespace ckcore
         return dlsym(handle_,symbol_name);
 #endif
     }
+
+    /**
+     * Returns the library path.
+     * @return The library path.
+     */
+    const Path &DynamicLibrary::path() const
+    {
+        return path_;
+    }
 };
 
