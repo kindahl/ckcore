@@ -28,6 +28,7 @@ public:
 		const ckcore::tchar *str1 = ckT("this is a test");
 		const ckcore::tchar *str2 = ckT("this is a test");
 		const ckcore::tchar *str3 = ckT("this is a longer test");
+        const ckcore::tchar *str4 = ckT("THIS is A longer TEST");
 
 		// Test comparison.
 		TS_ASSERT(!ckcore::string::astrcmp(str1,str2));
@@ -37,17 +38,20 @@ public:
 		TS_ASSERT(!ckcore::string::astrncmp(str1,str2,10));
 		TS_ASSERT(!ckcore::string::astrncmp(str1,str3,10));
 		TS_ASSERT(ckcore::string::astrncmp(str1,str3,11));
+		TS_ASSERT(!ckcore::string::astrcmpi(str3,str4));
+		TS_ASSERT(!ckcore::string::astrncmpi(str1,str4,10));
+		TS_ASSERT(ckcore::string::astrncmpi(str1,str4,11));
 
 		// Test length.
 		TS_ASSERT_EQUALS(ckcore::string::astrlen(str1),14);
 		TS_ASSERT_EQUALS(ckcore::string::astrlen(str3),21);
 
 		// Scanning.
-		const ckcore::tchar *str4 = ckT("VTS_7_53.IFO");
+		const ckcore::tchar *str5 = ckT("VTS_7_53.IFO");
 		ckcore::tuint32 i1 = 0,i2 = 0;
 		ckcore::tchar ext[64];
 
-		TS_ASSERT_EQUALS(asscanf(str4,ckT("VTS_%u_%u.%[^\0]"),&i1,&i2,ext),3);
+		TS_ASSERT_EQUALS(asscanf(str5,ckT("VTS_%u_%u.%[^\0]"),&i1,&i2,ext),3);
 		TS_ASSERT_EQUALS(i1,7);
 		TS_ASSERT_EQUALS(i2,53);
 		TS_ASSERT(!ckcore::string::astrcmp(ext,ckT("IFO")));

@@ -65,6 +65,49 @@ namespace ckcore
 		}
 
 		/**
+         * Compares two strings in a case insensitive way.
+         * @param [in] str1 The first string.
+		 * @param [in] str2 The second string.
+         * @return If str1 is less than str2 < 0 is returned, if str1 is
+	     *         identical to str2 0 is returned, if str1 is greater than
+		 *         str2 > 0 is returned.
+         */
+		int astrcmpi(const tchar *str1,const tchar *str2)
+		{
+#ifdef _WINDOWS
+#ifdef _UNICODE
+            return stricmp(str1,str2);
+#else
+            return wcsicmp(str1,str2);
+#endif
+#else
+			return strcasecmp(str1,str2);
+#endif
+		}
+
+		/**
+         * Compares two strings in a case insensitive way.
+         * @param [in] str1 The first string.
+		 * @param [in] str2 The second string.
+		 * @param [in] n The number of characters to compare.
+         * @return If str1 is less than str2 < 0 is returned, if str1 is
+	     *         identical to str2 0 is returned, if str1 is greater than
+		 *         str2 > 0 is returned.
+         */
+		int astrncmpi(const tchar *str1,const tchar *str2,size_t n)
+		{
+#ifdef _WINDOWS
+#ifdef _UNICODE
+            return strnicmp(str1,str2,n);
+#else
+            return wcsnicmp(str1,str2,n);
+#endif
+#else
+			return strncasecmp(str1,str2,n);
+#endif
+		}
+
+		/**
          * Wrapper around the strlen-like functions to be compatible with
 		 * different character encodings.
          * @param [in] str1 The first string.

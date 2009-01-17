@@ -51,6 +51,8 @@ namespace ckcore
     {
 		int astrcmp(const tchar *str1,const tchar *str2);
 		int astrncmp(const tchar *str1,const tchar *str2,size_t n);
+		int astrcmpi(const tchar *str1,const tchar *str2);
+		int astrncmpi(const tchar *str1,const tchar *str2,size_t n);
 		size_t astrlen(const tchar *str);
 		tchar *astrcpy(tchar *str1,const tchar *str2);
 		tchar *astrncpy(tchar *str1,const tchar *str2,size_t n);
