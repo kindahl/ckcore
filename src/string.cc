@@ -76,9 +76,9 @@ namespace ckcore
 		{
 #ifdef _WINDOWS
 #ifdef _UNICODE
-            return stricmp(str1,str2);
+            return _wcsicmp(str1,str2);
 #else
-            return wcsicmp(str1,str2);
+            return _stricmp(str1,str2);
 #endif
 #else
 			return strcasecmp(str1,str2);
@@ -98,9 +98,9 @@ namespace ckcore
 		{
 #ifdef _WINDOWS
 #ifdef _UNICODE
-            return strnicmp(str1,str2,n);
+            return _wcsnicmp(str1,str2,n);
 #else
-            return wcsnicmp(str1,str2,n);
+            return _strnicmp(str1,str2,n);
 #endif
 #else
 			return strncasecmp(str1,str2,n);
