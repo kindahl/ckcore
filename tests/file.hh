@@ -24,7 +24,7 @@
 class FiletestSuite : public Cxxtest::testSuite
 {
 public:
-    void testopenclosetest()
+    void testOpenClose()
     {
         // test non-existing file.
         ckcore::File file1(ckT("data/file/non-existent"));
@@ -121,7 +121,7 @@ public:
         TS_ASSERT_SAME_DATA(in_data,out_data,37);
     }
 
-    void testseektell()
+    void testSeekTell()
     {
         ckcore::File file(ckT("data/file/8253bytes"));
         TS_ASSERT(file.open(ckcore::File::ckOPEN_READ));
@@ -163,7 +163,7 @@ public:
         }
     }
 
-    void testexistremove()
+    void testExistRemove()
     {
         ckcore::File file1(ckT("data/file/non-existent"));
         TS_ASSERT(!file1.exist());
@@ -189,7 +189,7 @@ public:
         TS_ASSERT(!ckcore::File::remove(ckT("")));
     }
 
-    void testrename()
+    void testRename()
     {
         // rename file in existing folder (should succeed).
         ckcore::File file1(ckT("data/file/new"));
@@ -235,7 +235,7 @@ public:
         TS_ASSERT(ckcore::File::remove(ckT("data/file/new2")));
     }
 
-    void testsize()
+    void testSize()
     {
         const ckcore::tchar *file_paths[] =
         {

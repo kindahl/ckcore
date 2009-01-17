@@ -129,7 +129,7 @@ public:
         TS_ASSERT_EQUALS(it,end);
     }
 
-    void testvalid()
+    void testValid()
     {
         ckcore::Path path1(ckT("c:/this/is/a/test"));
         ckcore::Path path2(ckT("c::/this/is/a/test"));
@@ -157,7 +157,7 @@ public:
 #endif
     }
 
-    void testroot_name()
+    void testRootName()
     {
         ckcore::Path path1(ckT("/this/is/"));
 #ifdef _WINDOWS
@@ -210,7 +210,7 @@ public:
         TS_ASSERT_EQUALS(path1.root_name(),ckT(""));
     }
 
-    void testdir_name()
+    void testDirName()
     {
         ckcore::Path path1(ckT("/this/is/a/test"));
         TS_ASSERT_EQUALS(path1.dir_name(),ckT("/this/is/a/"));
@@ -241,7 +241,7 @@ public:
 #endif
     }
 
-    void testbase_name()
+    void testBaseName()
     {
         ckcore::Path path1(ckT("c:/this/is/a/test"));
         TS_ASSERT_EQUALS(path1.base_name(),ckT("test"));
@@ -281,7 +281,7 @@ public:
 #endif
     }
 
-    void testext_name()
+    void testExtName()
     {
         ckcore::Path path1 = ckT("/this/is/a/test");
         TS_ASSERT_EQUALS(path1.ext_name(),ckT(""));

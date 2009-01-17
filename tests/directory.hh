@@ -25,7 +25,7 @@
 class DirectoryTestSuite : public CxxTest::TestSuite
 {
 public:
-    void testcreateremove()
+    void testCreateRemove()
     {
         ckcore::Directory dir1(ckT("data/new"));
         TS_ASSERT(dir1.create());
