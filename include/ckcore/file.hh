@@ -31,6 +31,8 @@ namespace ckcore
     class FileBase
     {
     public:
+        virtual ~FileBase() {};
+
         /**
          * Defines modes which describes how to open files.
          */
