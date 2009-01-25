@@ -21,6 +21,7 @@
  * @brief Defines the Windows process class.
  */
 #pragma once
+#include <windows.h>
 #include <vector>
 #include <set>
 #include "ckcore/types.hh"
@@ -88,7 +89,9 @@ namespace ckcore
 		void add_block_delim(char delim);
 		void remove_block_delim(char delim);
 
-        // OutStream interface.
+        /*
+		 * OutStream interface.
+		 */
         tint64 write(void *buffer,tuint32 count);
 
         /**
