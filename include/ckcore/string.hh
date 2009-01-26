@@ -59,6 +59,7 @@ namespace ckcore
 
         wchar_t *ansi_to_utf16(const char *ansi,wchar_t *utf,int utf_len);
         char *utf16_to_ansi(const wchar_t *utf,char *ansi,int ansi_len);
+		tchar *ansi_to_auto(const char *ansi,tchar *out,int out_len);
 
 		/**
 		 * Converts an ANSI string if necessary into UTF-16 format. If UTF-16 is not

@@ -220,5 +220,24 @@ namespace ckcore
 #endif
             return ansi;
         }
+
+		/**
+         * Converts an ANSI string if necessary into UTF-16 format. If UTF-16 is not
+		 * used the very same ANSI string is copied.
+         * @param [in] ansi The ANSI string to convert.
+         * @param [in] out Pointer to buffer to which the ANSI or UTF-16 string
+         *                 should be written.
+         * @param [in] out_len The length of the out buffer counted in UTF-16
+         *                     or ANSI characters.
+         * @return The same pointer specified as the out argument.
+         */
+        tchar *ansi_to_auto(const char *ansi,tchar *out,int out_len)
+        {
+#if defined(_WINDOWS) && defined(_UNICODE)
+			return ansi_to_utf16(ansi,out,out_len);
+#else
+			return strncpy(out,ansi,out_len);
+#endif
+        }
     };
 };
