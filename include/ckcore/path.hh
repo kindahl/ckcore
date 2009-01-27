@@ -61,6 +61,7 @@ namespace ckcore
         tstring path_name_;
 
     public:
+		Path();
         Path(const tchar *path_name);
         ~Path();
 

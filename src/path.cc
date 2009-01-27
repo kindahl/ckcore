@@ -133,6 +133,13 @@ namespace ckcore
             return (**this) != *it;
     }
 
+	/**
+     * Constructs an empty Path object.
+     */
+    Path::Path()
+    {
+    }
+
     /**
      * Constructs a Path object.
      * @param [in] path_name The path name.
