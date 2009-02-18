@@ -1,6 +1,6 @@
 # Variables.
 CXX=g++
-CXXFLAGS = -D_UNIX -L../src/.libs -lckcore -I../include
+CXXFLAGS=-D_UNIX -L../src/.libs -lckcore -I../include
 
 # Targets.
 all: clean test streambench smallclient
