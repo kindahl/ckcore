@@ -35,7 +35,7 @@ namespace ckcore
     bool FileInStream::open()
     {
         size_ = file_.size();
-        return file_.open(FileBase::ckOPEN_READ);
+        return file_.open(File::ckOPEN_READ);
     }
 
     /**
@@ -75,15 +75,15 @@ namespace ckcore
      */
 	bool FileInStream::seek(tuint32 distance,StreamWhence whence)
 	{
-		FileBase::FileWhence file_whence;
+		File::FileWhence file_whence;
 		switch (whence)
 		{
 			case ckSTREAM_CURRENT:
-				file_whence = FileBase::ckFILE_CURRENT;
+				file_whence = File::ckFILE_CURRENT;
 				break;
 
 			default:
-				file_whence = FileBase::ckFILE_BEGIN;
+				file_whence = File::ckFILE_BEGIN;
 				break;
 		}
 
@@ -137,7 +137,7 @@ namespace ckcore
      */
     bool FileOutStream::open()
     {
-        return file_.open(FileBase::ckOPEN_WRITE);
+        return file_.open(File::ckOPEN_WRITE);
     }
 
     /**

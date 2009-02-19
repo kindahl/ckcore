@@ -31,8 +31,30 @@ namespace ckcore
     /**
      * @brief The class for dealing with files on Windows.
      */
-    class File : public FileBase
+    class File
     {
+    public:
+        /**
+         * Defines modes which describes how to open files.
+         */
+        enum FileMode
+        {
+            ckOPEN_READ,
+            ckOPEN_WRITE,
+			ckOPEN_READWRITE
+        };
+
+        /**
+         * Defines directives what to use as base offset when performing seek
+         * operations.
+         */
+        enum FileWhence
+        {
+            ckFILE_CURRENT,
+            ckFILE_BEGIN,
+			ckFILE_END
+        };
+
     private:
         HANDLE file_handle_;
         Path file_path_;
