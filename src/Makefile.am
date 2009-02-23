@@ -14,8 +14,8 @@ lib_LTLIBRARIES = libckcore.la
 
 libckcore_la_SOURCES = unix/directory.cc unix/file.cc unix/process.cc \
 					   bufferedstream.cc convert.cc crcstream.cc dynlib.cc \
-					   filestream.cc nullstream.cc path.cc progresser.cc \
-					   stream.cc string.cc system.cc
+					   filestream.cc log.cc nullstream.cc path.cc \
+					   progresser.cc stream.cc string.cc system.cc
 libckcore_la_LDFLAGS = -version-info $(CKCORE_VERSION)
 
 library_includedir = $(includedir)/ckcore

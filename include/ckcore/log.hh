@@ -27,6 +27,20 @@
 namespace ckcore
 {
     /**
+     * Global log name space.
+     */
+    namespace log
+    {
+        /**
+         * Defines the print function type.
+         */
+        typedef void (*tlog_print)(const tchar *format,...);
+
+        extern tlog_print print;
+        extern tlog_print print_line;
+    };
+
+    /**
      * @brief Interface for data logging.
      */
     class Log
