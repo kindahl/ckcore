@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdarg.h>
 #include "ckcore/types.hh"
 #include "ckcore/log.hh"
 

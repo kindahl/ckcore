@@ -23,6 +23,7 @@
 
 #pragma once
 #include <string>
+#include <sstream>
 
 namespace ckcore
 {
@@ -30,12 +31,14 @@ namespace ckcore
 #ifdef _UNICODE
     typedef wchar_t tchar;
 	typedef std::wstring tstring;
+	typedef std::wstringstream tstringstream;
 #ifndef ckT
 #define ckT(quote) L##quote
 #endif
 #else
 	typedef char tchar;
 	typedef std::string tstring;
+	typedef std::stringstream tstringstream;
 #ifndef ckT
 #define ckT
 #endif
@@ -57,6 +60,7 @@ namespace ckcore
 	typedef short tint16;
 	typedef unsigned short tuint16;
     typedef std::string tstring;
+	typedef std::stringstream tstringstream;
 #ifndef ckT
 #define ckT
 #endif
