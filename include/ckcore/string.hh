@@ -79,7 +79,7 @@ namespace ckcore
 		}
 
 		/**
-		 * Converts an ANSI or a UTF-16 string (depending on compilation options)
+		 * Converts an ANSI or an UTF-16 string (depending on compilation options)
 		 * into ANSI format.
 		 * @param [in] str The ANSI or UTF-16 string to convert.
 		 * @return The specified string converted into ANSI format.
@@ -92,6 +92,23 @@ namespace ckcore
 			return std::string(utf16_to_ansi(str,res,sizeof(res)));
 #else
 			return std::string(str);
+#endif
+		}
+
+		/**
+		 * Converts an UTF-16 string if necessary into ANSI format. If ANSI is not
+		 * used the very same UTF-16 string is returned.
+		 * @param [in] str The UTF-16 string to return and maybe convert.
+		 * @return The specified UTF-16 string either in ANSI or in UTF-16 format.
+		 */
+		template<size_t S>
+		tstring utf16_to_auto(const tchar *str)
+		{
+#if defined(_WINDOWS) && defined(_UNICODE)
+			return tstring(str);
+#else
+			tchar res[S];
+			return tstring(utf16_to_ansi(str,res,sizeof(res)/sizeof(tchar)));
 #endif
 		}
     };

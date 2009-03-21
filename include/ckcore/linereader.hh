@@ -58,92 +58,14 @@ namespace ckcore
         InStream &stream_;
 
     public:
-        /**
+        /**<
          * Constructs a LineReader object.
          * @param [in] stream The input stream to use for reading and parsing
          *                    into lines.
          */
-        LineReader(InStream &stream) : stream_(stream),encoding_(ckENCODING_ANSI)
+        LineReader(InStream &stream) : stream_(stream),
+			encoding_(encoding(stream))
         {
-            unsigned char bom[4];
-            tint64 read = stream.read(bom,4);
-            stream_.seek(0,InStream::ckSTREAM_BEGIN);
-
-            if (read >= 2)
-            {
-                // Check if UTF-16 (big endian).
-                if (bom[0] == 0xfe && bom[1] == 0xff)
-                {
-                    encoding_ = ckENCODING_UTF16BE;
-                    stream_.seek(2,InStream::ckSTREAM_CURRENT);
-                }
-
-                // Check if UTF-16 (little endian).
-                if (bom[0] == 0xff && bom[1] == 0xfe)
-                {
-                    encoding_ = ckENCODING_UTF16LE;
-                    stream_.seek(2,InStream::ckSTREAM_CURRENT);
-                }
-
-                if (read >= 3)
-                {
-                    // Check if UTF-1.
-                    if (bom[0] == 0xf7 && bom[1] == 0x64 && bom[2] == 0x4c)
-                    {
-                        encoding_ = ckENCODING_UTF1;
-                        stream_.seek(3,InStream::ckSTREAM_CURRENT);
-                    }
-
-                    // Check if UTF-8.
-                    if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf)
-                    {
-                        encoding_ = ckENCODING_UTF8;
-                        stream_.seek(3,InStream::ckSTREAM_CURRENT);
-                    }
-
-                    // Check if SCSU.
-                    if (bom[0] == 0x0e && bom[1] == 0xfe && bom[2] == 0xff)
-                    {
-                        encoding_ = ckENCODING_SCSU;
-                        stream_.seek(3,InStream::ckSTREAM_CURRENT);
-                    }
-
-                    // Check if BOCU-1.
-                    if (bom[0] == 0xfb && bom[1] == 0xee && bom[2] == 0x28)
-                    {
-                        encoding_ = ckENCODING_BOCU1;
-                        stream_.seek(3,InStream::ckSTREAM_CURRENT);
-                    }
-
-                    if (read == 4)
-                    {
-                        // Check if UTF-32 (big endian).
-                        if (bom[0] == 0x00 && bom[1] == 0x00 && bom[2] == 0xfe && bom[3] == 0xff)
-                        {
-                            encoding_ = ckENCODING_UTF32BE;
-                            stream_.seek(4,InStream::ckSTREAM_CURRENT);
-                        }
-
-                        // Check if UTF-32 (little endian).
-                        if (bom[0] == 0xff && bom[1] == 0xfe && bom[2] == 0x00 && bom[3] == 0x00)
-                        {
-                            encoding_ = ckENCODING_UTF32LE;
-                            stream_.seek(2,InStream::ckSTREAM_CURRENT); // We have already skipped two bytes for UTF-16.
-                        }
-
-                        // Check if UTF-EBCDIC.
-                        if (bom[0] == 0xdd && bom[1] == 0x73 && bom[2] == 0x66 && bom[3] == 0x73)
-                        {
-                            encoding_ = ckENCODING_UTFEBCDIC;
-                            stream_.seek(4,InStream::ckSTREAM_CURRENT);
-                        }
-
-                        // Check if BOCU-1 (extended).
-                        if (bom[0] == 0xfb && bom[1] == 0xee && bom[2] == 0x28 && bom[3] == 0xff)
-                            stream_.seek(1,InStream::ckSTREAM_CURRENT); // We have already skipped three bytes for BOCU-1.
-                    }
-                }
-            }
         }
 
         /**
@@ -214,6 +136,98 @@ namespace ckcore
 
             return line;
         }
+
+		/**
+		 * Checks the text encoding used in the specified stream.
+		 * @return The text encoding used in the specified stream. If no
+		 *         encoding is specified ANSI is assumed.
+		 */
+		static Encoding encoding(InStream &stream)
+		{
+			Encoding result = ckENCODING_ANSI;
+
+			unsigned char bom[4];
+            tint64 read = stream.read(bom,4);
+            stream.seek(0,InStream::ckSTREAM_BEGIN);
+
+            if (read >= 2)
+            {
+                // Check if UTF-16 (big endian).
+                if (bom[0] == 0xfe && bom[1] == 0xff)
+                {
+                    result = ckENCODING_UTF16BE;
+                    stream.seek(2,InStream::ckSTREAM_CURRENT);
+                }
+
+                // Check if UTF-16 (little endian).
+                if (bom[0] == 0xff && bom[1] == 0xfe)
+                {
+                    result = ckENCODING_UTF16LE;
+                    stream.seek(2,InStream::ckSTREAM_CURRENT);
+                }
+
+                if (read >= 3)
+                {
+                    // Check if UTF-1.
+                    if (bom[0] == 0xf7 && bom[1] == 0x64 && bom[2] == 0x4c)
+                    {
+                        result = ckENCODING_UTF1;
+                        stream.seek(3,InStream::ckSTREAM_CURRENT);
+                    }
+
+                    // Check if UTF-8.
+                    if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf)
+                    {
+                        result = ckENCODING_UTF8;
+                        stream.seek(3,InStream::ckSTREAM_CURRENT);
+                    }
+
+                    // Check if SCSU.
+                    if (bom[0] == 0x0e && bom[1] == 0xfe && bom[2] == 0xff)
+                    {
+                        result = ckENCODING_SCSU;
+                        stream.seek(3,InStream::ckSTREAM_CURRENT);
+                    }
+
+                    // Check if BOCU-1.
+                    if (bom[0] == 0xfb && bom[1] == 0xee && bom[2] == 0x28)
+                    {
+                        result = ckENCODING_BOCU1;
+                        stream.seek(3,InStream::ckSTREAM_CURRENT);
+                    }
+
+                    if (read == 4)
+                    {
+                        // Check if UTF-32 (big endian).
+                        if (bom[0] == 0x00 && bom[1] == 0x00 && bom[2] == 0xfe && bom[3] == 0xff)
+                        {
+                            result = ckENCODING_UTF32BE;
+                            stream.seek(4,InStream::ckSTREAM_CURRENT);
+                        }
+
+                        // Check if UTF-32 (little endian).
+                        if (bom[0] == 0xff && bom[1] == 0xfe && bom[2] == 0x00 && bom[3] == 0x00)
+                        {
+                            result = ckENCODING_UTF32LE;
+                            stream.seek(2,InStream::ckSTREAM_CURRENT); // We have already skipped two bytes for UTF-16.
+                        }
+
+                        // Check if UTF-EBCDIC.
+                        if (bom[0] == 0xdd && bom[1] == 0x73 && bom[2] == 0x66 && bom[3] == 0x73)
+                        {
+                            result = ckENCODING_UTFEBCDIC;
+                            stream.seek(4,InStream::ckSTREAM_CURRENT);
+                        }
+
+                        // Check if BOCU-1 (extended).
+                        if (bom[0] == 0xfb && bom[1] == 0xee && bom[2] == 0x28 && bom[3] == 0xff)
+                            stream.seek(1,InStream::ckSTREAM_CURRENT); // We have already skipped three bytes for BOCU-1.
+                    }
+                }
+            }
+
+			return result;
+		}
     };
 };
 
