@@ -17,30 +17,36 @@
  */
 
 /**
- * @file include/ckcore/system.hh
- * @brief Defines the system namespace.
+ * @file include/ckcore/windows/thread.hh
+ * @brief Defines the Windows thread implementation.
  */
-
 #pragma once
+#include <windows.h>
 #include "ckcore/types.hh"
 
 namespace ckcore
 {
-    namespace system
-    {
-        /**
-         * Defines different cache levels.
-         */
-        enum CacheLevel
-        {
-            ckLEVEL_1 = 0x01,
-            ckLEVEL_2,
-            ckLEVEL_3
-        };
+    namespace thread
+	{
+		bool create(tfunction func,void *param);
+		bool sleep(ckcore::tuint32 milliseconds);
 
-        tuint64 time();
-        tuint64 ticks();
-        unsigned long cache_size(CacheLevel level);
-    };
+		/**
+		 * @brief Thead mutex class.
+		 */
+		class Mutex
+		{
+		private:
+			HANDLE handle_;
+			bool locked_;
+
+		public:
+			Mutex();
+			~Mutex();
+
+			bool lock();
+			bool unlock();
+		};
+	};
 };
 

@@ -814,6 +814,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath=".\thread.cc"
+					>
+				</File>
+				<File
 					RelativePath=".\util.cc"
 					>
 				</File>
@@ -893,6 +897,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\ckcore\thread.hh"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\ckcore\types.hh"
 				>
 			</File>
@@ -913,6 +921,10 @@
 				</File>
 				<File
 					RelativePath=".\stdafx.hh"
+					>
+				</File>
+				<File
+					RelativePath="..\..\include\ckcore\windows\thread.hh"
 					>
 				</File>
 				<File

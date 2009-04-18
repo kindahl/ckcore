@@ -28,197 +28,199 @@
 
 namespace ckcore
 {
-    /**
-     * Returns the number of milliseconds that has elapsed since the system was
-     * started.
-     * @return The number of milliseconds since the system was started.
-     */
-    tuint64 System::time()
-    {
+	namespace system
+	{
+		/**
+		 * Returns the number of milliseconds that has elapsed since the system
+		 * was started.
+		 * @return The number of milliseconds since the system was started.
+		 */
+		tuint64 time()
+		{
 #ifdef _WINDOWS
-        return GetTickCount();
+			return GetTickCount();
 #else
-        struct timeval time;
-        gettimeofday(&time,(struct timezone *)0);
-        return (tuint64)(time.tv_sec * 1000 + (time.tv_usec / 1000));
+			struct timeval time;
+			gettimeofday(&time,(struct timezone *)0);
+			return (tuint64)(time.tv_sec * 1000 + (time.tv_usec / 1000));
 #endif
-    }
+		}
 
-    /**
-     * Returns the number of clock cycles executed by the host processor since
-     * the system was started.
-     * @return The number of executed clock cycles since the system was
-     *         started.
-     */
-    tuint64 System::ticks()
-    {
+		/**
+		 * Returns the number of clock cycles executed by the host processor
+		 * since the system was started.
+		 * @return The number of executed clock cycles since the system was
+		 *         started.
+		 */
+		tuint64 ticks()
+		{
 #ifdef _WINDOWS
-		return __rdtsc();
+			return __rdtsc();
 #else
-		unsigned long low = 0,high = 0;
+			unsigned long low = 0,high = 0;
 
-        asm("rdtsc"
-            :"=a"(low),"=d"(high)
-            :
-            :);
+			asm("rdtsc"
+				:"=a"(low),"=d"(high)
+				:
+				:);
 
-		tuint64 result = high;
-        result <<= 32;
-        result |= low;
-        return result;
+			tuint64 result = high;
+			result <<= 32;
+			result |= low;
+			return result;
 #endif
-    }
-
-#ifdef _WINDOWS
-#ifdef _M_X64
-	extern "C" void cpuid64(unsigned long func,unsigned long arg,unsigned long *words);
-#endif
-#endif
-
-    void System::cpuid(unsigned long func,unsigned long arg,
-                       unsigned long &a,unsigned long &b,
-                       unsigned long &c,unsigned long &d)
-    {
+		}
 
 #ifdef _WINDOWS
 #ifdef _M_X64
-		unsigned long words[4];
-		cpuid64(func,arg,words);
+		extern "C" void cpuid64(unsigned long func,unsigned long arg,unsigned long *words);
+#endif
+#endif
 
-		a = words[0];
-		b = words[1];
-		c = words[2];
-		d = words[3];
+		void cpuid(unsigned long func,unsigned long arg,
+				   unsigned long &a,unsigned long &b,
+				   unsigned long &c,unsigned long &d)
+		{
+#ifdef _WINDOWS
+#ifdef _M_X64
+			unsigned long words[4];
+			cpuid64(func,arg,words);
+
+			a = words[0];
+			b = words[1];
+			c = words[2];
+			d = words[3];
 #else
-		// I don't know how to copy back to arguments passed by reference, that's
-		// why I use temporary variables first.
-		unsigned long t1,t2,t3,t4;
+			// I don't know how to copy back to arguments passed by reference, that's
+			// why I use temporary variables first.
+			unsigned long t1,t2,t3,t4;
 
-		__asm
-        {
-            mov eax,func
-			mov ecx,arg
-            cpuid
-            mov dword ptr t1,eax
-            mov dword ptr t2,ebx
-            mov dword ptr t3,ecx
-            mov dword ptr t4,edx
-        };
+			__asm
+			{
+				mov eax,func
+				mov ecx,arg
+				cpuid
+				mov dword ptr t1,eax
+				mov dword ptr t2,ebx
+				mov dword ptr t3,ecx
+				mov dword ptr t4,edx
+			};
 
-		a = t1;
-		b = t2;
-		c = t3;
-		d = t4;
+			a = t1;
+			b = t2;
+			c = t3;
+			d = t4;
 #endif
 #else
-		// 32-bit PIC compatible version.
+			// 32-bit PIC compatible version.
 #ifdef __i386__ && ifdef __PIC__
-        asm("pushl %%ebx\n"
-			"cpuid\n"
-			"movl %%ebx,%1\n"
-			"popl %%ebx\n"
-            :"=a"(a),
-             "=r"(b),
-             "=c"(c),
-             "=d"(d)
-            :"a"(func),
-             "c"(arg));
+			asm("pushl %%ebx\n"
+				"cpuid\n"
+				"movl %%ebx,%1\n"
+				"popl %%ebx\n"
+				:"=a"(a),
+				 "=r"(b),
+				 "=c"(c),
+				 "=d"(d)
+				:"a"(func),
+				 "c"(arg));
 #else
-        asm("cpuid"
-            :"=a"(a),
-             "=b"(b),
-             "=c"(c),
-             "=d"(d)
-            :"a"(func),
-             "c"(arg));
+			asm("cpuid"
+				:"=a"(a),
+				 "=b"(b),
+				 "=c"(c),
+				 "=d"(d)
+				:"a"(func),
+				 "c"(arg));
 #endif
 #endif
-    }
+		}
 
-    /**
-     * Determines the size of the specified cache. This function will only be
-     * able to obtain the cache sizes on Intel systems.
-     * @return If successfull the size of the cache is returned in bytes, if
-     *         unsuccessfull 0 is returned.
-     */
-    unsigned long System::cache_size_intel(CacheLevel level)
-    {
-        unsigned long reg = 0;
-        while (true)
-        {
-            unsigned long a,b,c,d;
-            cpuid(4,reg++,a,b,c,d);
+		/**
+		 * Determines the size of the specified cache. This function will only
+		 * be able to obtain the cache sizes on Intel systems.
+		 * @return If successfull the size of the cache is returned in bytes,
+		 *         if unsuccessfull 0 is returned.
+		 */
+		unsigned long cache_size_intel(CacheLevel level)
+		{
+			unsigned long reg = 0;
+			while (true)
+			{
+				unsigned long a,b,c,d;
+				cpuid(4,reg++,a,b,c,d);
 
-            // Check if we have found the last cache.
-            unsigned char cur_type = (unsigned char)a & 0x1f;
-            if (cur_type == 0)
-                break;
+				// Check if we have found the last cache.
+				unsigned char cur_type = (unsigned char)a & 0x1f;
+				if (cur_type == 0)
+					break;
 
-            // We're only interested in the level 1 data cache.
-            unsigned char cur_level = (unsigned char)(a >> 5) & 0x07;
-            if ((cur_type == 1 || cur_type == 3) && cur_level == level)
-            {
-                unsigned long ways = (b >> 22) & 0x3ff;
-                unsigned long part = (b >> 12) & 0x3ff;
-                unsigned long line = b & 0xfff;
-                unsigned long sets = c;
+				// We're only interested in the level 1 data cache.
+				unsigned char cur_level = (unsigned char)(a >> 5) & 0x07;
+				if ((cur_type == 1 || cur_type == 3) && cur_level == level)
+				{
+					unsigned long ways = (b >> 22) & 0x3ff;
+					unsigned long part = (b >> 12) & 0x3ff;
+					unsigned long line = b & 0xfff;
+					unsigned long sets = c;
 
-                return (ways + 1) * (part + 1) * (line + 1) * (sets + 1);
-            }
-        }
+					return (ways + 1) * (part + 1) * (line + 1) * (sets + 1);
+				}
+			}
 
-        return 0;
-    }
+			return 0;
+		}
 
-    /**
-     * Determines the size of the specified cache. This function will only be
-     * able to obtain the cache sizes on AMD systems.
-     * @return If successfull the size of the cache is returned in bytes, if
-     *         unsuccessfull 0 is returned.
-     */
-    unsigned long System::cache_size_amd(CacheLevel level)
-    {
-        unsigned long a,b,c,d;
+		/**
+		 * Determines the size of the specified cache. This function will only
+		 * be able to obtain the cache sizes on AMD systems.
+		 * @return If successfull the size of the cache is returned in bytes,
+		 *         if unsuccessfull 0 is returned.
+		 */
+		unsigned long cache_size_amd(CacheLevel level)
+		{
+			unsigned long a,b,c,d;
 
-        if (level == System::ckLEVEL_1)
-        {
-            cpuid(0x80000005,0,a,b,c,d);
-            return ((c >> 24) & 0xff) * 1024;
-        }
-        else if (level == System::ckLEVEL_2)
-        {
-            cpuid(0x80000006,0,a,b,c,d);
-            return ((c >> 16) & 0xffff) * 1024;
-        }
+			if (level == ckLEVEL_1)
+			{
+				cpuid(0x80000005,0,a,b,c,d);
+				return ((c >> 24) & 0xff) * 1024;
+			}
+			else if (level == ckLEVEL_2)
+			{
+				cpuid(0x80000006,0,a,b,c,d);
+				return ((c >> 16) & 0xffff) * 1024;
+			}
 
-        // Level 3 can not be determined exactly.
-        return 0;
-    }
+			// Level 3 can not be determined exactly.
+			return 0;
+		}
 
-    /**
-     * Determines the size of the specified cache. This function will only be
-     * able to obtain the cache sizes on AMD and Intel systems.
-     * @return If successfull the size of the cache is returned in bytes, if
-     *         unsuccessfull 0 is returned.
-     */
-    unsigned long System::cache_size(CacheLevel level)
-    {
-        // Obtain processor vendor identifier.
-        unsigned long a,b,c,d;
-        cpuid(0,0,a,b,c,d);
+		/**
+		 * Determines the size of the specified cache. This function will only
+		 * be able to obtain the cache sizes on AMD and Intel systems.
+		 * @return If successfull the size of the cache is returned in bytes,
+		 *         if unsuccessfull 0 is returned.
+		 */
+		unsigned long cache_size(CacheLevel level)
+		{
+			// Obtain processor vendor identifier.
+			unsigned long a,b,c,d;
+			cpuid(0,0,a,b,c,d);
 
-        char vendor[13];
-        memcpy(vendor    ,&b,4);
-        memcpy(vendor + 4,&d,4);
-        memcpy(vendor + 8,&c,4);
-        vendor[12] = '\0';
+			char vendor[13];
+			memcpy(vendor    ,&b,4);
+			memcpy(vendor + 4,&d,4);
+			memcpy(vendor + 8,&c,4);
+			vendor[12] = '\0';
 
-        if (!strcmp(vendor,"GenuineIntel"))
-            return cache_size_intel(level);
-        else if (!strcmp(vendor,"AuthenticAMD"))
-            return cache_size_amd(level);
+			if (!strcmp(vendor,"GenuineIntel"))
+				return cache_size_intel(level);
+			else if (!strcmp(vendor,"AuthenticAMD"))
+				return cache_size_amd(level);
 
-        return 0;
-    }
+			return 0;
+		}
+	};
 };
 

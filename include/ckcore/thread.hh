@@ -17,30 +17,28 @@
  */
 
 /**
- * @file include/ckcore/system.hh
- * @brief Defines the system namespace.
+ * @file include/ckcore/thread.hh
+ * @brief Includes the platform specific thread implementation.
  */
 
 #pragma once
-#include "ckcore/types.hh"
 
 namespace ckcore
 {
-    namespace system
-    {
-        /**
-         * Defines different cache levels.
-         */
-        enum CacheLevel
-        {
-            ckLEVEL_1 = 0x01,
-            ckLEVEL_2,
-            ckLEVEL_3
-        };
-
-        tuint64 time();
-        tuint64 ticks();
-        unsigned long cache_size(CacheLevel level);
-    };
+	namespace thread
+	{
+		/**
+		 * Defines the thread function type.
+		 */
+		typedef void (* tfunction)(void *param);
+	};
 };
+
+#ifdef _WINDOWS
+#include "ckcore/windows/thread.hh"
+#endif
+
+#ifdef _UNIX
+#include "ckcore/unix/thread.hh"
+#endif
 
