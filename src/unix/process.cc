@@ -16,10 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <sys/wait.h>
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <string.h>
+#include <stdlib.h>
 #include <map>
 #include "ckcore/file.hh"
 #include "ckcore/string.hh"
