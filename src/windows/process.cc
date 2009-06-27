@@ -29,7 +29,7 @@ namespace ckcore
         pipe_stdin_(NULL),pipe_output_(NULL),
         process_handle_(NULL),thread_handle_(NULL),
 		start_event_(NULL),stop_event_(NULL),
-        thread_id_(0),state_(STATE_STOPPED),
+        thread_id_(0),state_(STATE_STOPPED),exit_code_(0),
         mutex_(NULL),mutex_exec_(NULL)
     {
         mutex_ = CreateMutex(NULL,FALSE,NULL);
@@ -113,6 +113,9 @@ namespace ckcore
 
         if (process_handle_ != NULL)
         {
+			if (GetExitCodeProcess(process_handle_,&exit_code_) == FALSE)
+				exit_code_ = -1;
+
             CloseHandle(process_handle_);
             process_handle_ = NULL;
         }
@@ -489,5 +492,18 @@ namespace ckcore
 
         return written;
     }
-};
 
+	/**
+	 * Obtains the exit code of the process.
+	 * @param [out] exit_code The process exit code.
+	 * @return If successful true is returned, if not false is returned.
+	 */
+	bool Process::exit_code(ckcore::tuint32 &exit_code) const
+	{
+		if (running())
+			return false;
+
+		exit_code = exit_code_;
+		return true;
+	}
+};

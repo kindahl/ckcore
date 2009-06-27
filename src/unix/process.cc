@@ -85,7 +85,11 @@ namespace ckcore
 
             // Change process status to stopped.
             if (ProcessMonitor::instance().pid_map_.count(pid) > 0)
-                ProcessMonitor::instance().pid_map_[pid]->state_ = Process::STATE_STOPPED;
+			{
+				Process *process = ProcessMonitor::instance().pid_map_[pid];
+                process->state_ = Process::STATE_STOPPED;
+				process->exit_code_ = WEXITSTATUS(status);
+			}
 
             // Call the old SIGCHLD signal handler.
             void (*old_sigchld_handler)(int) = ProcessMonitor::instance().old_sigchld_handler_;
@@ -117,7 +121,9 @@ namespace ckcore
     /**
      * Constructs a Process object.
      */
-    Process::Process() : invalid_inheritor_(false),pid_(-1),state_(STATE_STOPPED),started_event_(false)
+    Process::Process() : invalid_inheritor_(false),
+		pid_(-1),state_(STATE_STOPPED),exit_code_(0),
+		started_event_(false)
     {
         pipe_stdin_[0] = pipe_stdin_[1] = -1;
         pipe_stdout_[0] = pipe_stdout_[1] = -1;
@@ -193,6 +199,7 @@ namespace ckcore
         // Reset state.
         pid_ = -1;
         state_ = STATE_STOPPED;
+		exit_code_ = 0;
 
         if (locked)
             pthread_mutex_unlock(&mutex_);
@@ -601,5 +608,19 @@ namespace ckcore
 
         return ::write(pipe_stdin_[FD_WRITE],buffer,count);
     }
+
+	/**
+	 * Obtains the exit code of the process.
+	 * @param [out] exit_code The process exit code.
+	 * @return If successful true is returned, if not false is returned.
+	 */
+	bool Process::exit_code(ckcore::tuint32 &exit_code) const
+	{
+		if (pid_ == -1 || !running())
+			return false;
+
+		exit_code = exit_code_;
+		return true;
+	}
 };
 

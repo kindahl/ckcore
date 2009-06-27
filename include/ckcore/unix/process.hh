@@ -67,6 +67,7 @@ namespace ckcore
 
         volatile pid_t pid_;            // Process identifier.
         volatile State state_;          // Process state.
+		volatile ckcore::tuint32 exit_code_;	// Process exit code (if exited).
 
 		std::set<char> block_delims_;
         std::string block_buffer_out_;  // For buffering partial standard output blocks before commiting them.
@@ -96,6 +97,7 @@ namespace ckcore
         bool running() const;
         bool wait() const;
         bool kill() const;
+		bool exit_code(ckcore::tuint32 &exit_code) const;
 
 		void add_block_delim(char delim);
 		void remove_block_delim(char delim);

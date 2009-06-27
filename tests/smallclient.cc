@@ -18,6 +18,8 @@ int main(int argc,const char *argv[])
             mode = 3;
         else if (!strcmp(argv[1],"-m4"))
             mode = 4;
+		else if (!strcmp(argv[1],"-m5"))
+            mode = 5;
     }
 
     std::cout << "SmallClient" << std::endl;
@@ -50,17 +52,23 @@ int main(int argc,const char *argv[])
 
         // Test standard input.
         case 4:
-            std::cout << "MESSAGE 1" << std::endl;
+			{
+				std::cout << "MESSAGE 1" << std::endl;
 
-            std::string str;
-            int i = 0;
-			std::cin >> str >> i;
+				std::string str;
+				int i = 0;
+				std::cin >> str >> i;
 
-			if (str == "TEST" && i == 1)
-                std::cout << "RESPONSE 1" << std::endl;
-            else
-                std::cout << "UNKNOWN" << std::endl;
+				if (str == "TEST" && i == 1)
+					std::cout << "RESPONSE 1" << std::endl;
+				else
+					std::cout << "UNKNOWN" << std::endl;
+			}
             break;
+
+		// Test exit code.
+		case 5:
+			return 42;
     }
 
     return 0;

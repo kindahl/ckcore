@@ -176,4 +176,40 @@ public:
         TS_ASSERT_SAME_DATA(process.next().c_str(),"MESSA",5);
 		TS_ASSERT_SAME_DATA(process.next().c_str(),"E 1",3);
 	}
+
+	void testExitCode()
+	{
+		ProcessWrapper process;
+
+		// Expected exit code zero.
+		ckcore::tstring cmd_line = SMALLCLIENT;
+		TS_ASSERT(process.create(cmd_line.c_str()));
+        process.wait();
+		TS_ASSERT(process.finished());
+
+		ckcore::tuint32 exit_code = -1;
+		TS_ASSERT(process.exit_code(exit_code));
+		TS_ASSERT_EQUALS(exit_code,0);
+
+		// Expected exit code 42.
+		cmd_line += ckT(" -m5");	// Cause the client to return 42 instead of zero.
+
+		TS_ASSERT(process.create(cmd_line.c_str()));
+        process.wait();
+		TS_ASSERT(process.finished());
+
+		exit_code = -1;
+		TS_ASSERT(process.exit_code(exit_code));
+		TS_ASSERT_EQUALS(exit_code,42);
+
+		// Expected exit code zero.
+		cmd_line = SMALLCLIENT;
+		TS_ASSERT(process.create(cmd_line.c_str()));
+        process.wait();
+		TS_ASSERT(process.finished());
+
+		exit_code = -1;
+		TS_ASSERT(process.exit_code(exit_code));
+		TS_ASSERT_EQUALS(exit_code,0);
+	}
 };

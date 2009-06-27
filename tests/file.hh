@@ -16,12 +16,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cxxtest/testSuite.h>
+#include <cxxtest/TestSuite.h>
 #include <stdlib.h>
 #include "ckcore/types.hh"
 #include "ckcore/file.hh"
+#include "ckcore/process.hh"
 
-class FiletestSuite : public Cxxtest::testSuite
+#ifdef _WINDOWS
+#define FILETESTER		ckT("bin/filetester.exe")
+#else
+#define FILETESTER		ckT("./bin/filetester")
+#endif
+
+class SimpleProcess: public ckcore::Process
+{
+public:
+    void event_finished() {}
+    void event_output(const std::string &block) {}
+};
+
+class FileTestSuite : public CxxTest::TestSuite
 {
 public:
     void testOpenClose()
@@ -64,18 +78,18 @@ public:
 		ckcore::File file1(ckT("data/file/new1"));
 		ckcore::File file2(ckT("data/file/new2"));
 
-		TS_ASSERT(file1.open(ckcore::FileBase::ckOPEN_WRITE));
-		TS_ASSERT(file2.open(ckcore::FileBase::ckOPEN_WRITE));
-		TS_ASSERT(file1.Write("1234",4) != -1);
-		TS_ASSERT(file2.Write("1234",4) != -1);
+		TS_ASSERT(file1.open(ckcore::File::ckOPEN_WRITE));
+		TS_ASSERT(file2.open(ckcore::File::ckOPEN_WRITE));
+		TS_ASSERT(file1.write("1234",4) != -1);
+		TS_ASSERT(file2.write("1234",4) != -1);
 		TS_ASSERT(file1.close());
 		TS_ASSERT(file2.close());
 
-		TS_ASSERT(file1.open(ckcore::FileBase::ckOPEN_WRITE));
-		TS_ASSERT(file2.open(ckcore::FileBase::ckOPEN_READWRITE));
-		TS_ASSERT(file2.seek(0,ckcore::FileBase::ckFILE_END) != -1);
-		TS_ASSERT(file1.Write("5678",4) != -1);
-		TS_ASSERT(file2.Write("5678",4) != -1);
+		TS_ASSERT(file1.open(ckcore::File::ckOPEN_WRITE));
+		TS_ASSERT(file2.open(ckcore::File::ckOPEN_READWRITE));
+		TS_ASSERT(file2.seek(0,ckcore::File::ckFILE_END) != -1);
+		TS_ASSERT(file1.write("5678",4) != -1);
+		TS_ASSERT(file2.write("5678",4) != -1);
 		TS_ASSERT(file1.close());
 		TS_ASSERT(file2.close());
 
@@ -95,7 +109,7 @@ public:
 		ckcore::tuint32 tot_write = 0;
         while (tot_write < 37)
         {
-			ckcore::tuint32 write = (ckcore::tuint32)file.Write(out_data + tot_write,
+			ckcore::tuint32 write = (ckcore::tuint32)file.write(out_data + tot_write,
 																37 - tot_write);
             TS_ASSERT(write != -1);
 
@@ -109,7 +123,7 @@ public:
 		ckcore::tuint32 tot_read = 0;
         while (tot_read < 37)
         {
-            ckcore::tuint32 read = (ckcore::tuint32)file.Read(in_data,37 - tot_read);
+            ckcore::tuint32 read = (ckcore::tuint32)file.read(in_data,37 - tot_read);
             TS_ASSERT(read != -1);
 
             tot_read += read;
@@ -268,4 +282,56 @@ public:
             TS_ASSERT_EQUALS(ckcore::File::size(file_paths[i]),file_sizes[i]);
         }
     }
+
+	void testExclusiveAccess()
+	{
+		// Create a new file.
+		ckcore::File file(ckT("data/file/new"));
+        TS_ASSERT(file.open(ckcore::File::ckOPEN_WRITE));
+        TS_ASSERT(file.close());
+
+        TS_ASSERT(file.open(ckcore::File::ckOPEN_READ));
+        TS_ASSERT(file.test());
+
+		// Launch an external process that tries to read from the test file
+		// (should succeed).
+		SimpleProcess process;
+		ckcore::tstring cmd_line = FILETESTER;
+		cmd_line += ckT(" -r data/file/new");
+
+		TS_ASSERT(process.create(cmd_line.c_str()));
+        process.wait();
+
+		ckcore::tuint32 exit_code = -1;
+		TS_ASSERT(process.exit_code(exit_code));
+		TS_ASSERT_EQUALS(exit_code,0);
+
+		// Launch an external process that tries to write to the test file
+		// (should fail).
+		cmd_line = FILETESTER;
+		cmd_line += ckT(" -w data/file/new");
+
+		TS_ASSERT(process.create(cmd_line.c_str()));
+        process.wait();
+
+		exit_code = -1;
+		TS_ASSERT(process.exit_code(exit_code));
+		TS_ASSERT_EQUALS(exit_code,1);
+
+		// Launch an external process that tries to remove the test file
+		// (should fail).
+		cmd_line = FILETESTER;
+		cmd_line += ckT(" -d data/file/new");
+
+		TS_ASSERT(process.create(cmd_line.c_str()));
+        process.wait();
+
+		exit_code = -1;
+		TS_ASSERT(process.exit_code(exit_code));
+		TS_ASSERT_EQUALS(exit_code,1);
+
+		// Finally, close  and remove the file.
+        TS_ASSERT(file.close());
+		TS_ASSERT(file.remove());
+	}
 };

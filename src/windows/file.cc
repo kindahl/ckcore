@@ -69,8 +69,7 @@ namespace ckcore
             case ckOPEN_READ:
                 file_handle_ = CreateFile(file_path_.name().c_str(),
 										  GENERIC_READ,
-										  FILE_SHARE_READ | FILE_SHARE_WRITE,
-										  NULL,OPEN_EXISTING,
+										  FILE_SHARE_READ,NULL,OPEN_EXISTING,
 										  FILE_ATTRIBUTE_ARCHIVE,NULL);
                 break;
 
