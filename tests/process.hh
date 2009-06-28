@@ -108,8 +108,23 @@ public:
 #else
 		// The Windows implementation does not yet support interleaved writing.
         TS_ASSERT_SAME_DATA(process.next().c_str(),"SmallClient",12);
-        TS_ASSERT_SAME_DATA(process.next().c_str(),"MESSAGE 1",9);
-        TS_ASSERT_SAME_DATA(process.next().c_str(),"MESSAGE 2",9);
+
+        // The order of which the messages arrive may be different on different
+        // operating systems. For example the first block applies for GNU/Linux
+        // while the second for Mac OS X.
+        std::string str1 = process.next();
+        std::string str2 = process.next();
+
+        if (str1 == "MESSAGE 1")
+        {
+            TS_ASSERT_SAME_DATA(str1.c_str(),"MESSAGE 1",9);
+            TS_ASSERT_SAME_DATA(str2.c_str(),"MESSAGE 2",9);
+        }
+        else
+        {
+            TS_ASSERT_SAME_DATA(str2.c_str(),"MESSAGE 1",9);
+            TS_ASSERT_SAME_DATA(str1.c_str(),"MESSAGE 2",9);
+        }
 #endif
 	}
 

@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -80,6 +81,25 @@ namespace ckcore
 			case ckOPEN_READWRITE:
 				file_handle_ = ::open(file_path_.name().c_str(),O_RDWR,S_IRUSR | S_IWUSR);
                 break;
+        }
+
+        // Set lock.
+        if (file_handle_ != -1)
+        {
+            struct flock file_lock;
+            file_lock.l_start = 0;
+            file_lock.l_len = 0;
+            file_lock.l_type = file_mode == ckOPEN_READ ? F_RDLCK : F_WRLCK;
+            file_lock.l_whence = SEEK_SET;
+
+            if (fcntl(file_handle_,F_SETLK,&file_lock) == -1)
+            {
+                if (errno == EACCES || errno == EAGAIN)
+                {
+                    close();
+                    return false;
+                }
+            }
         }
 
         return file_handle_ != -1;
@@ -219,7 +239,26 @@ namespace ckcore
     {
         close();
 
-        return unlink(file_path_.name().c_str()) == 0;
+        // Test if the file can be opened for writing, if not we should not
+        // removal of the file.
+        int file_handle = ::open(file_path_.name().c_str(),O_WRONLY,S_IRUSR | S_IWUSR);
+        if (file_handle != -1)
+        {
+            struct flock file_lock;
+            file_lock.l_start = 0;
+            file_lock.l_len = 0;
+            file_lock.l_type = F_WRLCK;
+            file_lock.l_whence = SEEK_SET;
+
+            int res = ::fcntl(file_handle,F_SETLK,&file_lock);
+            int err = errno;
+            ::close(file_handle);
+
+            if (res == -1 && (err == EACCES || err == EAGAIN))
+                return false;
+        }
+
+        return ::unlink(file_path_.name().c_str()) == 0;
     }
 
     /**
@@ -237,7 +276,7 @@ namespace ckcore
 
         close();
 
-        if (rename(file_path_.name().c_str(),new_file_path.name().c_str()) == 0)
+        if (::rename(file_path_.name().c_str(),new_file_path.name().c_str()) == 0)
         {
             file_path_ = new_file_path;
             return true;
@@ -359,8 +398,8 @@ namespace ckcore
         if (exist(new_file_path))
             return false;
 
-        return rename(old_file_path.name().c_str(),
-                      new_file_path.name().c_str()) == 0;
+        return ::rename(old_file_path.name().c_str(),
+                        new_file_path.name().c_str()) == 0;
     }
 
     /**

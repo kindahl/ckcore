@@ -3,7 +3,7 @@ CXX=g++
 CXXFLAGS=-D_UNIX -L../src/.libs -lckcore -I../include
 
 # Targets.
-all: clean test streambench smallclient
+all: clean test streambench smallclient filetester
 
 clean:
 	rm -f bin/test bin/streambench test.cc
@@ -17,3 +17,6 @@ streambench:
 
 smallclient:
 	$(CXX) $(CXXFLAGS) smallclient.cc -o bin/smallclient
+
+filetester:
+	$(CXX) $(CXXFLAGS) filetester.cc -o bin/filetester

@@ -109,7 +109,8 @@ namespace ckcore
     /**
      * Tests the equivalence of this and another iterator.
      * @param [in] it The iterator to use for comparison.
-     * @return If the iterators are equal true is returned, otherwise false.
+     * @return If the iterators are equal true is returned, otherwise false is
+     *         returned.
      */
     bool Path::Iterator::operator==(const Iterator &it) const
     {
@@ -123,7 +124,7 @@ namespace ckcore
      * Tests the non-equivalence of this and another iterator.
      * @param [in] it The iterator to use for comparison.
      * @return If the iterators are not equal true is returned, otherwise
-     *         false.
+     *         false is returned.
      */
     bool Path::Iterator::operator!=(const Iterator &it) const
     {

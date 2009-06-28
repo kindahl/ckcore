@@ -59,15 +59,12 @@ namespace ckcore
 #else
 			unsigned long low = 0,high = 0;
 
-			asm("rdtsc"
+			asm volatile("rdtsc"
 				:"=a"(low),"=d"(high)
 				:
 				:);
 
-			tuint64 result = high;
-			result <<= 32;
-			result |= low;
-			return result;
+            return ((tuint64)high << 32) | low;
 #endif
 		}
 

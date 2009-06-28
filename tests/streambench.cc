@@ -28,7 +28,7 @@ int main(int argc,const char *argv[])
 
     ckcore::BufferedInStream is(fs);
 
-    ckcore::tuint64 last_time = ckcore::System::time();
+    ckcore::tuint64 last_time = ckcore::system::time();
     ckcore::tuint64 last_read = 0;
 
     unsigned char buffer[100];
@@ -44,7 +44,7 @@ int main(int argc,const char *argv[])
         last_read += res;
 
         // Check if a second has passed.
-        ckcore::tuint64 cur_time = ckcore::System::time();
+        ckcore::tuint64 cur_time = ckcore::system::time();
         if (cur_time - last_time > 1000)
         {
             std::cout << "Speed: " << last_read/(1024*1024) << " MiB/s." << std::endl;

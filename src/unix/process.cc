@@ -88,7 +88,9 @@ namespace ckcore
 			{
 				Process *process = ProcessMonitor::instance().pid_map_[pid];
                 process->state_ = Process::STATE_STOPPED;
-				process->exit_code_ = WEXITSTATUS(status);
+
+                if (WIFEXITED(status))
+                    process->exit_code_ = WEXITSTATUS(status);
 			}
 
             // Call the old SIGCHLD signal handler.
@@ -199,7 +201,6 @@ namespace ckcore
         // Reset state.
         pid_ = -1;
         state_ = STATE_STOPPED;
-		exit_code_ = 0;
 
         if (locked)
             pthread_mutex_unlock(&mutex_);
@@ -451,7 +452,7 @@ namespace ckcore
             arg_list[i] = const_cast<tchar *>(arg_vec[i].c_str());
 
         char *path = arg_list[0];
-        arg_list[num_args + 1] = static_cast<char *>(NULL);
+        arg_list[num_args] = static_cast<char *>(NULL);
 
         // Check that the executable exist.
         if (!File::exist(path))
@@ -519,6 +520,7 @@ namespace ckcore
             pthread_cond_wait(&started_cond_,&started_mutex_);
         pthread_mutex_unlock(&started_mutex_);
 
+        exit_code_ = 0;
         return true;
     }
 
@@ -616,7 +618,7 @@ namespace ckcore
 	 */
 	bool Process::exit_code(ckcore::tuint32 &exit_code) const
 	{
-		if (pid_ == -1 || !running())
+		if (running())
 			return false;
 
 		exit_code = exit_code_;
