@@ -25,6 +25,16 @@
 #include "ckcore/crcstream.hh"
 #include "ckcore/nullstream.hh"
 #include "ckcore/system.hh"
+#include "ckcore/progress.hh"
+#include "ckcore/progresser.hh"
+
+class DummyProgress : public ckcore::Progress
+{
+public:
+	void set_status(const ckcore::tchar *format,...) {}
+	void notify(MessageType type,const ckcore::tchar *format,...) {}
+	bool cancelled() { return false; }
+};
 
 class StreamTestSuite : public CxxTest::TestSuite
 {
@@ -297,5 +307,36 @@ public:
         ns.write(NULL,754);
         TS_ASSERT_EQUALS(ns.written(),797);
     }
+
+	void testCopy()
+	{
+		ckcore::FileInStream is1(ckT("data/file/8253bytes"));
+        TS_ASSERT(is1.open());
+        ckcore::FileInStream is2(ckT("data/file/53bytes"));
+        TS_ASSERT(is2.open());
+
+		ckcore::NullStream ns1,ns2,ns3,ns4;
+
+		DummyProgress dp;
+		ckcore::Progresser p(dp,0xffffffff);
+
+		TS_ASSERT(ckcore::stream::copy(is1,ns1,p,825));
+		TS_ASSERT(ckcore::stream::copy(is2,ns2,p,825));
+
+		TS_ASSERT_EQUALS(ns1.written(),825);
+		TS_ASSERT_EQUALS(ns2.written(),825);
+
+		// Try again reaching outside the internal buffer used within the copy
+		// function.
+		TS_ASSERT(is1.seek(0,ckcore::InStream::ckSTREAM_BEGIN));
+		TS_ASSERT(ckcore::stream::copy(is1,ns3,p,8200));
+		TS_ASSERT_EQUALS(ns3.written(),8200);
+
+		// Try again reaching outside the internal buffer used within the copy
+		// function and also reaching outside the stream.
+		TS_ASSERT(is1.seek(0,ckcore::InStream::ckSTREAM_BEGIN));
+		TS_ASSERT(ckcore::stream::copy(is1,ns4,p,9200));
+		TS_ASSERT_EQUALS(ns4.written(),9200);
+	}
 };
 

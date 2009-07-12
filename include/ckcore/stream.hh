@@ -51,7 +51,7 @@ namespace ckcore
          * @param [in] buffer Pointer to beginning of buffer to read to.
          * @param [in] count The number of bytes to read.
          * @return If the operation failed -1 is returned, otherwise the
-         *         function returns the number of butes read (this may be zero
+         *         function returns the number of bytes read (this may be zero
          *         when the end of the file has been reached).
          */
         virtual tint64 read(void *buffer,tuint32 count) = 0;
@@ -107,6 +107,8 @@ namespace ckcore
         bool copy(InStream &from,OutStream &to);
 		bool copy(InStream &from,OutStream &to,Progress &progress);
 		bool copy(InStream &from,OutStream &to,Progresser &progresser);
+		bool copy(InStream &from,OutStream &to,Progresser &progresser,
+				  tuint64 size);
     };
 };
 

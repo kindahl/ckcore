@@ -344,6 +344,42 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\canexstream.cc"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\convert.cc"
 				>
 				<FileConfiguration
@@ -833,6 +869,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\ckcore\canexstream.hh"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\ckcore\convert.hh"
 				>
 			</File>
@@ -849,6 +889,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\ckcore\exception.hh"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\ckcore\file.hh"
 				>
 			</File>
@@ -862,6 +906,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\ckcore\log.hh"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\ckcore\memory.hh"
 				>
 			</File>
 			<File

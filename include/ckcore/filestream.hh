@@ -41,11 +41,13 @@ namespace ckcore
 
     public:
         FileInStream(const Path &file_path);
+		virtual ~FileInStream();
 
         bool open();
         bool close();
         bool end();
 		bool seek(tuint32 distance,StreamWhence whence);
+		bool test() const;
 
         tint64 read(void *buffer,tuint32 count);
 		tint64 size();
@@ -61,6 +63,7 @@ namespace ckcore
 
     public:
         FileOutStream(const Path &file_path);
+		virtual ~FileOutStream();
 
         bool open();
         bool close();

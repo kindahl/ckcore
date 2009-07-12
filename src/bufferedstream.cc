@@ -227,10 +227,13 @@ namespace ckcore
     }
 
     /**
-     * Destructs the BufferedOutStream object.
+     * Destructs the BufferedOutStream object and flushes any remaining data in
+	 * the buffer.
      */
     BufferedOutStream::~BufferedOutStream()
     {
+		flush();
+
         // Free the memory allocated for the internal buffer.
         if (buffer_ != NULL)
         {

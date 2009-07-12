@@ -112,7 +112,7 @@ namespace ckcore
 
     /**
      * Checks whether the file has been opened or not.
-     * @return If a file is open true is returned, otherwise false.
+     * @return If a file is open true is returned, otherwise false is returned.
      */
     bool File::test() const
     {

@@ -28,6 +28,14 @@ namespace ckcore
     {
     }
 
+	/**
+     * Closes the stream and destructs the object.
+     */
+	FileInStream::~FileInStream()
+	{
+		close();
+	}
+
     /**
      * Opens the file for access through the stream.
      * @return If successfull true is returned, otherwise false.
@@ -97,6 +105,16 @@ namespace ckcore
 		return false;
 	}
 
+	/**
+     * Checks whether the file stream has been opened or not.
+     * @return If a file stream is open true is returned, otherwise false is
+	 *		   returned.
+     */
+	bool FileInStream::test() const
+	{
+		return file_.test();
+	}
+
     /**
      * Reads raw data from the stream.
      * @param [in] buffer Pointer to beginning of buffer to read to.
@@ -130,6 +148,14 @@ namespace ckcore
     FileOutStream::FileOutStream(const Path &file_path) : file_(file_path)
     {
     }
+
+	/**
+     * Closes the stream and destructs the object.
+     */
+	FileOutStream::~FileOutStream()
+	{
+		close();
+	}
 
     /**
      * Opens the file for access through the stream.
