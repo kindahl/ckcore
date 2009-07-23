@@ -248,12 +248,16 @@ namespace ckcore
         }
 
         // Notify that the process has finished.
-        if (!process->invalid_inheritor_)
-            process->event_finished();
+        /*if (!process->invalid_inheritor_)
+            process->event_finished();*/
 
         process->close();
 
         ReleaseMutex(process->mutex_exec_);
+
+		// Notify that the process has finished.
+        if (!process->invalid_inheritor_)
+            process->event_finished();
 		return 0;
     }
 
