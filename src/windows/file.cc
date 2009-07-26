@@ -527,15 +527,19 @@ namespace ckcore
 	/**
 	 * Creates a File object of a temporary file. The file path is generated
 	 * to be placed in the systems default temporary directory.
+	 * @param [in] prefix Prefix to use on temporary file name.
 	 * @return File object of temp file.
 	 */
-	File File::temp()
+	File File::temp(const tchar *prefix)
 	{
+		if (prefix == NULL)
+			prefix = ckT("tmp");
+
 		tchar dir_name[246];
 		GetTempPath(sizeof(dir_name) / sizeof(tchar),dir_name);
 
 		tchar tmp_name[260];
-		GetTempFileName(dir_name,ckT("tmp"),0,tmp_name);
+		GetTempFileName(dir_name,prefix,0,tmp_name);
 
 		return File(tmp_name);
 	}
@@ -545,12 +549,16 @@ namespace ckcore
 	 * to be placed in the specified path.
 	 * @param [in] file_path The path to where the temporary file should be
 	 *                       stored.
+	 * @param [in] prefix Prefix to use on temporary file name.
 	 * @return File object of temp file.
 	 */
-	File File::temp(const Path &file_path)
+	File File::temp(const Path &file_path,const tchar *prefix)
 	{
+		if (prefix == NULL)
+			prefix = ckT("tmp");
+
 		tchar tmp_name[260];
-		GetTempFileName(file_path.name().c_str(),ckT("tmp"),0,tmp_name);
+		GetTempFileName(file_path.name().c_str(),prefix,0,tmp_name);
 
 		return File(tmp_name);
 	}
