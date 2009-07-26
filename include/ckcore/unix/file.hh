@@ -96,8 +96,8 @@ namespace ckcore
         static bool access(const Path &file_path,FileMode file_mode);
 		static bool hidden(const Path &file_path);
         static tint64 size(const Path &file_path);
-		static File temp();
-		static File temp(const Path &file_path);
+		static File temp(const tchar *prefix);
+		static File temp(const Path &file_path,const tchar *prefix);
     };
 };
 

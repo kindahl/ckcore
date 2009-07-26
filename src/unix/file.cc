@@ -489,19 +489,33 @@ namespace ckcore
      * Creates a File object describing a temporary file on the hard drive. The
      * file path is pointing to an unique file name in the default temporary
      * directory of the current system. The file is not automatically created.
+     * @param [in] prefix Prefix to use on temporary file name.
      * @return File object to a temporary file.
      */
-	File File::temp()
+	File File::temp(const tchar *prefix)
 	{
+        if (prefix == NULL)
+            prefix = ckT("file");
+
 		tchar *tmp_name = tmpnam(NULL);
 		if (tmp_name != NULL)
 		{
-			return File(tmp_name);
+            Path tmp_path(tmp_name);
+
+            tstring file_name = prefix;
+            file_name += tmp_path.base_name();
+
+			Path full_path = tmp_path.dir_name().c_str();
+            full_path += file_name.c_str();
+			return File(full_path);
+            
+			//return File(tmp_name);
 		}
 		else
 		{
 			tchar tmp_name2[260];
-			strcpy(tmp_name2,ckT("/tmp/file"));
+			strcpy(tmp_name2,ckT("/tmp/"));
+			strcat(tmp_name2,prefix);
 			strcat(tmp_name2,convert::ui32_to_str(rand()));
 			strcat(tmp_name2,ckT(".tmp"));
 
@@ -514,21 +528,28 @@ namespace ckcore
 	 * to be placed in the specified path.
 	 * @param [in] file_path The path to where the temporary file should be
 	 *                       stored.
+     * @param [in] prefix Prefix to use on temporary file name.
 	 * @return File object of temp file.
 	 */
-	File File::temp(const Path &file_path)
+	File File::temp(const Path &file_path,const tchar *prefix)
 	{
+        if (prefix == NULL)
+            prefix = ckT("file");
+
 		tchar *tmp_name = tmpnam(NULL);
 		if (tmp_name != NULL)
 		{
+            tstring file_name = prefix;
+            file_name += Path(tmp_name).base_name();
+
 			Path full_path = file_path;
-			full_path += Path(tmp_name).base_name().c_str();
+            full_path += file_name.c_str();
 			return File(full_path);
 		}
 		else
 		{
 			tchar tmp_name2[260];
-			strcpy(tmp_name2,ckT("file"));
+			strcpy(tmp_name2,prefix);
 			strcat(tmp_name2,convert::ui32_to_str(rand()));
 			strcat(tmp_name2,ckT(".tmp"));
 
