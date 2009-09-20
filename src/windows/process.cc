@@ -103,7 +103,11 @@ namespace ckcore
                 // forced to terminate.
                 SetEvent(stop_event_);
 
-                if (WaitForSingleObject(thread_handle_,5000) == WAIT_TIMEOUT)
+                /*if (WaitForSingleObject(thread_handle_,5000) == WAIT_TIMEOUT)
+					TerminateThread(thread_handle_,-2);*/
+				// UPDATE: Rather let the program hang to make the problem present to the
+				//		   user.
+				if (WaitForSingleObject(thread_handle_,INFINITE) != WAIT_OBJECT_0)
 					TerminateThread(thread_handle_,-2);
             }
 
@@ -246,10 +250,6 @@ namespace ckcore
                 break;
             }
         }
-
-        // Notify that the process has finished.
-        /*if (!process->invalid_inheritor_)
-            process->event_finished();*/
 
         process->close();
 
