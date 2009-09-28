@@ -17,11 +17,10 @@
  */
 
 #include <string.h>
-#ifdef _WINDOWS
+#if defined(_WINDOWS)
 #include <windows.h>
 #include <intrin.h>
-#endif
-#ifdef _UNIX
+#elif defined(_UNIX)
 #include <sys/time.h>
 #endif
 #include "ckcore/system.hh"
@@ -68,10 +67,8 @@ namespace ckcore
 #endif
 		}
 
-#ifdef _WINDOWS
-#ifdef _M_X64
+#if defined(_WINDOWS) && defined(_M_X64)
 		extern "C" void cpuid64(unsigned long func,unsigned long arg,unsigned long *words);
-#endif
 #endif
 
 		void cpuid(unsigned long func,unsigned long arg,
@@ -110,7 +107,7 @@ namespace ckcore
 #endif
 #else
 			// 32-bit PIC compatible version.
-#ifdef __i386__ && ifdef __PIC__
+#if defined(__i386__) && defined(__PIC__)
 			asm("pushl %%ebx\n"
 				"cpuid\n"
 				"movl %%ebx,%1\n"
