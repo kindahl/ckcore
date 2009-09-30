@@ -227,7 +227,7 @@ namespace ckcore
             return tstring(ckT("/"));
 #endif
         else
-            return tstring(ckT(""));
+            return tstring();
     }
 
     /**
@@ -248,7 +248,7 @@ namespace ckcore
             delim = path_name_.rfind('/',end - 1);
 #endif
         if (delim == -1)
-            return tstring(ckT(""));
+            return tstring();
         else
             return path_name_.substr(0,delim + 1);
     }
@@ -286,7 +286,7 @@ namespace ckcore
         tstring base_name = Path::base_name();
         size_t delim = base_name.rfind('.');
         if (delim == -1)
-            return tstring(ckT(""));
+            return tstring();
         else
             return base_name.substr(delim + 1);
     }
@@ -390,4 +390,3 @@ namespace ckcore
         return *this;
     }
 };
-

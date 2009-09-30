@@ -40,7 +40,7 @@ namespace ckcore
 	typedef std::string tstring;
 	typedef std::stringstream tstringstream;
 #ifndef ckT
-#define ckT
+#define ckT(quote) quote
 #endif
 #endif
     typedef __int64 tint64;
@@ -62,8 +62,7 @@ namespace ckcore
     typedef std::string tstring;
 	typedef std::stringstream tstringstream;
 #ifndef ckT
-#define ckT
+#define ckT(quote) quote
 #endif
 #endif
 };
-
