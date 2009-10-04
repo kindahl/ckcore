@@ -63,5 +63,5 @@ namespace ckcore
 			return message_;
 		}
     };
-};
+}
 

@@ -70,6 +70,6 @@ namespace ckcore
 		void copy(CanexInStream &from,CanexOutStream &to,Progresser &progresser);
 		void copy(CanexInStream &from,CanexOutStream &to,Progresser &progresser,
 				  tuint64 size);
-    };
-};
+    }
+}
 

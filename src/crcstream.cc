@@ -16,6 +16,7 @@
  * aint with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <assert.h>
 #include "ckcore/crcstream.hh"
 
 namespace ckcore
@@ -39,8 +40,8 @@ namespace ckcore
      * Constructs a CrcStream object.
      */
     CrcStream::CrcStream(CrcType type) : reflect_(true),order_(32),
-        mask_(0xffffffff),initial_(0xffffffff),checksum_(0xffffffff),
-        final_(0xffffffff)
+        mask_(0xffffffff),initial_(0xffffffff),
+        final_(0xffffffff),checksum_(0xffffffff)
     {
         // Calculate the table entries.
         tuint32 crc = 0;
@@ -50,25 +51,28 @@ namespace ckcore
         switch (type)
         {
             case ckCRC_16:
-                poly = 0x8005;      // CRC-16-IBM.
+                poly = 0x8005;		// CRC-16-IBM.
                 order_ = 16;
                 initial_ = 0xffff;
                 final_ = 0xffff;
                 checksum_ = 0xffff;
                 break;
 
-            // Do nothing, this is the default configuration.
-            /*case ckCRC_32:
-                break;*/
+            case ckCRC_32:
+                // Do nothing, this is the default configuration.
+                break;
 
             case ckCRC_CCITT:
-                poly = 0x1021;     // From UDF 1.50 reference documentation.
+                poly = 0x1021;		// From UDF 1.50 reference documentation.
                 reflect_ = false;
                 order_ = 16;
                 initial_ = 0x0000;
                 final_ = 0x0000;
                 checksum_ = 0x0000;
                 break;
+
+			default:
+				assert(false);
         }
 
         tuint32 high = (tuint32)1 << (order_ - 1);
@@ -143,5 +147,5 @@ namespace ckcore
 
         return count;
     }
-};
+}
 

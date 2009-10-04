@@ -299,5 +299,5 @@ namespace ckcore
 
         return result;
     }
-};
+}
 

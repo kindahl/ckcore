@@ -48,5 +48,5 @@ namespace ckcore
         written_ += count;
         return count;
     }
-};
+}
 

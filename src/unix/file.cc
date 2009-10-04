@@ -560,5 +560,5 @@ namespace ckcore
 			return File(full_path);
 		}
 	}
-};
+}
 

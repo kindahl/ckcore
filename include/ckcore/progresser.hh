@@ -47,5 +47,5 @@ namespace ckcore
 
 		bool cancelled();
 	};
-};
+}
 

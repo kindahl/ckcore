@@ -380,6 +380,7 @@ namespace ckcore
         process->close();
 
         pthread_mutex_unlock(&process->mutex_exec_);
+	return NULL;
     }
 
     /**
@@ -624,5 +625,5 @@ namespace ckcore
 		exit_code = exit_code_;
 		return true;
 	}
-};
+}
 

@@ -389,4 +389,4 @@ namespace ckcore
         path_name_ += p.path_name_;
         return *this;
     }
-};
+}

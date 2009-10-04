@@ -41,6 +41,6 @@ namespace ckcore
         tuint64 time();
         tuint64 ticks();
         unsigned long cache_size(CacheLevel level);
-    };
-};
+    }
+}
 

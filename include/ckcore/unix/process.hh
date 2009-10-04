@@ -117,5 +117,5 @@ namespace ckcore
          */
         virtual void event_output(const std::string &block) = 0;
     };
-};
+}
 

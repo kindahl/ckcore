@@ -82,5 +82,5 @@ namespace ckcore
 		 */
 		virtual bool cancelled() = 0;
     };
-};
+}
 

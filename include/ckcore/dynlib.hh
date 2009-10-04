@@ -55,5 +55,5 @@ namespace ckcore
 
         const Path &path() const;
     };
-};
+}
 

@@ -67,5 +67,5 @@ namespace ckcore
          */
         tlog_print print = def_print;
         tlog_print print_line = def_print_line;
-    };
-};
+    }
+}

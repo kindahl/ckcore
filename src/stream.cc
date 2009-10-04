@@ -263,6 +263,6 @@ namespace ckcore
             delete [] buffer;
             return true;
         }
-    };
-};
+    }
+}
 

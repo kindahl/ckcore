@@ -41,5 +41,5 @@ namespace ckcore
 
 		void tm_to_dostime(struct tm &time,unsigned short &dos_date,
 						   unsigned short &dos_time);
-    };
-};
+    }
+}

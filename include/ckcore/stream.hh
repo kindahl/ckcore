@@ -109,6 +109,6 @@ namespace ckcore
 		bool copy(InStream &from,OutStream &to,Progresser &progresser);
 		bool copy(InStream &from,OutStream &to,Progresser &progresser,
 				  tuint64 size);
-    };
-};
+    }
+}
 

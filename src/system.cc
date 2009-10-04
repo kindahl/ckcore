@@ -215,6 +215,6 @@ namespace ckcore
 
 			return 0;
 		}
-	};
-};
+	}
+}
 

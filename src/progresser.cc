@@ -66,5 +66,5 @@ namespace ckcore
 	{
 		return progress_.cancelled();
 	}
-};
+}
 

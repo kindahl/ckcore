@@ -65,4 +65,4 @@ namespace ckcore
 #define ckT(quote) quote
 #endif
 #endif
-};
+}

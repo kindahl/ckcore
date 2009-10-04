@@ -31,8 +31,8 @@ namespace ckcore
 		 * Defines the thread function type.
 		 */
 		typedef void (* tfunction)(void *param);
-	};
-};
+	}
+}
 
 #ifdef _WINDOWS
 #include "ckcore/windows/thread.hh"

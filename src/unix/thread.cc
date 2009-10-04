@@ -133,6 +133,6 @@ namespace ckcore
 
 			return !(locked_ = !(pthread_mutex_unlock(&mutex_) == 0));
 		}
-	};
-};
+	}
+}
 

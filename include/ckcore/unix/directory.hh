@@ -89,5 +89,5 @@ namespace ckcore
                          struct tm &modify_time,struct tm &create_time);
 		static Directory temp();
     };
-};
+}
 

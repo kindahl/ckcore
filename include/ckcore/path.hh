@@ -81,5 +81,5 @@ namespace ckcore
         Path operator+(const Path &p);
         Path &operator+=(const Path &p);
     };
-};
+}
 

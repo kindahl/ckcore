@@ -74,5 +74,5 @@ namespace ckcore
 
         tint64 write(void *buffer,tuint32 count);
     };
-};
+}
 

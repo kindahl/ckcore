@@ -111,6 +111,6 @@ namespace ckcore
 			return tstring(utf16_to_ansi(str,res,sizeof(res)/sizeof(tchar)));
 #endif
 		}
-    };
-};
+    }
+}
 

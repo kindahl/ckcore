@@ -239,5 +239,5 @@ namespace ckcore
 			return strncpy(out,ansi,out_len);
 #endif
         }
-    };
-};
+    }
+}

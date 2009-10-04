@@ -99,5 +99,5 @@ namespace ckcore
 		static File temp(const tchar *prefix);
 		static File temp(const Path &file_path,const tchar *prefix);
     };
-};
+}
 

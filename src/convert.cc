@@ -170,6 +170,6 @@ namespace ckcore
 			dos_time |= (unsigned short)time.tm_min << 5;
 			dos_time |= (unsigned short)time.tm_hour << 11;
 		}
-    };
-};
+    }
+}
 

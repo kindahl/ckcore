@@ -326,5 +326,5 @@ namespace ckcore
             return Directory(tmp_name2);
         }
 	}
-};
+}
 

@@ -47,6 +47,6 @@ namespace ckcore
 			bool lock();
 			bool unlock();
 		};
-	};
-};
+	}
+}
 

@@ -214,6 +214,6 @@ namespace ckcore
 				progresser.update(res);
 			}
         }
-    };
-};
+    }
+}
 

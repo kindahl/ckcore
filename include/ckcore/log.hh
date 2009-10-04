@@ -38,7 +38,7 @@ namespace ckcore
 
         extern tlog_print print;
         extern tlog_print print_line;
-    };
+    }
 
     /**
      * @brief Interface for data logging.
@@ -61,5 +61,5 @@ namespace ckcore
          */
 		virtual void print_line(const tchar *format,...) = 0;
     };
-};
+}
 

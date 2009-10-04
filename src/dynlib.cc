@@ -114,5 +114,5 @@ namespace ckcore
     {
         return path_;
     }
-};
+}
 

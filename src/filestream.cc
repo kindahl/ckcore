@@ -189,5 +189,5 @@ namespace ckcore
     {
         return file_.write(buffer,count);
     }
-};
+}
 
