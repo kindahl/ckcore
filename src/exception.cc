@@ -30,20 +30,22 @@ namespace ckcore
      * Construct an Exception object.
      * @param [in] err_msg The error message.
      */
-    Exception2::Exception2(const ckcore::tchar * const err_msg) : err_msg_(err_msg)
+    Exception2::Exception2(const ckcore::tchar * const err_msg)
     {
 #if defined(_WINDOWS) && defined(_UNICODE)
-        /*int utf16_size = lstrlen(err_msg) + 1;
+        int utf16_size = lstrlen(err_msg) + 1;
         int utf8_size = WideCharToMultiByte(CP_UTF8,0,err_msg,utf16_size,NULL,
                                             0,NULL,NULL);
 
-        ATLASSERT(utf8_size != 0);
+        assert(utf8_size != 0);
 
         err_msg_.reserve(utf8_size);
 
         utf8_size = WideCharToMultiByte(CP_UTF8,0,err_msg,utf16_size,
                                         const_cast<char *>(err_msg_.c_str()),
-                                        utf8_size,NULL,NULL);*/
+                                        utf8_size,NULL,NULL);
+#else
+		err_msg_ = err_msg;
 #endif
     }
 
@@ -51,27 +53,62 @@ namespace ckcore
      * Construct an Exception object.
      * @param [in] err_msg The error message.
      */
-    Exception2::Exception2(const ckcore::tstring &err_msg) : err_msg_(err_msg)
+    Exception2::Exception2(const ckcore::tstring &err_msg)
     {
+#if defined(_WINDOWS) && defined(_UNICODE)
+		int utf16_size = static_cast<int>(err_msg.size()) + 1;
+		int utf8_size = WideCharToMultiByte(CP_UTF8,0,err_msg.c_str(),
+											utf16_size,NULL,
+                                            0,NULL,NULL);
+
+        assert(utf8_size != 0);
+
+        err_msg_.reserve(utf8_size);
+
+		utf8_size = WideCharToMultiByte(CP_UTF8,0,err_msg.c_str(),utf16_size,
+                                        const_cast<char *>(err_msg_.c_str()),
+                                        utf8_size,NULL,NULL);
+#else
+		err_msg_ = err_msg;
+#endif
     }
 
     /**
-     * Returns the error message.
+     * Returns the error message ANSI/UTF-8 format.
      * @return The error message.
      */
-    const ckcore::tchar *Exception2::lwhat(void) const throw()
-    {
-        return err_msg_.c_str();
-    }
-
     const char *Exception2::what(void) const throw()
     {
-        // Please use the wrapper GetExceptErrMsg() instead of calling what()
-        // on objects derived from std::exception .
-        assert(false);
-
-        return "internal error: no ansi message available.";
+       return err_msg_.c_str();
     }
+
+	/**
+     * Returns the error message in tstring format.
+     * @return The error message.
+     */
+	tstring Exception2::message() const
+	{
+#if defined(_WINDOWS) && defined(_UNICODE)
+		const int utf8_size = static_cast<int>(err_msg_.size()) + 1;
+
+		int utf16_size = MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,
+											 err_msg_.c_str(),utf8_size,NULL,0);
+
+		assert(utf16_size != 0);
+
+		tstring result;
+		result.reserve(utf16_size + 1);
+
+		utf16_size = MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,
+										 err_msg_.c_str(),utf8_size,
+										 const_cast<wchar_t *>(result.c_str()),
+										 utf16_size);
+
+		return result;
+#else
+		return err_msg_;
+#endif
+	}
 
     /**
      * Returns the exception message of the given exception object. The
@@ -82,12 +119,11 @@ namespace ckcore
      */
     ckcore::tstring get_except_msg(const std::exception &e)
     {
-        const Exception2 *const pE = dynamic_cast<const Exception2 *>(&e);
+        const Exception2 *const ptr = dynamic_cast<const Exception2 *>(&e);
+		if (ptr != NULL)
+			ptr->message();
 
-        if (pE != NULL)
-            return pE->lwhat();
-
-        return ckcore::string::ansi_to_auto<1024>(pE->what());
+		return ckcore::string::ansi_to_auto<1024>(e.what());
     }
 
     /**

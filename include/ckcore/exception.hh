@@ -70,10 +70,13 @@ namespace ckcore
 		}
     };
 
+	/**
+     * @brief Exception class.
+     */
     class Exception2 : public std::exception
     {
     private:
-        tstring err_msg_;
+		std::string err_msg_;
 
     public:
         Exception2(const tchar * const err_msg);
@@ -81,7 +84,7 @@ namespace ckcore
         virtual ~Exception2() throw() {};
 
         virtual const char *what(void) const throw();
-        const tchar *lwhat(void) const throw();
+		tstring message() const;
     };
 
     tstring get_except_msg(const std::exception &e);
@@ -91,4 +94,3 @@ namespace ckcore
     void throw_from_hresult(HRESULT res,const tchar * pfx_fmt,...);
 #endif
 };  // namespace ckcore
-
