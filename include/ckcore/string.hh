@@ -22,6 +22,7 @@
  */
 
 #pragma once
+#include <stdio.h>
 #include "ckcore/types.hh"
 
 // Not very nice since they are not in the namespace.
@@ -60,6 +61,10 @@ namespace ckcore
         wchar_t *ansi_to_utf16(const char *ansi,wchar_t *utf,int utf_len);
         char *utf16_to_ansi(const wchar_t *utf,char *ansi,int ansi_len);
 		tchar *ansi_to_auto(const char *ansi,tchar *out,int out_len);
+
+		void vformatstr(tstring &res,const tchar * const fmt,
+                        const va_list args);
+        tstring formatstr(const tchar * const fmt,...);
 
 		/**
 		 * Converts an ANSI string if necessary into UTF-16 format. If UTF-16 is not

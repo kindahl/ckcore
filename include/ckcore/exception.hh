@@ -22,7 +22,13 @@
  */
 
 #pragma once
+
+#ifdef _WINDOWS
+#include <windows.h>
+#endif
+
 #include "ckcore/types.hh"
+#include "ckcore/string.hh"
 
 namespace ckcore
 {
@@ -63,5 +69,26 @@ namespace ckcore
 			return message_;
 		}
     };
-}
+
+    class Exception2 : public std::exception
+    {
+    private:
+        tstring err_msg_;
+
+    public:
+        Exception2(const tchar * const err_msg);
+        Exception2(const tstring &err_msg);
+        virtual ~Exception2() throw() {};
+
+        virtual const char *what(void) const throw();
+        const tchar *lwhat(void) const throw();
+    };
+
+    tstring get_except_msg(const std::exception &e);
+    void rethrow_with_pfx(const std::exception &e,const tchar *fmt,...);
+
+#ifdef _WINDOWS
+    void throw_from_hresult(HRESULT res,const tchar * pfx_fmt,...);
+#endif
+};  // namespace ckcore
 

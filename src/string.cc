@@ -20,6 +20,10 @@
 #include <cstring>
 #ifdef _WINDOWS
 #include <windows.h>
+#include <atlbase.h>
+#include <atlapp.h>
+#else
+#include <assert.h>
 #endif
 #include "ckcore/string.hh"
 
@@ -162,6 +166,78 @@ namespace ckcore
 		}
 
         /**
+         * Creates a formatted string from a format description similar to that
+         * of sprintf. This routine accept positional arguments like "%1$s".
+         * @param [out] res Output formatted string.
+         * @param [in] fmt The string format.
+         * @param [in] args Variable argument list.
+         */
+        void vformatstr(tstring &res,const tchar * const fmt,
+                        const va_list args)
+        {
+#ifdef _WINDOWS
+            // There are here several ways to write this routine:
+            // 1) Call vasprintf(), insert the result into the string, free()
+            //    the result.
+            // 2) [the one implemented] Call Microsoft's _vscprintf() to
+            //    calculate the string length upfront, make enough room for
+            //    that length, then call sprintf() to print the string.
+            // 3) Try once with snprintf(), and, if not enough room was
+            //    available, make enough room and call snprintf() again.
+            // 4) Try once with Microsoft's _snprintf(), and, if not enough
+            //    room, increase room (perhaps exponentially) and try again.
+            const int char_cnt = _vsctprintf_p(fmt,args);
+            if (char_cnt == 0)
+            {
+                res.clear();
+                return;
+            }
+
+            res.resize(char_cnt + 1);
+            ATLVERIFY(char_cnt == _vstprintf_p(&res[0],char_cnt + 1,fmt,args));
+
+            // Remove the null terminator, std::string will add its own if
+            // necessary.
+            res.resize(char_cnt);
+
+#else  // #ifdef _WINDOWS
+            const int char_cnt = vsnprintf(NULL,0,fmt,args);
+            if (char_cnt == 0)
+            {
+                res.clear();
+                return;
+            }
+
+            res.resize(char_cnt + 1);
+            if (char_cnt != vsnprintf(&res[0],char_cnt + 1,fmt,args))
+                 assert(false);
+
+            // Remove the null terminator, std::string will add its own if
+            // necessary.
+            res.resize(char_cnt);
+#endif  // #ifdef _WINDOWS
+        }
+
+        /**
+         * Creates a formatted string from a format description similar to that
+         * of sprintf. This routine accept positional arguments like "%1$s".
+         * @param [in] fmt The string format.
+         * @return The resulting formatted string.
+         */
+        tstring formatstr(const tchar * const fmt,...)
+        {
+            tstring res;
+            
+            va_list args;
+            va_start(args,fmt);
+            
+            vformatstr(res,fmt,args);
+            
+            va_end(args);
+            return res;
+        }
+
+        /**
          * Converts an ANSI string into UTF-16 (big endian) format.
          * @param [in] ansi The ANSI string to convert.
          * @param [in] utf Pointer to buffer to which the UTF-16 string should
@@ -173,8 +249,9 @@ namespace ckcore
         wchar_t *ansi_to_utf16(const char *ansi,wchar_t *utf,int utf_len)
         {
 #ifdef _WINDOWS
-            int converted = MultiByteToWideChar(AreFileApisANSI() ? CP_ACP : CP_OEMCP,MB_PRECOMPOSED,
-                ansi,(int)strlen(ansi) + 1,utf,utf_len);
+            int converted = MultiByteToWideChar(AreFileApisANSI() ? CP_ACP : CP_OEMCP,
+                                                MB_PRECOMPOSED,ansi,(int)strlen(ansi) + 1,
+                                                utf,utf_len);
 
             // Trunkate UTF-16 string if buffer is too small.
             if (converted == utf_len)
