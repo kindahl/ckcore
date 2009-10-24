@@ -121,7 +121,7 @@ namespace ckcore
     {
         const Exception2 *const ptr = dynamic_cast<const Exception2 *>(&e);
 		if (ptr != NULL)
-			ptr->message();
+			return ptr->message();
 
 		return ckcore::string::ansi_to_auto<1024>(e.what());
     }
