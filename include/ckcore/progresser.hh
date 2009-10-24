@@ -43,7 +43,7 @@ namespace ckcore
 		Progresser(Progress &progress,tuint64 total);
 
 		void update(tuint64 count);
-		void notify(Progress::MessageType type,const tchar *format,...);
+		void notify(Progress::MessageType type,const tchar *format,...) __attribute__ ((format (printf, 3, 4)));
 
 		bool cancelled();
 	};

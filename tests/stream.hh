@@ -31,8 +31,8 @@
 class DummyProgress : public ckcore::Progress
 {
 public:
-	void set_status(const ckcore::tchar *format,...) {}
-	void notify(MessageType type,const ckcore::tchar *format,...) {}
+	void set_status(const ckcore::tchar *format,...) __attribute__ ((format (printf, 2, 3))) {}
+	void notify(MessageType type,const ckcore::tchar *format,...) __attribute__ ((format (printf, 3, 4))) {}
 	bool cancelled() { return false; }
 };
 

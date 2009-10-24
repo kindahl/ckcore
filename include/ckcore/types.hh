@@ -65,4 +65,8 @@ namespace ckcore
 #define ckT(quote) quote
 #endif
 #endif
+
+#ifndef __GNUC__
+#  define __attribute__(x)
+#endif
 }

@@ -88,7 +88,7 @@ namespace ckcore
     };
 
     tstring get_except_msg(const std::exception &e);
-    void rethrow_with_pfx(const std::exception &e,const tchar *fmt,...);
+    void rethrow_with_pfx(const std::exception &e,const tchar *fmt,...) __attribute__ ((format (printf, 2, 3)));
 
 #ifdef _WINDOWS
     void throw_from_hresult(HRESULT res,const tchar * pfx_fmt,...);

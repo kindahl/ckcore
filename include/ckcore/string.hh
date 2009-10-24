@@ -65,7 +65,7 @@ namespace ckcore
 
 		void vformatstr(tstring &res,const tchar * const fmt,
                         const va_list args);
-        tstring formatstr(const tchar * const fmt,...);
+        tstring formatstr(const tchar * const fmt,...) __attribute__ ((format (printf, 1, 2)));
 
 		/**
 		 * Converts an ANSI string if necessary into UTF-16 format. If UTF-16 is not

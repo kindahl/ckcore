@@ -34,7 +34,7 @@ namespace ckcore
         /**
          * Defines the print function type.
          */
-        typedef void (*tlog_print)(const tchar *format,...);
+        typedef void (*tlog_print)(const tchar *format,...) __attribute__ ((format (printf, 1, 2)));
 
         extern tlog_print print;
         extern tlog_print print_line;
@@ -52,14 +52,14 @@ namespace ckcore
 		 * Prints a message string to the logging system.
 		 * @param [in] format The message format or the message itself.
 		 */
-		virtual void print(const tchar *format,...) = 0;
+		virtual void print(const tchar *format,...) __attribute__ ((format (printf, 2, 3))) = 0;
 
         /**
          * Prints a message string followed by a new line to the logging
          * system.
          * @param [in] format The message format or message itself.
          */
-		virtual void print_line(const tchar *format,...) = 0;
+		virtual void print_line(const tchar *format,...) __attribute__ ((format (printf, 2, 3))) = 0;
     };
 }
 

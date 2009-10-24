@@ -65,7 +65,7 @@ namespace ckcore
 		 * Sets the status message describing the current operation.
 		 * @param [in] format The status message format.
 		 */
-		virtual void set_status(const tchar *format,...) = 0;
+		virtual void set_status(const tchar *format,...) __attribute__ ((format (printf, 2, 3))) = 0;
 
 		/**
 		 * Transmits a message to the interface implementor. This message is
@@ -73,7 +73,7 @@ namespace ckcore
 		 * @param [in] type The type of message.
 		 * @param [in] format The message format.
 		 */
-		virtual void notify(MessageType type,const tchar *format,...) = 0;
+		virtual void notify(MessageType type,const tchar *format,...) __attribute__ ((format (printf, 3, 4))) = 0;
 
 		/**
 		 * Checks wether the operation has been cancelled or not.

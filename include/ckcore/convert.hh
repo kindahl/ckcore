@@ -28,7 +28,7 @@ namespace ckcore
 {
     namespace convert
     {
-		void sprintf(tchar *buffer,size_t size,const tchar *format,...);
+		void sprintf(tchar *buffer,size_t size,const tchar *format,...) __attribute__ ((format (printf, 3, 4)));
 
 		const tchar *b_to_str(bool value);
 		const tchar *i32_to_str(tint32 value);
