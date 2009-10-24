@@ -23,6 +23,7 @@
 
 #pragma once
 #include <stdio.h>
+#include <stdarg.h>
 #include "ckcore/types.hh"
 
 // Not very nice since they are not in the namespace.
