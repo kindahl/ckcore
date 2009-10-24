@@ -108,7 +108,7 @@ namespace ckcore
 		 * @return The specified UTF-16 string either in ANSI or in UTF-16 format.
 		 */
 		template<size_t S>
-		tstring utf16_to_auto(const tchar *str)
+		tstring utf16_to_auto(const wchar_t *str)
 		{
 #if defined(_WINDOWS) && defined(_UNICODE)
 			return tstring(str);
