@@ -55,9 +55,7 @@ namespace ckcore
 	{
 		if (!stream_.seek(distance,whence))
 		{
-			tstring msg = ckT("Seek error in ");
-			msg += ident_ = ckT(".");
-			throw Exception(msg);
+			throw Exception2(string::formatstr(ckT("Seek error in %s."),ident_.c_str()));
 		}
 	}
 
@@ -74,9 +72,7 @@ namespace ckcore
 		ckcore::tint64 res = stream_.read(buffer,count);
 		if (res == -1)
 		{
-			tstring msg = ckT("Could not read from ");
-			msg += ident_ = ckT(".");
-			throw Exception(msg);
+			throw Exception2(string::formatstr(ckT("Could not read from %s."),ident_.c_str()));
 		}
 
 		return res;
@@ -125,9 +121,7 @@ namespace ckcore
 		ckcore::tint64 res = stream_.write(buffer,count);
 		if (res == -1 || res != count)
 		{
-			tstring msg = ckT("Could not write to ");
-			msg += ident_ = ckT(".");
-			throw Exception(msg);
+			throw Exception2(string::formatstr(ckT("Could not write to %s."),ident_.c_str()));
 		}
     }
 
@@ -217,4 +211,3 @@ namespace ckcore
         }
     }
 }
-
