@@ -32,44 +32,6 @@
 
 namespace ckcore
 {
-    /**
-     * @brief Exception base class.
-     */
-    class Exception
-    {
-	protected:
-		tstring message_;
-
-    public:
-		/**
-		 * Constructs an Exception object.
-		 * @param [in] message The message describing the reason for the error.
-		 */
-		Exception(const tchar *message) : message_(message) {}
-
-		/**
-		 * Constructs an Exception object.
-		 * @param [in] message The message describing the reason for the error.
-		 */
-		Exception(const tstring &message) : message_(message) {}
-
-		/**
-		 * Constructs an Exception object without an error mesasge.
-		 */
-		Exception() {}
-
-        virtual ~Exception() {};
-
-		/**
-		 * Returns the message describing the reason for the error.
-		 * @return The message describing the reason for the error.
-		 */
-		virtual const tstring &what() const
-		{
-			return message_;
-		}
-    };
-
 	/**
      * @brief Exception class.
      */
