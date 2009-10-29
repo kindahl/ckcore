@@ -55,4 +55,5 @@ namespace ckcore
 #ifdef _WINDOWS
     void throw_from_hresult(HRESULT res,const tchar * pfx_fmt,...);
 #endif
+    void throw_from_errno(int errno_code,const tchar * pfx_fmt,... ) __attribute__ ((format (printf, 2, 3)));;
 };  // namespace ckcore

@@ -19,8 +19,10 @@
 #include <ckcore/exception.hh>  // The include file for this module comes first.
 #include <assert.h>
 #include <stdarg.h>
+#include <string.h>  // strerror_r
 #ifdef _WINDOWS
 #include <comdef.h>
+#include <tchar.h>
 #endif
 #include <ckcore/string.hh>
 
@@ -39,7 +41,7 @@ namespace ckcore
 
         assert(utf8_size != 0);
 
-        err_msg_.reserve(utf8_size);
+        err_msg_.resize(utf8_size);
 
         utf8_size = WideCharToMultiByte(CP_UTF8,0,err_msg,utf16_size,
                                         const_cast<char *>(err_msg_.c_str()),
@@ -63,7 +65,7 @@ namespace ckcore
 
         assert(utf8_size != 0);
 
-        err_msg_.reserve(utf8_size);
+		err_msg_.resize(utf8_size);
 
 		utf8_size = WideCharToMultiByte(CP_UTF8,0,err_msg.c_str(),utf16_size,
                                         const_cast<char *>(err_msg_.c_str()),
@@ -74,7 +76,7 @@ namespace ckcore
     }
 
     /**
-     * Returns the error message ANSI/UTF-8 format.
+     * Returns the error message in UTF-8 format.
      * @return The error message.
      */
     const char *Exception2::what(void) const throw()
@@ -97,7 +99,7 @@ namespace ckcore
 		assert(utf16_size != 0);
 
 		tstring result;
-		result.reserve(utf16_size + 1);
+		result.resize(utf16_size + 1);
 
 		utf16_size = MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,
 										 err_msg_.c_str(),utf8_size,
@@ -169,4 +171,43 @@ namespace ckcore
         throw Exception2(msg);
     }
 #endif  // #ifdef _WINDOWS
+
+    static tstring get_errno_msg(const int errno_code)
+    {
+#ifdef WIN32
+        const tchar * const errno_msg = _tcserror(errno_code);
+#else
+        
+        // We could write a loop here, but it's unlikely
+        // that any errno error messages are so long.
+        tchar strerror_buffer[ 2048 ];
+    
+        const tchar * const errno_msg = strerror_r(errno_code,
+                                                   strerror_buffer,
+                                                   sizeof(strerror_buffer));
+#endif
+        return tstring(errno_msg);
+    }
+
+    
+    void throw_from_errno(const int errno_code,
+                          const tchar * const pfx_fmt,...)
+    {
+        tstring msg;
+
+        if (pfx_fmt != NULL)
+        {
+            va_list args;
+            va_start(args,pfx_fmt);
+
+			string::vformatstr(msg,pfx_fmt,args);
+
+            va_end(args);
+        }
+
+        const tstring errno_msg = get_errno_msg(errno_code);
+        msg.append(errno_msg);
+
+        throw Exception2(msg);
+    }
 }  // namespace ckcore
