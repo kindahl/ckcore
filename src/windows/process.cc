@@ -17,6 +17,10 @@
  */
 
 #include "stdafx.hh"
+
+#include <atlbase.h>
+#include <atlapp.h>
+
 #include "ckcore/stream.hh"
 #include "ckcore/process.hh"
 
@@ -101,50 +105,81 @@ namespace ckcore
             {
                 // If the thread does not respond within 5 seconds it will be
                 // forced to terminate.
-                SetEvent(stop_event_);
+                ATLVERIFY( 0 != SetEvent(stop_event_) );
 
                 /*if (WaitForSingleObject(thread_handle_,5000) == WAIT_TIMEOUT)
 					TerminateThread(thread_handle_,-2);*/
 				// UPDATE: Rather let the program hang to make the problem present to the
 				//		   user.
 				if (WaitForSingleObject(thread_handle_,INFINITE) != WAIT_OBJECT_0)
-					TerminateThread(thread_handle_,-2);
+				{
+					ATLASSERT( false );
+					ATLVERIFY( 0 != TerminateThread(thread_handle_,-2) );
+				}
             }
 
-            CloseHandle(thread_handle_);
+            ATLVERIFY( 0 != CloseHandle(thread_handle_) );
             thread_handle_ = NULL;
         }
 
-        if (process_handle_ != NULL)
-        {
-			if (GetExitCodeProcess(process_handle_,&exit_code_) == FALSE)
-				exit_code_ = -1;
 
-            CloseHandle(process_handle_);
-            process_handle_ = NULL;
-        }
-
+		// Close the pipes before closing the child process.
+		// That way, if the child process is still alive,
+		// it will get an error when writing to stdout or reading
+		// from stdin. If the child process properly checks for errors
+		// (which is normally the case at least for stdin),
+		// it will terminate early. If not, it will carry on
+		// and terminate at some point time.
+		// If we don't close the pipes, there is a risk
+		// that the process will forever hang waiting for us
+		// to read its output or to write its input. If we then
+		// wait for the child to terminate, we'll get a nice deadlock.
         if (pipe_stdin_ != NULL)
         {
-            CloseHandle(pipe_stdin_);
+            ATLVERIFY( 0 != CloseHandle(pipe_stdin_) );
             pipe_stdin_ = NULL;
         }
 
         if (pipe_output_ != NULL)
         {
-            CloseHandle(pipe_output_);
+            ATLVERIFY( 0 != CloseHandle(pipe_output_) );
             pipe_output_ = NULL;
         }
 
+        if (process_handle_ != NULL)
+        {
+			// We expect all our child processes to properly terminate
+			// and don't freeze on exit. However, there is a risk
+			// that they don't behave properly. Therefore,
+			// instead of forever waiting at this point, we could wait for some time,
+			// and then forcibly terminate the child process. But we don't really
+			// want to kill children that way, as we may end up with garbage on
+			// the hard disk or get into some other kind of trouble. The best thing
+			// to do would be to warn the user and let him decide. This
+			// is not implemented yet.
+			ATLVERIFY( WAIT_OBJECT_0 == WaitForSingleObject( process_handle_, INFINITE ) );
+
+			if (GetExitCodeProcess(process_handle_,&exit_code_) == FALSE)
+			{
+				ATLASSERT( false );  // Actually, this should never fail.
+				exit_code_ = -1;
+			}
+
+			ATLASSERT( exit_code_ != STILL_ACTIVE );
+
+            ATLVERIFY( 0 != CloseHandle(process_handle_) );
+            process_handle_ = NULL;
+        }
+
         // Reset state.
-		ResetEvent(start_event_);
-		ResetEvent(stop_event_);
+		ATLVERIFY( 0 != ResetEvent(start_event_) );
+		ATLVERIFY( 0 != ResetEvent(stop_event_) );
 
         thread_id_ = 0;
         state_ = STATE_STOPPED;
 
         if (locked)
-            ReleaseMutex(mutex_);
+            ATLVERIFY( 0 != ReleaseMutex(mutex_) );
     }
 
     /**
