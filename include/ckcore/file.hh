@@ -24,10 +24,99 @@
 #pragma once
 
 #ifdef _WINDOWS
-#include "ckcore/windows/file.hh"
+
+#include <windows.h>
+
+#elif defined(_UNIX)
+
+// Nothing special for Unix.
+
+#else
+#error "Unknown platform"
 #endif
 
-#ifdef _UNIX
-#include "ckcore/unix/file.hh"
+#include <ckcore/file.hh>
+#include <ckcore/types.hh>
+#include <ckcore/path.hh>
+
+namespace ckcore
+{
+    /**
+     * @brief The class for dealing with files on Windows.
+     */
+    class File
+    {
+    public:
+        /**
+         * Defines modes which describes how to open files.
+         */
+        enum FileMode
+        {
+            ckOPEN_READ,
+            ckOPEN_WRITE,
+			ckOPEN_READWRITE
+        };
+
+        /**
+         * Defines directives what to use as base offset when performing seek
+         * operations.
+         */
+        enum FileWhence
+        {
+            ckFILE_CURRENT,
+            ckFILE_BEGIN,
+			ckFILE_END
+        };
+
+    private:
+
+#ifdef _WINDOWS
+        HANDLE file_handle_;
+#else
+        int file_handle_;
 #endif
 
+        Path file_path_;
+
+    public:
+        File(const Path &file_path);
+        ~File();
+
+		const tstring &name() const;
+
+        // Functions for internal manipulation.
+        bool open(FileMode file_mode);
+        bool close();
+        bool test() const;
+        tint64 seek(tint64 distance,FileWhence whence);
+        tint64 tell() const;
+        tint64 read(void *buffer,tint64 count);
+        tint64 write(const void *buffer,tint64 count);
+
+        // Functions for external manipulation (does not require file to be
+        // opened).
+        bool exist() const;
+        bool remove();
+        bool rename(const Path &new_file_path);
+        bool time(struct tm &access_time,struct tm &modify_time,
+                  struct tm &create_time) const;
+        bool access(FileMode file_mode) const;
+		bool hidden() const;
+        tint64 size();
+
+        // Static (conveniance and performance) functions, they are not allowed
+        // to be wrappers around the non-static functions for performance
+        // reasons.
+        static bool exist(const Path &file_path);
+        static bool remove(const Path &file_path);
+        static bool rename(const Path &old_file_path,
+                           const Path &new_file_path);
+        static bool time(const Path &file_path,struct tm &access_time,
+                         struct tm &modify_time,struct tm &create_time);
+        static bool access(const Path &file_path,FileMode file_mode);
+		static bool hidden(const Path &file_path);
+        static tint64 size(const Path &file_path);
+		static File temp(const tchar *prefix);
+		static File temp(const Path &file_path,const tchar *prefix);
+    };
+};

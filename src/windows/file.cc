@@ -17,8 +17,12 @@
  */
 
 #include "stdafx.hh"
+
+#include <atldef.h>
+
+#include <ckcore/file.hh>
+
 #include "util.hh"
-#include "ckcore/file.hh"
 
 namespace ckcore
 {
@@ -189,13 +193,16 @@ namespace ckcore
      *         returns the number of bytes read (this may be zero when the end
      *         of the file has been reached).
      */
-    tint64 File::read(void *buffer,tuint32 count)
+    tint64 File::read(void *buffer,tint64 count)
     {
+		// ReadFile() takes a DWORD (defined as unsigned long) as the byte count.
+		ATLASSERT( count >= 0 || count <= ULONG_MAX );
+
         if (file_handle_ == INVALID_HANDLE_VALUE)
             return -1;
 
 		unsigned long read = 0;
-		if (ReadFile(file_handle_,buffer,count,&read,NULL) == FALSE)
+		if (ReadFile(file_handle_,buffer,DWORD(count),&read,NULL) == FALSE)
 			return -1;
 		else
 			return read;
@@ -209,13 +216,16 @@ namespace ckcore
      * @return If the operation failed -1 is returned, otherwise the function
      *         returns the number of bytes written (this may be zero).
      */
-    tint64 File::write(const void *buffer,tuint32 count)
+    tint64 File::write(const void *buffer,tint64 count)
     {
+		// WriteFile() takes a DWORD (defined as unsigned long) as the byte count.
+		ATLASSERT( count >= 0 || count <= ULONG_MAX );
+
         if (file_handle_ == INVALID_HANDLE_VALUE)
             return -1;
 
 		unsigned long written = 0;
-		if (WriteFile(file_handle_,buffer,count,&written,NULL) == FALSE)
+		if (WriteFile(file_handle_,buffer,DWORD(count),&written,NULL) == FALSE)
 			return -1;
 		else
 			return written;

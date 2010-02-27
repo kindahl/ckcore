@@ -188,7 +188,7 @@ namespace ckcore
      *         returns the number of bytes read (this may be zero when the end
      *         of the file has been reached).
      */
-    tint64 File::read(void *buffer,unsigned long count)
+    tint64 File::read(void *buffer,tint64 count)
     {
         if (file_handle_ == -1)
             return -1;
@@ -204,7 +204,7 @@ namespace ckcore
      * @return If the operation failed -1 is returned, otherwise the function
      *         returns the number of bytes written (this may be zero).
      */
-    tint64 File::write(const void *buffer,unsigned long count)
+    tint64 File::write(const void *buffer,tint64 count)
     {
         if (file_handle_ == -1)
             return -1;
@@ -561,4 +561,3 @@ namespace ckcore
 		}
 	}
 }
-
