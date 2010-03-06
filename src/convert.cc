@@ -18,6 +18,8 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <algorithm>
+#include <assert.h>
 #include "ckcore/convert.hh"
 
 namespace ckcore
@@ -127,6 +129,36 @@ namespace ckcore
 		}
 
 		/**
+         * Most implementations of itoa() and printf() lock the locale settings
+         * and are therefore much slower than this routine.
+         */
+		void ui64_to_str2(tuint64 value, tchar * buffer)
+        {
+          // Short-circuit the zero value, for it's very common.
+          if (!value)
+          {
+            buffer[0]='0';
+            buffer[1]='\0';
+            return;
+          }
+
+          tchar * p=buffer;
+
+          do
+          {
+            *p=tchar('0' + value%10);
+            ++p;
+            value/=10;
+  
+          } while(value);
+
+          std::reverse(buffer, p);
+          *p='\0';
+
+          assert(p-buffer < INT_TO_STR_BUFLEN);
+        }
+      
+		/**
          * Converts the specified big endian unsigned 32-bit integer value into
          * a little endian 32-bit unsigned integer value.
          * @param [in] value The integer value to convert.
@@ -172,4 +204,3 @@ namespace ckcore
 		}
     }
 }
-

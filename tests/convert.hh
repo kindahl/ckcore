@@ -27,6 +27,7 @@ public:
     void testConvert()
     {
 		// Test boolean values.
+		{  // Scoping to prevent inadvertently testing the wrong variables
 		const ckcore::tchar *str11 = ckT("0");
 		const ckcore::tchar *str12 = ckcore::convert::b_to_str(false);
 		TS_ASSERT(!ckcore::string::astrcmp(str11,str12));
@@ -34,8 +35,10 @@ public:
 		const ckcore::tchar *str21 = ckT("1");
 		const ckcore::tchar *str22 = ckcore::convert::b_to_str(true);
 		TS_ASSERT(!ckcore::string::astrcmp(str21,str22));
+		}
 
 		// Test 32-bit integer values.
+		{  // Scoping to prevent inadvertently testing the wrong variables
 		const ckcore::tchar *str31 = ckT("2147483647");
 		const ckcore::tchar *str32 = ckcore::convert::i32_to_str(2147483647);
 		TS_ASSERT(!ckcore::string::astrcmp(str31,str32));
@@ -47,8 +50,10 @@ public:
 		const ckcore::tchar *str51 = ckT("4294967295");
 		const ckcore::tchar *str52 = ckcore::convert::ui32_to_str(4294967295UL);
 		TS_ASSERT(!ckcore::string::astrcmp(str51,str52));
+		}
 
 		// Test 64-bit integer values.
+		{  // Scoping to prevent inadvertently testing the wrong variables
 		const ckcore::tchar *str61 = ckT("9223372036854775807");
 		const ckcore::tchar *str62 = ckcore::convert::i64_to_str(9223372036854775807LL);
 		TS_ASSERT(!ckcore::string::astrcmp(str61,str62));
@@ -60,6 +65,46 @@ public:
 		const ckcore::tchar *str81 = ckT("18446744073709551615");
 		const ckcore::tchar *str82 = ckcore::convert::ui64_to_str(18446744073709551615ULL);
 		TS_ASSERT(!ckcore::string::astrcmp(str81,str82));
+		}
+
+        ckcore::tchar convBuffer[ckcore::convert::INT_TO_STR_BUFLEN];
+
+		// Test 32-bit integer values.
+		{  // Scoping to prevent inadvertently testing the wrong variables
+        const ckcore::tint32 max32 = 2147483647;
+        const ckcore::tint32 min32 = (-max32 - 1LL);
+        
+		const ckcore::tchar *str131 = ckT("2147483647");
+		ckcore::convert::i32_to_str2(max32, convBuffer);
+		TS_ASSERT(!ckcore::string::astrcmp(str131,convBuffer));
+
+		const ckcore::tchar *str141 = ckT("-2147483648");
+		ckcore::convert::i32_to_str2(min32, convBuffer);
+		TS_ASSERT(!ckcore::string::astrcmp(str141,convBuffer));
+
+		const ckcore::tchar *str151 = ckT("4294967295");
+		ckcore::convert::ui32_to_str2(4294967295UL, convBuffer);
+		TS_ASSERT(!ckcore::string::astrcmp(str151,convBuffer));
+		}
+        
+		// Test 64-bit integer values.
+		{  // Scoping to prevent inadvertently testing the wrong variables
+        const ckcore::tint64 max64 = 9223372036854775807LL;
+        const ckcore::tint64 min64 = (-max64 - 1LL);
+        
+		const ckcore::tchar *str61 = ckT("9223372036854775807");
+		ckcore::convert::i64_to_str2(max64, convBuffer);
+		TS_ASSERT(!ckcore::string::astrcmp(str61,convBuffer));
+
+		const ckcore::tchar *str71 = ckT("-9223372036854775808");
+		ckcore::convert::i64_to_str2(min64, convBuffer);
+		TS_ASSERT(!ckcore::string::astrcmp(str71,convBuffer));
+        
+
+		const ckcore::tchar *str81 = ckT("18446744073709551615");
+		ckcore::convert::ui64_to_str2(18446744073709551615ULL, convBuffer);
+		TS_ASSERT(!ckcore::string::astrcmp(str81,convBuffer));
+		}
 
         // sprintf function.
         const ckcore::tchar *str91 = ckT("Test: 42.");
