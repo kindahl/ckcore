@@ -9,7 +9,7 @@ EXTRA_DIST = ../include/ckcore/bufferedstream.hh ../include/ckcore/canexstream.h
 			 ../include/ckcore/stream.hh ../include/ckcore/string.hh \
 			 ../include/ckcore/system.hh ../include/ckcore/thread.hh \
 			 ../include/ckcore/types.hh
-AM_CPPFLAGS = -I../include
+AM_CPPFLAGS = -I$(srcdir)/../include
 SUBDIRS = unix
 
 lib_LTLIBRARIES = libckcore.la
