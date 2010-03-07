@@ -996,10 +996,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\include\ckcore\windows\file.hh"
-					>
-				</File>
-				<File
 					RelativePath="..\..\include\ckcore\windows\process.hh"
 					>
 				</File>
