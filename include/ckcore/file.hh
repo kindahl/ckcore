@@ -80,9 +80,9 @@ namespace ckcore
 
     public:
         File(const Path &file_path);
-        ~File();
+       ~File() { close(); }
 
-		const tstring &name() const;
+        const tstring &name() const { return file_path_.name(); }
 
         // Functions for internal manipulation.
         bool open(FileMode file_mode);
@@ -100,8 +100,8 @@ namespace ckcore
         bool rename(const Path &new_file_path);
         bool time(struct tm &access_time,struct tm &modify_time,
                   struct tm &create_time) const;
-        bool access(FileMode file_mode) const;
-		bool hidden() const;
+        bool access(FileMode file_mode) const { return access(file_path_,file_mode); }
+        bool hidden() const { return hidden(file_path_); }
         tint64 size();
 
         // Static (conveniance and performance) functions, they are not allowed

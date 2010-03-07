@@ -210,4 +210,10 @@ namespace ckcore
 
         throw Exception2(msg);
     }
+
+    void throw_internal_error(const tchar *file,int line)
+    {
+      throw Exception2(string::formatstr(ckT("Internal error in %s at line %d."),file,line));
+    }
+ 
 }  // namespace ckcore

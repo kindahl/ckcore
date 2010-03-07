@@ -37,24 +37,6 @@ namespace ckcore
     }
 
     /**
-     * Destructs the File object. The file will be automatically closed if the
-     * close function has not been called.
-     */
-    File::~File()
-    {
-        close();
-    }
-
-	/**
-	 * Returns the full file path name.
-	 * @return The full file path name.
-	 */
-	const tstring &File::name() const
-	{
-		return file_path_.name();
-	}
-
-    /**
      * Opens the file in the requested mode.
      * @param [in] file_mode Determines how the file should be opened. In write
      *                       mode the file will be created if it does not
@@ -318,29 +300,6 @@ namespace ckcore
 
         return time(file_path_.name().c_str(),access_time,modify_time,create_time);
     }
-
-    /**
-     * Checks if the active user has permission to open the file in a certain
-     * file mode.
-     * @param [in] file_mode The file mode to check for access permission.
-     * @return If the active user have permission to open the file in the
-     *         specified file mode true is returned, otherwise false is
-     *         returned.
-     */
-    bool File::access(FileMode file_mode) const
-    {
-        return access(file_path_.name().c_str(),file_mode);
-    }
-
-	/**
-	 * Checks if the file is hidden or not.
-	 * @return If successful and if the file is hidden true is returned,
-	 * 		   otherwise false is returned.
-	 */
-	bool File::hidden() const
-	{
-		return hidden(file_path_);
-	}
 
     /**
      * Calcualtes the size of the file.
