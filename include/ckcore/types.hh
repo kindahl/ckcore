@@ -42,16 +42,15 @@ namespace ckcore
 #ifndef ckT
 #define ckT(quote) quote
 #endif
-#endif
+#endif  // #ifdef _UNICODE
     typedef __int64 tint64;
     typedef unsigned __int64 tuint64;
     typedef long tint32;
     typedef unsigned long tuint32;
 	typedef short tint16;
 	typedef unsigned short tuint16;
-#endif
 
-#ifdef _UNIX
+#elif defined(_UNIX)
     typedef char tchar;
     typedef long long tint64;
     typedef unsigned long long tuint64;
@@ -64,6 +63,9 @@ namespace ckcore
 #ifndef ckT
 #define ckT(quote) quote
 #endif
+
+#else
+#error "Unknown platform."
 #endif
 
 #ifndef __GNUC__

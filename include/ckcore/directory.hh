@@ -25,9 +25,8 @@
 
 #ifdef _WINDOWS
 #include "ckcore/windows/directory.hh"
-#endif
-
-#ifdef _UNIX
+#elif defined(_UNIX)
 #include "ckcore/unix/directory.hh"
+#else
+#error "Unknown platform."
 #endif
-

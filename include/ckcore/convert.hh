@@ -31,10 +31,6 @@ namespace ckcore
 		void sprintf(tchar *buffer,size_t size,const tchar *format,...) __attribute__ ((format (printf, 3, 4)));
 
 		const tchar *b_to_str(bool value);
-		const tchar *i32_to_str(tint32 value);
-		const tchar *ui32_to_str(tuint32 value);
-		const tchar *i64_to_str(tint64 value);
-		const tchar *ui64_to_str(tuint64 value);
 
         enum { INT_TO_STR_BUFLEN = 30 };  // more than enough for 64-bit integers
 

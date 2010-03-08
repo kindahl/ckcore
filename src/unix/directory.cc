@@ -318,13 +318,16 @@ namespace ckcore
         }
         else
         {
-            tchar tmp_name2[260];
+            tchar tmp_name2[PATH_MAX+1];
             strcpy(tmp_name2,ckT("/tmp/file"));
-            strcat(tmp_name2,convert::ui32_to_str(rand()));
+
+            tchar convBuffer[convert::INT_TO_STR_BUFLEN];
+            convert::ui32_to_str2(rand(), convBuffer);
+            strcat(tmp_name2, convBuffer);
+            
             strcat(tmp_name2,ckT(".tmp"));
 
             return Directory(tmp_name2);
         }
 	}
 }
-

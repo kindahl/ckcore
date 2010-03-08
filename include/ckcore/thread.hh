@@ -36,9 +36,8 @@ namespace ckcore
 
 #ifdef _WINDOWS
 #include "ckcore/windows/thread.hh"
-#endif
-
-#ifdef _UNIX
+#elif defined(_UNIX)
 #include "ckcore/unix/thread.hh"
+#else
+#error "Unknown platform."
 #endif
-

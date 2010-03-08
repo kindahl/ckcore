@@ -17,12 +17,16 @@
  */
 
 #include <string.h>
+
 #if defined(_WINDOWS)
 #include <windows.h>
 #include <intrin.h>
 #elif defined(_UNIX)
 #include <sys/time.h>
+#else
+#error "Unknown platform."
 #endif
+
 #include "ckcore/system.hh"
 
 namespace ckcore
@@ -217,4 +221,3 @@ namespace ckcore
 		}
 	}
 }
-

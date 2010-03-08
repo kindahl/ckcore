@@ -22,6 +22,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 #include <sys/stat.h>
 #include "ckcore/convert.hh"
 #include "ckcore/file.hh"
@@ -473,10 +474,14 @@ namespace ckcore
 		}
 		else
 		{
-			tchar tmp_name2[260];
+			tchar tmp_name2[PATH_MAX+1];
 			strcpy(tmp_name2,ckT("/tmp/"));
 			strcat(tmp_name2,prefix);
-			strcat(tmp_name2,convert::ui32_to_str(rand()));
+
+            tchar convBuffer[convert::INT_TO_STR_BUFLEN];
+            convert::ui32_to_str2(rand(), convBuffer);
+			strcat(tmp_name2, convBuffer);
+            
 			strcat(tmp_name2,ckT(".tmp"));
 
 			return File(tmp_name2);
@@ -508,9 +513,13 @@ namespace ckcore
 		}
 		else
 		{
-			tchar tmp_name2[260];
+			tchar tmp_name2[PATH_MAX+1];
 			strcpy(tmp_name2,prefix);
-			strcat(tmp_name2,convert::ui32_to_str(rand()));
+            
+            tchar convBuffer[convert::INT_TO_STR_BUFLEN];
+            convert::ui32_to_str2(rand(), convBuffer);
+			strcat(tmp_name2, convBuffer);
+            
 			strcat(tmp_name2,ckT(".tmp"));
 
 			Path full_path = file_path;

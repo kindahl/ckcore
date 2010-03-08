@@ -25,9 +25,8 @@
 
 #ifdef _WINDOWS
 #include "ckcore/windows/process.hh"
-#endif
-
-#ifdef _UNIX
+#elif defined(_UNIX)
 #include "ckcore/unix/process.hh"
+#else
+#error "Unknown platform."
 #endif
-

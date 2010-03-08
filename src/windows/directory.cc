@@ -337,13 +337,17 @@ namespace ckcore
 		if (GetTempPath(sizeof(dir_name) / sizeof(tchar),dir_name) == 0)
 			dir_name[0] = '\0';
 
-		tchar tmp_name[260];
+		tchar tmp_name[_MAX_PATH];
 		if (GetTempFileName(dir_name,ckT("tmp"),0,tmp_name) == 0)
 		{
 			// Fall back on random name generation.
 			lstrcpy(tmp_name,dir_name);
 			lstrcat(tmp_name,ckT("file"));
-			lstrcat(tmp_name,convert::ui32_to_str((tuint32)rand()));
+
+            tchar convBuffer[convert::INT_TO_STR_BUFLEN];
+            convert::ui32_to_str2((tuint32)rand(), convBuffer);
+			lstrcat(tmp_name,convBuffer);
+                                 
 			lstrcat(tmp_name,ckT(".tmp"));
 		}
 
