@@ -50,11 +50,11 @@ namespace ckcore
     };
 
     tstring get_except_msg(const std::exception &e);
-    void rethrow_with_pfx(const std::exception &e,const tchar *fmt,...) __attribute__ ((format (printf, 2, 3)));
+    void MSC_DECLSPEC_NORETURN rethrow_with_pfx(const std::exception &e,const tchar *fmt,...) __attribute__ ((noreturn, format (printf, 2, 3)));
 
 #ifdef _WINDOWS
-    void throw_from_hresult(HRESULT res,const tchar * pfx_fmt,...);
+    void MSC_DECLSPEC_NORETURN throw_from_hresult(HRESULT res,const tchar * pfx_fmt,...) __attribute__ ((noreturn));
 #endif
-    void throw_from_errno(int errno_code,const tchar * pfx_fmt,... ) __attribute__ ((format (printf, 2, 3)));;
-    void throw_internal_error(const tchar *file,int line);
+    void MSC_DECLSPEC_NORETURN throw_from_errno(int errno_code,const tchar * pfx_fmt,... ) __attribute__ ((noreturn, format (printf, 2, 3)));
+    void MSC_DECLSPEC_NORETURN throw_internal_error(const tchar *file,int line) __attribute__ ((noreturn));
 };  // namespace ckcore

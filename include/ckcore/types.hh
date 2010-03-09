@@ -71,4 +71,12 @@ namespace ckcore
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
+
+// Note that __declspec(dllexport) is recognised on cygwin and mingw,
+// so we should not just let all __declspec() vanish, like we do with __attribute__.
+#ifdef _MSC_VER
+#  define MSC_DECLSPEC_NORETURN __declspec(noreturn)
+#else
+#  define MSC_DECLSPEC_NORETURN
+#endif
 }
