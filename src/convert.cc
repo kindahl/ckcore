@@ -26,8 +26,6 @@ namespace ckcore
 {
     namespace convert
     {
-		tchar global_buffer[64];
-
 		/**
 		 * A safe platform intependant version of the sprintf function.
 		 * @param [in] buffer The target string buffer.
@@ -52,16 +50,12 @@ namespace ckcore
 		}
 
 		/**
-         * Converts the specified boolean value into a string. This function
-         * uses a global buffer so the result pointer must not be freed.
-         * @param [in] value The integer value to convert.
-         * @return A pointer to the string containing the converter value.
+         * Converts the specified boolean value into a string.
          */
-		const tchar *b_to_str(bool value)
+		void b_to_str2(bool value, tchar * buffer)
 		{
-			global_buffer[0] = '\0';
-			sprintf(global_buffer,sizeof(global_buffer),ckT("%d"),value);
-			return global_buffer;
+			buffer[0] = value ? '1' : '0';
+			buffer[1] = '\0';
 		}
 
 		/**

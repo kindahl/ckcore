@@ -26,18 +26,18 @@ class ConvertTestSuite : public CxxTest::TestSuite
 public:
     void testConvert()
     {
+        ckcore::tchar convBuffer[ckcore::convert::INT_TO_STR_BUFLEN];
+      
 		// Test boolean values.
 		{  // Scoping to prevent inadvertently testing the wrong variables
 		const ckcore::tchar *str11 = ckT("0");
-		const ckcore::tchar *str12 = ckcore::convert::b_to_str(false);
-		TS_ASSERT(!ckcore::string::astrcmp(str11,str12));
+		ckcore::convert::b_to_str2(false, convBuffer);
+		TS_ASSERT(!ckcore::string::astrcmp(str11,convBuffer));
 
 		const ckcore::tchar *str21 = ckT("1");
-		const ckcore::tchar *str22 = ckcore::convert::b_to_str(true);
-		TS_ASSERT(!ckcore::string::astrcmp(str21,str22));
+		ckcore::convert::b_to_str2(true, convBuffer);
+		TS_ASSERT(!ckcore::string::astrcmp(str21,convBuffer));
 		}
-
-        ckcore::tchar convBuffer[ckcore::convert::INT_TO_STR_BUFLEN];
 
 		// Test 32-bit integer values.
 		{  // Scoping to prevent inadvertently testing the wrong variables
