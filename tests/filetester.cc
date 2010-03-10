@@ -3,6 +3,10 @@
 #ifdef _WINDOWS
 #include <string>
 #include <windows.h>
+#elif defined(_UNIX)
+#include <string.h>
+#else
+#error "Unknown platform."
 #endif
 
 #include <ckcore/path.hh>
@@ -75,4 +79,3 @@ int main(int argc,const char *argv[])
 
     return 0;
 }
-

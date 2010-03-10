@@ -4,6 +4,10 @@
 #include <string>
 #include <windows.h>
 #define sleep(x) Sleep(x*1000)
+#elif defined(_UNIX)
+#include <string.h>
+#else
+#error "Unknown platform"
 #endif
 
 int main(int argc,const char *argv[])
@@ -73,4 +77,3 @@ int main(int argc,const char *argv[])
 
     return 0;
 }
-
