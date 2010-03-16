@@ -41,7 +41,7 @@ public:
     void testOpenClose()
     {
         // test non-existing file.
-        ckcore::File file1(ckT("data/file/non-existent"));
+        ckcore::File file1(ckT(TEST_SRC_DIR "/data/file/non-existent"));
         TS_ASSERT(!file1.test());
 
         TS_ASSERT(!file1.open(ckcore::File::ckOPEN_READ));
@@ -59,7 +59,7 @@ public:
         TS_ASSERT(!file1.close());
 
         // test existing file.
-        ckcore::File file2(ckT("data/file/0bytes"));
+        ckcore::File file2(ckT(TEST_SRC_DIR "/data/file/0bytes"));
         TS_ASSERT(!file2.test());
 
         TS_ASSERT(file2.open(ckcore::File::ckOPEN_READ));
@@ -75,8 +75,8 @@ public:
 
 	void testAppend()
 	{
-		ckcore::File file1(ckT("data/file/new1"));
-		ckcore::File file2(ckT("data/file/new2"));
+		ckcore::File file1(ckT(TEST_SRC_DIR "/data/file/new1"));
+		ckcore::File file2(ckT(TEST_SRC_DIR "/data/file/new2"));
 
 		TS_ASSERT(file1.open(ckcore::File::ckOPEN_WRITE));
 		TS_ASSERT(file2.open(ckcore::File::ckOPEN_WRITE));
@@ -102,7 +102,7 @@ public:
 
     void testReadWrite()
     {
-        ckcore::File file(ckT("data/file/new"));
+        ckcore::File file(ckT(TEST_SRC_DIR "/data/file/new"));
         TS_ASSERT(file.open(ckcore::File::ckOPEN_WRITE));
         const char out_data[] = "abcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -137,7 +137,7 @@ public:
 
     void testSeekTell()
     {
-        ckcore::File file(ckT("data/file/8253bytes"));
+        ckcore::File file(ckT(TEST_SRC_DIR "/data/file/8253bytes"));
         TS_ASSERT(file.open(ckcore::File::ckOPEN_READ));
         TS_ASSERT(file.test());
 
@@ -179,7 +179,7 @@ public:
 
     void testExistRemove()
     {
-        ckcore::File file1(ckT("data/file/non-existent"));
+        ckcore::File file1(ckT(TEST_SRC_DIR "/data/file/non-existent"));
         TS_ASSERT(!file1.exist());
         TS_ASSERT(!file1.remove());
         TS_ASSERT(file1.open(ckcore::File::ckOPEN_WRITE));
@@ -187,76 +187,76 @@ public:
         TS_ASSERT(file1.remove());
         TS_ASSERT(!file1.exist());
 
-        ckcore::File file2(ckT("data/file/0bytes"));
+        ckcore::File file2(ckT(TEST_SRC_DIR "/data/file/0bytes"));
         TS_ASSERT(file2.exist());
 
         // test static functions.
-        TS_ASSERT(ckcore::File::exist(ckT("data/file/0bytes")));
-        TS_ASSERT(!ckcore::File::exist(ckT("data/file/non-existent")));
+        TS_ASSERT(ckcore::File::exist(ckT(TEST_SRC_DIR "/data/file/0bytes")));
+        TS_ASSERT(!ckcore::File::exist(ckT(TEST_SRC_DIR "/data/file/non-existent")));
 
-        TS_ASSERT(!ckcore::File::remove(ckT("data/file/non-existent")));
-        ckcore::File file3(ckT("data/file/new"));
+        TS_ASSERT(!ckcore::File::remove(ckT(TEST_SRC_DIR "/data/file/non-existent")));
+        ckcore::File file3(ckT(TEST_SRC_DIR "/data/file/new"));
         TS_ASSERT(file3.open(ckcore::File::ckOPEN_WRITE));
         TS_ASSERT(file3.close());
-        TS_ASSERT(ckcore::File::remove(ckT("data/file/new")));
-        TS_ASSERT(!ckcore::File::remove(ckT("data/file/non-existent")));
+        TS_ASSERT(ckcore::File::remove(ckT(TEST_SRC_DIR "/data/file/new")));
+        TS_ASSERT(!ckcore::File::remove(ckT(TEST_SRC_DIR "/data/file/non-existent")));
         TS_ASSERT(!ckcore::File::remove(ckT("")));
     }
 
     void testRename()
     {
         // rename file in existing folder (should succeed).
-        ckcore::File file1(ckT("data/file/new"));
+        ckcore::File file1(ckT(TEST_SRC_DIR "/data/file/new"));
         TS_ASSERT(file1.open(ckcore::File::ckOPEN_WRITE));
 
-        TS_ASSERT(file1.rename(ckT("data/file/new2")));
-        TS_ASSERT(ckcore::File::exist(ckT("data/file/new2")));
+        TS_ASSERT(file1.rename(ckT(TEST_SRC_DIR "/data/file/new2")));
+        TS_ASSERT(ckcore::File::exist(ckT(TEST_SRC_DIR "/data/file/new2")));
         TS_ASSERT(!file1.close());
 
         // rename file in new non-existing folder (should fail).
-        ckcore::File file2(ckT("data/file/new"));
+        ckcore::File file2(ckT(TEST_SRC_DIR "/data/file/new"));
         TS_ASSERT(file2.open(ckcore::File::ckOPEN_WRITE));
 
-        TS_ASSERT(!file2.rename(ckT("data/file/new/new2")));
-        TS_ASSERT(!ckcore::File::exist(ckT("data/file/new/new2")));
+        TS_ASSERT(!file2.rename(ckT(TEST_SRC_DIR "/data/file/new/new2")));
+        TS_ASSERT(!ckcore::File::exist(ckT(TEST_SRC_DIR "/data/file/new/new2")));
         TS_ASSERT(!file2.close());
 
         // Try to rename file to existing file (should fail).
-        TS_ASSERT(!file2.rename(ckT("data/file/new2")));
+        TS_ASSERT(!file2.rename(ckT(TEST_SRC_DIR "/data/file/new2")));
 
         // Clean up.
         TS_ASSERT(file1.remove());
         TS_ASSERT(file2.remove());
 
         // Try to rename non-existent file.
-        ckcore::File file3(ckT("data/file/non-existent"));
-        TS_ASSERT(!file3.rename(ckT("data/file/new")));
-        TS_ASSERT(!ckcore::File::exist(ckT("data/file/new")));
-        TS_ASSERT(!file3.rename(ckT("data/file/non-existent")));
-        TS_ASSERT(!ckcore::File::exist(ckT("data/file/non-existent")));
+        ckcore::File file3(ckT(TEST_SRC_DIR "/data/file/non-existent"));
+        TS_ASSERT(!file3.rename(ckT(TEST_SRC_DIR "/data/file/new")));
+        TS_ASSERT(!ckcore::File::exist(ckT(TEST_SRC_DIR "/data/file/new")));
+        TS_ASSERT(!file3.rename(ckT(TEST_SRC_DIR "/data/file/non-existent")));
+        TS_ASSERT(!ckcore::File::exist(ckT(TEST_SRC_DIR "/data/file/non-existent")));
 
         // Try to rename without name.
         TS_ASSERT(!file3.rename(ckT("")));
 
         // test static function.
-        ckcore::File file4(ckT("data/file/new"));
+        ckcore::File file4(ckT(TEST_SRC_DIR "/data/file/new"));
         TS_ASSERT(file4.open(ckcore::File::ckOPEN_WRITE));
         TS_ASSERT(file4.close());
-        TS_ASSERT(ckcore::File::rename(ckT("data/file/new"),ckT("data/file/new2")));
-        TS_ASSERT(!ckcore::File::rename(ckT("data/file/new2"),ckT("data/file/new2")));
-        TS_ASSERT(!ckcore::File::rename(ckT("data/file/new2"),ckT("")));
-        TS_ASSERT(!ckcore::File::rename(ckT("data/file/new2"),ckT("data/file/new/new2")));
-        TS_ASSERT(ckcore::File::remove(ckT("data/file/new2")));
+        TS_ASSERT(ckcore::File::rename (ckT(TEST_SRC_DIR "/data/file/new") ,ckT(TEST_SRC_DIR "/data/file/new2")));
+        TS_ASSERT(!ckcore::File::rename(ckT(TEST_SRC_DIR "/data/file/new2"),ckT(TEST_SRC_DIR "/data/file/new2")));
+        TS_ASSERT(!ckcore::File::rename(ckT(TEST_SRC_DIR "/data/file/new2"),ckT("")));
+        TS_ASSERT(!ckcore::File::rename(ckT(TEST_SRC_DIR "/data/file/new2"),ckT(TEST_SRC_DIR "/data/file/new/new2")));
+        TS_ASSERT(ckcore::File::remove (ckT(TEST_SRC_DIR "/data/file/new2")));
     }
 
     void testSize()
     {
         const ckcore::tchar *file_paths[] =
         {
-            ckT("data/file/0bytes"),
-            ckT("data/file/53bytes"),
-            ckT("data/file/123bytes"),
-            ckT("data/file/8253bytes")
+            ckT(TEST_SRC_DIR "/data/file/0bytes"),
+            ckT(TEST_SRC_DIR "/data/file/53bytes"),
+            ckT(TEST_SRC_DIR "/data/file/123bytes"),
+            ckT(TEST_SRC_DIR "/data/file/8253bytes")
         };
 
         const ckcore::tint64 file_sizes[] =
@@ -286,7 +286,7 @@ public:
 	void testExclusiveAccess()
 	{
 		// Create a new file.
-		ckcore::File file(ckT("data/file/new"));
+		ckcore::File file(ckT(TEST_SRC_DIR "/data/file/new"));
         TS_ASSERT(file.open(ckcore::File::ckOPEN_WRITE));
         TS_ASSERT(file.close());
 
@@ -297,7 +297,7 @@ public:
 		// (should succeed).
 		SimpleProcess process;
 		ckcore::tstring cmd_line = FILETESTER;
-		cmd_line += ckT(" -r data/file/new");
+		cmd_line += ckT(" -r " TEST_SRC_DIR "/data/file/new");
 
 		TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
@@ -309,7 +309,7 @@ public:
 		// Launch an external process that tries to write to the test file
 		// (should fail).
 		cmd_line = FILETESTER;
-		cmd_line += ckT(" -w data/file/new");
+		cmd_line += ckT(" -w " TEST_SRC_DIR "/data/file/new");
 
 		TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
@@ -321,7 +321,7 @@ public:
 		// Launch an external process that tries to remove the test file
 		// (should fail).
 		cmd_line = FILETESTER;
-		cmd_line += ckT(" -d data/file/new");
+		cmd_line += ckT(" -d " TEST_SRC_DIR "/data/file/new");
 
 		TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
