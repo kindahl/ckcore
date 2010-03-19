@@ -63,9 +63,9 @@ namespace ckcore
         char *utf16_to_ansi(const wchar_t *utf,char *ansi,int ansi_len);
 		tchar *ansi_to_auto(const char *ansi,tchar *out,int out_len);
 
-		void vformatstr(tstring &res,const tchar * const fmt,
-                        const va_list args);
-        tstring formatstr(const tchar * const fmt,...) __attribute__ ((format (printf, 1, 2)));
+		void vformatstr(tstring &res,const tchar * fmt,
+                        va_list args);
+        tstring formatstr(const tchar * fmt,...) __attribute__ ((format (printf, 1, 2)));
 
 		/**
 		 * Converts an ANSI string if necessary into UTF-16 format. If UTF-16 is not
@@ -119,4 +119,3 @@ namespace ckcore
 		}
     }
 }
-
