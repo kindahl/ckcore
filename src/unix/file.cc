@@ -17,6 +17,7 @@
  */
 
 #include <errno.h>
+#include <assert.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -42,51 +43,63 @@ namespace ckcore
      * @param [in] file_mode Determines how the file should be opened. In write
      *                       mode the file will be created if it does not
      *                       exist.
-     * @return If successfull true is returned, otherwise false.
+     * Errors are thrown as exceptions.
      */
-    bool File::open(FileMode file_mode)
+  
+    void File::open2(FileMode file_mode) throw(std::exception)
     {
-        // Check a file handle has already been opened, in that case try to close
-        // it.
-        if (file_handle_ != -1 && !close())
-            return false;
+		try
+		{
+			// Check a file handle has already been opened, in that case try to close
+			// it.
+			if (file_handle_ != -1 && !close())
+				throw Exception2(ckT("Cannot close previously open file handle."));
 
-        // Open the file handle.
-        switch (file_mode)
-        {
-            case ckOPEN_READ:
-                file_handle_ = ::open(file_path_.name().c_str(),O_RDONLY);
-                break;
+			// Open the file handle.
+			switch (file_mode)
+			{
+			case ckOPEN_READ:
+				file_handle_ = ::open(file_path_.name().c_str(),O_RDONLY);
+				break;
 
-            case ckOPEN_WRITE:
-                file_handle_ = ::open(file_path_.name().c_str(),O_CREAT | O_WRONLY,S_IRUSR | S_IWUSR);
-                break;
+			case ckOPEN_WRITE:
+				file_handle_ = ::open(file_path_.name().c_str(),O_CREAT | O_WRONLY,S_IRUSR | S_IWUSR);
+				break;
 
 			case ckOPEN_READWRITE:
 				file_handle_ = ::open(file_path_.name().c_str(),O_RDWR,S_IRUSR | S_IWUSR);
-                break;
-        }
+				break;
 
-        // Set lock.
-        if (file_handle_ != -1)
-        {
-            struct flock file_lock;
-            file_lock.l_start = 0;
-            file_lock.l_len = 0;
-            file_lock.l_type = file_mode == ckOPEN_READ ? F_RDLCK : F_WRLCK;
-            file_lock.l_whence = SEEK_SET;
+			default:
+				assert( false );
+			}
 
-            if (fcntl(file_handle_,F_SETLK,&file_lock) == -1)
-            {
-                if (errno == EACCES || errno == EAGAIN)
-                {
-                    close();
-                    return false;
-                }
-            }
-        }
+			if (file_handle_ == -1)
+				throw_from_errno( errno, NULL );
 
-        return file_handle_ != -1;
+			// Set lock.
+			struct flock file_lock;
+			file_lock.l_start = 0;
+			file_lock.l_len = 0;
+			file_lock.l_type = file_mode == ckOPEN_READ ? F_RDLCK : F_WRLCK;
+			file_lock.l_whence = SEEK_SET;
+
+			if (fcntl(file_handle_,F_SETLK,&file_lock) == -1)
+			{
+				const int saved_errno = errno; // close() can overwrite errno.
+				if (saved_errno == EACCES || saved_errno == EAGAIN)
+				{
+					close();
+					throw_from_errno( saved_errno, ckT("Error setting the file lock: ") );
+				}
+			}
+		}
+		catch ( const std::exception & e )
+		{
+			rethrow_with_pfx( e,
+				ckT("Error opening file \"%s\": "),
+				file_path_.name().c_str() );
+		}
     }
 
     /**
@@ -125,41 +138,55 @@ namespace ckcore
      * @param [in] whence Specifies what to use as base when calculating the
      *                    final file pointer position.
      * @return If successfull the resulting file pointer location is returned,
-     *         otherwise -1 is returned.
+     *         otherwise an exception is thrown.
      */
-    tint64 File::seek(tint64 distance,FileWhence whence)
+    tint64 File::seek2(tint64 distance,FileWhence whence) throw(std::exception)
     {
-        if (file_handle_ == -1)
-            return -1;
+		check_file_is_open();
+
+        int ret = -1;
 
         switch (whence)
         {
             case ckFILE_CURRENT:
-                return lseek(file_handle_,distance,SEEK_CUR);
+                ret = lseek(file_handle_,distance,SEEK_CUR);
+                break;
 
             case ckFILE_BEGIN:
-                return lseek(file_handle_,distance,SEEK_SET);
+                ret = lseek(file_handle_,distance,SEEK_SET);
+                break;
 
             case ckFILE_END:
-                return lseek(file_handle_,distance,SEEK_END);
+                ret = lseek(file_handle_,distance,SEEK_END);
+                break;
+
+            default:
+                assert( false );
         }
 
-        return -1;
+        if ( ret == -1 )
+          throw_from_errno( errno, ckT("Cannot seek in file: ") );
+
+        return ret;
     }
 
     /**
      * Calculates the current file pointer position in the file.
-     * @return If successfull the current file pointer position, otherwise -1
-     *         is returned.
+     * @return If successfull the current file pointer position, otherwise
+     *         an exception is thrown.
      */
-    tint64 File::tell() const
+    tint64 File::tell2() const throw(std::exception)
     {
-        if (file_handle_ == -1)
-            return -1;
+		check_file_is_open();
 
         // Obtain the current file pointer position by seeking 0 bytes from the
         // current position.
-        return lseek(file_handle_,0,SEEK_CUR);
+        const int ret = lseek(file_handle_,0,SEEK_CUR);
+
+        if ( ret == 1 )
+          throw_from_errno( errno, ckT("Cannot get the current file pointer: ") );
+
+        return ret;
     }
 
     /**
@@ -303,21 +330,32 @@ namespace ckcore
     }
 
     /**
-     * Calcualtes the size of the file.
-     * @return If successfull the size of the file, otherwise -1 is returned.
+     * Calculates the size of the file.
+     * @return If successfull the size of the file, otherwise an exception is thrown.
      */
-    tint64 File::size()
+    tint64 File::size2() throw(std::exception)
     {
         // If the file is not open, use the static in this case optimized
         // function.
-        if (file_handle_ == -1)
-            return size(file_path_.name().c_str());
+        if ( !test() )
+            return size2(file_path_);
 
-        tint64 cur_pos = tell();
-        tint64 size = seek(0,ckFILE_END);
-        seek(cur_pos,ckFILE_BEGIN);
+        try
+        {
+            tint64 cur_pos = tell2();
+            
+            tint64 size = seek2(0,ckFILE_END);
 
-        return size;
+            seek2(cur_pos,ckFILE_BEGIN);
+
+			return size;
+		}
+        catch ( const std::exception & e )
+        {
+            rethrow_with_pfx( e,
+                              ckT("Error querying size of file \"%s\": "),
+                              file_path_.name().c_str() );
+        }
     }
 
     /**
@@ -433,15 +471,15 @@ namespace ckcore
 	}
 
     /**
-     * Calcualtes the size of the specified file.
+     * Calculates the size of the specified file.
      * @param [in] file_path The path to the file.
-     * @return If successfull the size of the file, otherwise -1 is returned.
+     * @return If successfull the size of the file, otherwise an exception is thrown.
      */
-    tint64 File::size(const Path &file_path)
+    tint64 File::size2(const Path &file_path) throw(std::exception)
     {
         struct stat file_stat;
         if (stat(file_path.name().c_str(),&file_stat) == -1)
-            return -1;
+            throw_from_errno( errno, "Error querying size of file \"%s\": ", file_path.name().c_str() );
 
         return file_stat.st_size;
     }

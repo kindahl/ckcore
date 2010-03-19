@@ -20,10 +20,14 @@
 #include <assert.h>
 #include <stdarg.h>
 #include <string.h>  // strerror_r
+
 #ifdef _WINDOWS
 #include <comdef.h>
 #include <tchar.h>
-#endif
+#include <atlbase.h>
+#include <atlapp.h>
+#endif  // #ifdef _WINDOWS
+
 #include <ckcore/string.hh>
 
 namespace ckcore
@@ -170,6 +174,85 @@ namespace ckcore
 
         throw Exception2(msg);
     }
+
+	// Parameter pfx_fmt can be NULL if there is no message prefix.
+    static tstring build_last_error_msg(const DWORD lastErrorCode, const tchar * const pfx_fmt, va_list args )
+	{
+        // The caller should have checked whether there was a last error to collect.
+        assert( lastErrorCode != ERROR_SUCCESS );
+
+        tstring msg;
+
+		if ( pfx_fmt != NULL )
+		{
+			ckcore::string::vformatstr(msg,pfx_fmt,args);
+		}
+
+        tstring errMsgFromLastError;
+
+        // FormatMessage() does not return the size of the buffer needed.
+        // We could try with a small buffer, and if that's not enough, double it
+        // and so on. However, performance is not important at this point,
+        // so we ask FormatMessage() to allocate a temporary buffer itself.
+
+        LPTSTR buffer;
+		DWORD dwLen = FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
+				                     NULL, lastErrorCode, 0, (LPTSTR)&buffer, 1, NULL );
+
+        if( dwLen )
+        {
+          try
+          {
+            // This can throw an exception if out of memory.
+            errMsgFromLastError = buffer;
+          }
+          catch ( ... )
+          {
+			ATLVERIFY( NULL == LocalFree( buffer ) );
+            throw;
+          }
+
+			ATLVERIFY( NULL == LocalFree( buffer ) );
+        }
+        else
+        {
+          errMsgFromLastError = ckT("<no error description available>");
+        }
+
+        msg.append(errMsgFromLastError);
+
+		return msg;
+	}
+
+    void throw_from_given_last_error(const DWORD lastErrorCode, const tchar * const pfx_fmt,...)
+	{
+        va_list args;
+        va_start(args,pfx_fmt);
+        
+        tstring msg = build_last_error_msg(lastErrorCode, pfx_fmt, args);
+        
+        va_end(args);
+
+		throw Exception2( msg );
+	}
+
+	void throw_from_last_error(const tchar * const pfx_fmt,...)
+	{
+		// Grab the last error as the very first thing,
+		// in case something else overwrites it.
+		const DWORD lastErrorCode = GetLastError();
+
+        va_list args;
+        va_start(args,pfx_fmt);
+        
+        tstring msg = build_last_error_msg(lastErrorCode,pfx_fmt,args);
+        
+        va_end(args);
+
+		throw Exception2( msg );
+	}
+
+
 #endif  // #ifdef _WINDOWS
 
     static tstring get_errno_msg(const int errno_code)

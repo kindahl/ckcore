@@ -53,7 +53,12 @@ namespace ckcore
     void MSC_DECLSPEC_NORETURN rethrow_with_pfx(const std::exception &e,const tchar *fmt,...) __attribute__ ((noreturn, format (printf, 2, 3)));
 
 #ifdef _WINDOWS
-    void MSC_DECLSPEC_NORETURN throw_from_hresult(HRESULT res,const tchar * pfx_fmt,...) __attribute__ ((noreturn));
+    void MSC_DECLSPEC_NORETURN throw_from_hresult(HRESULT res,const tchar * pfx_fmt,...);
+    void MSC_DECLSPEC_NORETURN throw_from_last_error(const tchar * pfx_fmt,...);
+	// Sometimes the caller needs to clean something up before calling throw_from_last_error(),
+	// and that can reset the last error, so we need another version of this routine with a
+	// manually-stored error code.
+    void MSC_DECLSPEC_NORETURN throw_from_given_last_error(DWORD lastErrorCode, const tchar * pfx_fmt,...);
 #endif
     void MSC_DECLSPEC_NORETURN throw_from_errno(int errno_code,const tchar * pfx_fmt,... ) __attribute__ ((noreturn, format (printf, 2, 3)));
     void MSC_DECLSPEC_NORETURN throw_internal_error(const tchar *file,int line) __attribute__ ((noreturn));

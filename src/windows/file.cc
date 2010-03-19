@@ -19,6 +19,9 @@
 #include "stdafx.hh"
 
 #include <atldef.h>
+#include <atlbase.h>
+#include <atlapp.h>
+#include <assert.h>
 
 #include <ckcore/file.hh>
 
@@ -26,6 +29,9 @@
 
 namespace ckcore
 {
+#pragma warning( push )
+#pragma warning( disable : 4290 )  // C++ exception specification ignored except to ...
+
     /**
      * Constructs a File object.
      * @param [in] file_path The path to the file.
@@ -40,14 +46,14 @@ namespace ckcore
      * @param [in] file_mode Determines how the file should be opened. In write
      *                       mode the file will be created if it does not
      *                       exist.
-     * @return If successfull true is returned, otherwise false.
+     * Errors are thrown as exceptions.
      */
-    bool File::open(FileMode file_mode)
+	void File::open2(FileMode file_mode) throw(std::exception)
     {
         // Check a file handle has already been opened, in that case try to close
         // it.
         if (file_handle_ != INVALID_HANDLE_VALUE && !close())
-            return false;
+			throw Exception2(ckT("Cannot close previously open file handle."));
 
         // Open the file handle.
         switch (file_mode)
@@ -72,9 +78,16 @@ namespace ckcore
 										  FILE_SHARE_READ,NULL,OPEN_EXISTING,
 										  FILE_ATTRIBUTE_ARCHIVE,NULL);
 				break;
+
+			default:
+				assert( false );
         }
 
-        return file_handle_ != INVALID_HANDLE_VALUE;
+		if ( file_handle_ == INVALID_HANDLE_VALUE )
+		{
+			throw_from_last_error( ckT("Error opening file \"%s\": "),
+			                       file_path_.name().c_str() );
+		}
     }
 
     /**
@@ -113,12 +126,11 @@ namespace ckcore
      * @param [in] whence Specifies what to use as base when calculating the
      *                    final file pointer position.
      * @return If successfull the resulting file pointer location is returned,
-     *         otherwise -1 is returned.
+     *         otherwise an exception is thrown.
      */
-    tint64 File::seek(tint64 distance,FileWhence whence)
+	tint64 File::seek2(tint64 distance,FileWhence whence) throw(std::exception)
     {
-        if (file_handle_ == INVALID_HANDLE_VALUE)
-            return -1;
+		check_file_is_open();
 
 		LARGE_INTEGER li;
 		li.QuadPart = distance;
@@ -136,12 +148,22 @@ namespace ckcore
             case ckFILE_END:
 				li.LowPart = SetFilePointer(file_handle_,li.LowPart,&li.HighPart,FILE_END);
 				break;
+
+			default:
+				assert( false );
         }
 
-		if (li.LowPart == INVALID_SET_FILE_POINTER && GetLastError() != ERROR_SUCCESS)
-			return -1;
+		if (li.LowPart == INVALID_SET_FILE_POINTER)
+		{
+			const DWORD lastError = GetLastError();
+			
+			if ( lastError != ERROR_SUCCESS )
+			{
+				throw_from_given_last_error( lastError, NULL );
+			}
+		}
 
-        return (tint64)li.QuadPart;
+        return li.QuadPart;
     }
 
     /**
@@ -149,10 +171,9 @@ namespace ckcore
      * @return If successfull the current file pointer position, otherwise -1
      *         is returned.
      */
-    tint64 File::tell() const
+	tint64 File::tell2() const throw(std::exception)
     {
-        if (file_handle_ == INVALID_HANDLE_VALUE)
-            return -1;
+		check_file_is_open();
 
         // Obtain the current file pointer position by seeking 0 bytes from the
         // current position.
@@ -160,8 +181,14 @@ namespace ckcore
 		li.QuadPart = 0;
 		li.LowPart = SetFilePointer(file_handle_,0,&li.HighPart,FILE_CURRENT);
 
-		if (li.LowPart == INVALID_SET_FILE_POINTER && GetLastError() != ERROR_SUCCESS)
-			return -1;
+		if (li.LowPart == INVALID_SET_FILE_POINTER)
+		{
+			const DWORD lastError = GetLastError();
+			if ( lastError != ERROR_SUCCESS )
+			{
+				throw_from_given_last_error( lastError, NULL );			
+			}
+		}
 
         return (tint64)li.QuadPart;
     }
@@ -313,19 +340,26 @@ namespace ckcore
      * Calcualtes the size of the file.
      * @return If successfull the size of the file, otherwise -1 is returned.
      */
-    tint64 File::size()
+	tint64 File::size2() throw(std::exception)
     {
         // If the file is not open, use the static in this case optimized
         // function.
-		if (file_handle_ == INVALID_HANDLE_VALUE)
+		if ( !test() )
 			return size(file_path_.name().c_str());
 
 		LARGE_INTEGER li;
 		li.QuadPart = 0;
 		li.LowPart = GetFileSize(file_handle_,(LPDWORD)&li.HighPart);
 
-		if (li.LowPart == 0xFFFFFFFF && GetLastError() != ERROR_SUCCESS)
-			return -1;
+		if (li.LowPart == INVALID_FILE_SIZE)
+		{
+			const DWORD lastError = GetLastError();
+			
+			if ( lastError != ERROR_SUCCESS )
+			{
+				throw_from_given_last_error( lastError, NULL );			
+			}
+		}
 
 		return li.QuadPart;
     }
@@ -471,26 +505,45 @@ namespace ckcore
      * @param [in] file_path The path to the file.
      * @return If successfull the size of the file, otherwise -1 is returned.
      */
-    tint64 File::size(const Path &file_path)
+	tint64 File::size2(const Path &file_path) throw(std::exception)
     {
-		HANDLE file_handle = CreateFile(file_path.name().c_str(),GENERIC_READ,
-										FILE_SHARE_READ | FILE_SHARE_WRITE,
-										NULL,OPEN_EXISTING,
-										FILE_ATTRIBUTE_ARCHIVE,NULL);
-		if (file_handle == INVALID_HANDLE_VALUE)
-			return false;
+		try
+		{
+			HANDLE file_handle = CreateFile(file_path.name().c_str(),GENERIC_READ,
+											FILE_SHARE_READ | FILE_SHARE_WRITE,
+											NULL,OPEN_EXISTING,
+											FILE_ATTRIBUTE_ARCHIVE,NULL);
+			if (file_handle == INVALID_HANDLE_VALUE)
+			{
+				throw_from_last_error( NULL );
+			}
 
-		LARGE_INTEGER li;
-		li.QuadPart = 0;
-		li.LowPart = GetFileSize(file_handle,(LPDWORD)&li.HighPart);
+			LARGE_INTEGER li;
+			li.QuadPart = 0;
+			li.LowPart = GetFileSize(file_handle,(LPDWORD)&li.HighPart);
 
-		if (li.LowPart == 0xFFFFFFFF && GetLastError() != ERROR_SUCCESS)
-			return -1;
-	    
-		tint64 result = li.QuadPart;
-		CloseHandle(file_handle);
-	    
-		return result;
+			if (li.LowPart == INVALID_FILE_SIZE)
+			{
+				// Grab the last error before CloseHandle() or something else resets it.
+				const DWORD lastError = GetLastError();
+				if ( lastError != ERROR_SUCCESS )
+				{
+					ATLVERIFY( 0 != CloseHandle(file_handle) );
+					throw_from_given_last_error( lastError, NULL );
+				}
+			}
+		    
+			tint64 result = li.QuadPart;
+			ATLVERIFY( 0 != CloseHandle(file_handle) );
+		    
+			return result;
+		}
+        catch ( const std::exception & e )
+        {
+            rethrow_with_pfx( e,
+                              ckT("Error querying size of file \"%s\": "),
+                              file_path.name().c_str() );
+        }
     }
 
 	/**
@@ -531,4 +584,7 @@ namespace ckcore
 
 		return File(tmp_name);
 	}
+
+#pragma warning( pop )
+
 };
