@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <time.h>
 #include <algorithm>
 #include <assert.h>
 #include "ckcore/convert.hh"

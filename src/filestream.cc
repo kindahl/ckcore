@@ -18,6 +18,8 @@
 
 #include "ckcore/filestream.hh"
 
+#include <assert.h>
+
 namespace ckcore
 {
     /**
@@ -43,7 +45,15 @@ namespace ckcore
     bool FileInStream::open()
     {
         size_ = file_.size();
-        return file_.open(File::ckOPEN_READ);
+        try
+        {
+          file_.open2(File::ckOPEN_READ);
+          return true;
+        }
+        catch ( ... )
+        {
+          return false;
+        }
     }
 
     /**
@@ -95,14 +105,17 @@ namespace ckcore
 				break;
 		}
 
-		tint64 result = file_.seek(distance,file_whence);
-		if (result != -1)
-		{
+        try
+        {
+            tint64 result = file_.seek2(distance,file_whence);
+            assert( result != -1 );  // Errors throw now exceptions.
 			read_ = result;
 			return true;
 		}
-
-		return false;
+        catch ( ... )
+        {
+          return false;
+        }
 	}
 
 	/**
@@ -163,7 +176,15 @@ namespace ckcore
      */
     bool FileOutStream::open()
     {
-        return file_.open(File::ckOPEN_WRITE);
+      try
+      {
+        file_.open2(File::ckOPEN_WRITE);
+        return true;
+      }
+      catch ( ... )
+      {
+        return false;
+      }
     }
 
     /**
@@ -190,4 +211,3 @@ namespace ckcore
         return file_.write(buffer,count);
     }
 }
-
