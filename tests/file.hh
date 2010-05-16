@@ -93,8 +93,8 @@ public:
 		TS_ASSERT(file1.close());
 		TS_ASSERT(file2.close());
 
-		TS_ASSERT_EQUALS(file1.size(),4);
-		TS_ASSERT_EQUALS(file2.size(),8);
+		TS_ASSERT_EQUALS(file1.size2(),4);
+		TS_ASSERT_EQUALS(file2.size2(),8);
 
 		TS_ASSERT(file1.remove());
 		TS_ASSERT(file2.remove());
@@ -147,8 +147,8 @@ public:
         TS_ASSERT(file.seek2(0,ckcore::File::ckFILE_CURRENT) == 0);
         TS_ASSERT(file.tell2() == 0);
 
-        TS_ASSERT(file.seek2(0,ckcore::File::ckFILE_END) == file.size());
-        TS_ASSERT(file.tell2() == file.size());
+        TS_ASSERT(file.seek2(0,ckcore::File::ckFILE_END) == file.size2());
+        TS_ASSERT(file.tell2() == file.size2());
 
         int file_size = 8253;
 
@@ -270,16 +270,16 @@ public:
         for (unsigned int i = 0; i < 4; i++)
         {
             ckcore::File file(file_paths[i]);
-            TS_ASSERT_EQUALS(file.size(),file_sizes[i]);
+            TS_ASSERT_EQUALS(file.size2(),file_sizes[i]);
             TS_ASSERT_THROWS_NOTHING(file.open2(ckcore::File::ckOPEN_READ));
-            TS_ASSERT_EQUALS(file.size(),file_sizes[i]);
+            TS_ASSERT_EQUALS(file.size2(),file_sizes[i]);
             file.close();
             /*file.open(ckcore::File::ckOPEN_WRITE);
             TS_ASSERT_EQUALS(file.size(),file_sizes[i]);
             file.close();*/
 
             // test static function.
-            TS_ASSERT_EQUALS(ckcore::File::size(file_paths[i]),file_sizes[i]);
+            TS_ASSERT_EQUALS(ckcore::File::size2(file_paths[i]),file_sizes[i]);
         }
     }
 

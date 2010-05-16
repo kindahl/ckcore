@@ -25,9 +25,22 @@ namespace ckcore
     /**
      * Constructs a FileInStream object.
      */
-    FileInStream::FileInStream(const Path &file_path) : file_(file_path),
-        size_(file_.size()),read_(0)
+    FileInStream::FileInStream(const Path &file_path)
+      : file_(file_path)
+      , read_(0)
     {
+      // TODO: we should make all callers exception safe, because
+      //       it's hard to be certain that everybody always checks
+      //       whether the size_ is -1 before trying to use
+      //       this object.
+      try
+      {
+        size_ = file_.size2();
+      }
+      catch ( ... )
+      {
+        size_ = -1;
+      }
     }
 
 	/**
@@ -44,7 +57,15 @@ namespace ckcore
      */
     bool FileInStream::open()
     {
-        size_ = file_.size();
+        try
+        {
+          size_ = file_.size2();
+        }
+        catch ( ... )
+        {
+          size_ = -1;
+        }
+        
         try
         {
           file_.open2(File::ckOPEN_READ);
