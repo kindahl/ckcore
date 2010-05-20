@@ -17,6 +17,10 @@
  */
 
 #include "stdafx.hh"
+
+#include <atlbase.h>
+#include <atlapp.h>
+
 #include <memory>
 #include "ckcore/thread.hh"
 
@@ -104,7 +108,7 @@ namespace ckcore
 		{
 			if (handle_ != NULL)
 			{
-				CloseHandle(handle_);
+				ATLVERIFY( 0 != CloseHandle(handle_) );
 				handle_ = NULL;
 			}
 		}
@@ -136,4 +140,3 @@ namespace ckcore
 		}
 	};
 };
-

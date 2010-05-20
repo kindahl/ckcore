@@ -105,6 +105,11 @@ namespace ckcore
             file_handle_ = INVALID_HANDLE_VALUE;
             return true;
         }
+		else
+		{
+			// I cannot think of a good reason why closing a handle should fail.
+			ATLASSERT( false );
+		}
 
         return false;
     }
@@ -427,7 +432,7 @@ namespace ckcore
         FILETIME access_ftime,modify_ftime,create_ftime;
 		bool result = GetFileTime(file_handle,&create_ftime,&access_ftime,
 								  &modify_ftime) == TRUE;
-		CloseHandle(file_handle);
+		ATLVERIFY( 0 != CloseHandle(file_handle) );
 
 		if (!result)
 			return false;

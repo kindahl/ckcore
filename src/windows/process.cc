@@ -66,27 +66,27 @@ namespace ckcore
 		// Destroy start event.
 		if (start_event_ != NULL)
 		{
-			CloseHandle(start_event_);
+			ATLVERIFY( 0 != CloseHandle(start_event_) );
 			start_event_ = NULL;
 		}
 
 		// Destroy stop event.
 		if (stop_event_ != NULL)
         {
-            CloseHandle(stop_event_);
+            ATLVERIFY( 0 != CloseHandle(stop_event_) );
             stop_event_ = NULL;
         }
 
         // Closes mutexes.
         if (mutex_exec_ != NULL)
         {
-            CloseHandle(mutex_exec_);
+			ATLVERIFY( 0 != CloseHandle(mutex_exec_) );
             mutex_exec_ = NULL;
         }
 
         if (mutex_ != NULL)
         {
-            CloseHandle(mutex_);
+            ATLVERIFY( 0 != CloseHandle(mutex_) );
             mutex_ = NULL;
         }
     }
@@ -329,8 +329,8 @@ namespace ckcore
 		if (!DuplicateHandle(GetCurrentProcess(),output_write,GetCurrentProcess(),
 			&error_write,0,true,DUPLICATE_SAME_ACCESS))
 		{
-			CloseHandle(output_read_temp);
-			CloseHandle(output_write);
+			ATLVERIFY( 0 != CloseHandle(output_read_temp) );
+			ATLVERIFY( 0 != CloseHandle(output_write) );
 
 			return false;
 		}
@@ -338,9 +338,9 @@ namespace ckcore
 		// Create the child input pipe.
 		if (!CreatePipe(&input_read,&input_write_temp,&sa,0))
 		{
-			CloseHandle(output_read_temp);
-			CloseHandle(output_write);
-			CloseHandle(error_write);
+			ATLVERIFY( 0 != CloseHandle(output_read_temp) );
+			ATLVERIFY( 0 != CloseHandle(output_write) );
+			ATLVERIFY( 0 != CloseHandle(error_write) );
 
 			return false;
 		}
@@ -351,11 +351,11 @@ namespace ckcore
 		if (!DuplicateHandle(GetCurrentProcess(),output_read_temp,GetCurrentProcess(),
 			&pipe_output_,0,false,DUPLICATE_SAME_ACCESS))
 		{
-			CloseHandle(output_read_temp);
-			CloseHandle(output_write);
-			CloseHandle(error_write);
-			CloseHandle(input_write_temp);
-			CloseHandle(input_read);
+			ATLVERIFY( 0 != CloseHandle(output_read_temp) );
+			ATLVERIFY( 0 != CloseHandle(output_write) );
+			ATLVERIFY( 0 != CloseHandle(error_write) );
+			ATLVERIFY( 0 != CloseHandle(input_write_temp) );
+			ATLVERIFY( 0 != CloseHandle(input_read) );
 
 			return false;
 		}
@@ -363,20 +363,20 @@ namespace ckcore
 		if (!DuplicateHandle(GetCurrentProcess(),input_write_temp,GetCurrentProcess(),
 			&pipe_stdin_,0,false,DUPLICATE_SAME_ACCESS))
 		{
-			CloseHandle(output_read_temp);
-			CloseHandle(output_write);
-			CloseHandle(error_write);
-			CloseHandle(input_write_temp);
-			CloseHandle(input_read);
+			ATLVERIFY( 0 != CloseHandle(output_read_temp) );
+			ATLVERIFY( 0 != CloseHandle(output_write) );
+			ATLVERIFY( 0 != CloseHandle(error_write) );
+			ATLVERIFY( 0 != CloseHandle(input_write_temp) );
+			ATLVERIFY( 0 != CloseHandle(input_read) );
 
-			CloseHandle(pipe_output_);
+			ATLVERIFY( 0 != CloseHandle(pipe_output_) );
 
 			return false;
 		}
 
 		// Now we can close the inherited pipes.
-		CloseHandle(output_read_temp);
-		CloseHandle(input_write_temp);
+		ATLVERIFY( 0 != CloseHandle(output_read_temp) );
+		ATLVERIFY( 0 != CloseHandle(input_write_temp) );
 
 		// Create the process.
 		PROCESS_INFORMATION pi;
@@ -398,16 +398,16 @@ namespace ckcore
 		process_handle_ = pi.hProcess;
 
 		// Close any unnecessary handles.
-		::CloseHandle(pi.hThread);
+		ATLVERIFY( 0 != CloseHandle(pi.hThread) );
 
-		CloseHandle(input_read);
-		CloseHandle(output_write);
-		CloseHandle(error_write);
+		ATLVERIFY( 0 != CloseHandle(input_read) );
+		ATLVERIFY( 0 != CloseHandle(output_write) );
+		ATLVERIFY( 0 != CloseHandle(error_write) );
 
 		if (!result)
 		{
-			CloseHandle(pipe_stdin_);
-			CloseHandle(pipe_output_);
+			ATLVERIFY( 0 != CloseHandle(pipe_stdin_) );
+			ATLVERIFY( 0 != CloseHandle(pipe_output_) );
 			pipe_stdin_ = NULL;
 			pipe_output_ = NULL;
 
