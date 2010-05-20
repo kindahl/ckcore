@@ -46,7 +46,7 @@ namespace ckcore
             return;
         }
 #ifdef _WINDOWS
-        size_t delim = path_->path_name_.find_first_of(ckT("/\\"),pos_start_ + 1);
+        tstring::size_type delim = path_->path_name_.find_first_of(ckT("/\\"),pos_start_ + 1);
 
         if (delim == 0)
         {
@@ -54,7 +54,7 @@ namespace ckcore
             delim = path_->path_name_.find_first_of(ckT("/\\"),pos_start_ + 1);
         }
 #else
-        size_t delim = path_->path_name_.find('/',pos_start_ + 1);
+        tstring::size_type delim = path_->path_name_.find('/',pos_start_ + 1);
 
         if (delim == 0)
         {
@@ -63,7 +63,7 @@ namespace ckcore
         }
 #endif
 
-        if (delim == -1)
+        if (delim == tstring::npos)
             pos_end_ = path_->path_name_.size();
         else
             pos_end_ = delim;
@@ -237,17 +237,17 @@ namespace ckcore
      */
     tstring Path::dir_name() const
     {
-        size_t end = path_name_.size() - 1;
+        tstring::size_type end = path_name_.size() - 1;
 #ifdef _WINDOWS
-        size_t delim = path_name_.find_last_of(ckT("/\\"));
+        tstring::size_type delim = path_name_.find_last_of(ckT("/\\"));
         if (delim == end)
             delim = path_name_.find_last_of(ckT("/\\"),end - 1);
 #else
-        size_t delim = path_name_.rfind('/');
+        tstring::size_type delim = path_name_.rfind('/');
         if (delim == end)
             delim = path_name_.rfind('/',end - 1);
 #endif
-        if (delim == -1)
+        if (delim == tstring::npos)
             return tstring();
         else
             return path_name_.substr(0,delim + 1);
@@ -259,18 +259,18 @@ namespace ckcore
      */
     tstring Path::base_name() const
     {
-        size_t end = path_name_.size() - 1;
+        tstring::size_type end = path_name_.size() - 1;
 #ifdef _WINDOWS
-        size_t delim = path_name_.find_last_of(ckT("/\\"));
+        tstring::size_type delim = path_name_.find_last_of(ckT("/\\"));
         if (delim == end)
             delim = path_name_.find_last_of(ckT("/\\"),--end);
 #else
-        size_t delim = path_name_.rfind('/');
+        tstring::size_type delim = path_name_.rfind('/');
         if (delim == end)
             delim = path_name_.rfind('/',--end);
 #endif
 
-        if (delim == -1)
+        if (delim == tstring::npos)
             return path_name_.substr(0,end + 1);
         else
             return path_name_.substr(delim + 1,end - delim);
@@ -284,8 +284,8 @@ namespace ckcore
     tstring Path::ext_name() const
     {
         tstring base_name = Path::base_name();
-        size_t delim = base_name.rfind('.');
-        if (delim == -1)
+        tstring::size_type delim = base_name.rfind('.');
+        if (delim == tstring::npos)
             return tstring();
         else
             return base_name.substr(delim + 1);

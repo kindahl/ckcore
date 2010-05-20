@@ -63,8 +63,9 @@ namespace ckcore
          * @param [in] stream The input stream to use for reading and parsing
          *                    into lines.
          */
-        LineReader(InStream &stream) : stream_(stream),
-			encoding_(encoding(stream))
+        LineReader(InStream &stream)
+          : encoding_(encoding(stream))
+          , stream_(stream)
         {
         }
 
@@ -230,4 +231,3 @@ namespace ckcore
 		}
     };
 }
-

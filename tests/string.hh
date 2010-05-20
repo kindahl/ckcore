@@ -43,8 +43,8 @@ public:
 		TS_ASSERT(ckcore::string::astrncmpi(str1,str4,11));
 
 		// Test length.
-		TS_ASSERT_EQUALS(ckcore::string::astrlen(str1),14);
-		TS_ASSERT_EQUALS(ckcore::string::astrlen(str3),21);
+		TS_ASSERT_EQUALS(ckcore::string::astrlen(str1),size_t(14));
+		TS_ASSERT_EQUALS(ckcore::string::astrlen(str3),size_t(21));
 
 		// Scanning.
 		const ckcore::tchar *str5 = ckT("VTS_7_53.IFO");
@@ -57,4 +57,3 @@ public:
 		TS_ASSERT(!ckcore::string::astrcmp(ext,ckT("IFO")));
 	}
 };
-

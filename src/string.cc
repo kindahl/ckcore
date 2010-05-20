@@ -22,9 +22,10 @@
 #include <windows.h>
 #include <atlbase.h>
 #include <atlapp.h>
-#else
-#include <assert.h>
 #endif
+
+#include <assert.h>
+
 #include "ckcore/string.hh"
 
 namespace ckcore
@@ -248,6 +249,7 @@ namespace ckcore
          */
         wchar_t *ansi_to_utf16(const char *ansi,wchar_t *utf,int utf_len)
         {
+          assert( utf_len >= 0 ); // See size_t typecast below.
 #ifdef _WINDOWS
             int converted = MultiByteToWideChar(AreFileApisANSI() ? CP_ACP : CP_OEMCP,
                                                 MB_PRECOMPOSED,ansi,(int)strlen(ansi) + 1,
@@ -258,7 +260,7 @@ namespace ckcore
                 utf[utf_len - 1] = '\0';
 #else
             size_t ansi_len = strlen(ansi);
-            size_t out_len = ansi_len >= utf_len ? utf_len - 1 : ansi_len;
+            size_t out_len = ansi_len >= size_t(utf_len) ? utf_len - 1 : ansi_len;
 
             for (size_t i = 0; i < out_len; i++)
                 utf[i] = ansi[i];
@@ -279,6 +281,7 @@ namespace ckcore
          */
         char *utf16_to_ansi(const wchar_t *utf,char *ansi,int ansi_len)
         {
+          assert( ansi_len >= 0 ); // See size_t typecast below.
 #ifdef _WINDOWS
             int converted = WideCharToMultiByte(AreFileApisANSI() ? CP_ACP : CP_OEMCP,0,
                 utf,(int)lstrlenW(utf) + 1,ansi,ansi_len,NULL,NULL);
@@ -288,7 +291,7 @@ namespace ckcore
                 ansi[ansi_len - 1] = '\0';
 #else
             size_t utf_len = wcslen(utf);
-            size_t out_len = utf_len >= ansi_len ? ansi_len - 1 : utf_len;
+            size_t out_len = utf_len >= size_t(ansi_len) ? ansi_len - 1 : utf_len;
 
             for (size_t i = 0; i < out_len; i++)
                 ansi[i] = utf[i] & 0xff;

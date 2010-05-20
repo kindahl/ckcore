@@ -106,11 +106,12 @@ public:
         TS_ASSERT_THROWS_NOTHING(file.open2(ckcore::File::ckOPEN_WRITE));
         const char out_data[] = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-		ckcore::tuint32 tot_write = 0;
-        while (tot_write < 37)
+        const ckcore::tint32 out_data_size = sizeof( out_data );
+
+		ckcore::tint32 tot_write = 0;
+        while (tot_write < out_data_size)
         {
-			ckcore::tuint32 write = (ckcore::tuint32)file.write(out_data + tot_write,
-																37 - tot_write);
+			ckcore::tint32 write = file.write(out_data + tot_write, out_data_size - tot_write);
             TS_ASSERT(write != -1);
 
             tot_write += write;
@@ -118,12 +119,12 @@ public:
 
         file.close();
         TS_ASSERT_THROWS_NOTHING( file.open2(ckcore::File::ckOPEN_READ) );
-        char in_data[37];
+        char in_data[out_data_size];
 
-		ckcore::tuint32 tot_read = 0;
-        while (tot_read < 37)
+		ckcore::tint32 tot_read = 0;
+        while (tot_read < out_data_size)
         {
-            ckcore::tuint32 read = (ckcore::tuint32)file.read(in_data,37 - tot_read);
+            ckcore::tint32 read = file.read(in_data,out_data_size - tot_read);
             TS_ASSERT(read != -1);
 
             tot_read += read;
@@ -132,7 +133,7 @@ public:
         file.close();
         file.remove();
 
-        TS_ASSERT_SAME_DATA(in_data,out_data,37);
+        TS_ASSERT_SAME_DATA(in_data,out_data,out_data_size);
     }
 
     void testSeekTell()
@@ -304,7 +305,7 @@ public:
 
 		ckcore::tuint32 exit_code = -1;
 		TS_ASSERT(process.exit_code(exit_code));
-		TS_ASSERT_EQUALS(exit_code,0);
+		TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(0));
 
 		// Launch an external process that tries to write to the test file
 		// (should fail).
@@ -316,7 +317,7 @@ public:
 
 		exit_code = -1;
 		TS_ASSERT(process.exit_code(exit_code));
-		TS_ASSERT_EQUALS(exit_code,1);
+		TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(1));
 
 		// Launch an external process that tries to remove the test file
 		// (should fail).
@@ -328,7 +329,7 @@ public:
 
 		exit_code = -1;
 		TS_ASSERT(process.exit_code(exit_code));
-		TS_ASSERT_EQUALS(exit_code,1);
+		TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(1));
 
 		// Finally, close  and remove the file.
         TS_ASSERT(file.close());

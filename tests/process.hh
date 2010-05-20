@@ -204,7 +204,7 @@ public:
 
 		ckcore::tuint32 exit_code = -1;
 		TS_ASSERT(process.exit_code(exit_code));
-		TS_ASSERT_EQUALS(exit_code,0);
+		TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(0));
 
 		// Expected exit code 42.
 		cmd_line += ckT(" -m5");	// Cause the client to return 42 instead of zero.
@@ -215,7 +215,7 @@ public:
 
 		exit_code = -1;
 		TS_ASSERT(process.exit_code(exit_code));
-		TS_ASSERT_EQUALS(exit_code,42);
+		TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(42));
 
 		// Expected exit code zero.
 		cmd_line = SMALLCLIENT;
@@ -225,6 +225,6 @@ public:
 
 		exit_code = -1;
 		TS_ASSERT(process.exit_code(exit_code));
-		TS_ASSERT_EQUALS(exit_code,0);
+		TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(0));
 	}
 };

@@ -52,14 +52,14 @@ namespace ckcore
          * Notifies change in progress.
          * @param [in] percent The progress in percent.
          */
-		virtual void set_progress(unsigned char percent) {};
+        virtual void set_progress(unsigned char /* percent */) {};
 
         /**
          * Enables or disables marquee progress reporting
 		 * @param [in] enable Set to true to enable marquee mode or set to false to
 		 *			   disable the marquee mode.
          */
-        virtual void set_marquee(bool enable) {};
+        virtual void set_marquee(bool /* enable */) {};
 
 		/**
 		 * Sets the status message describing the current operation.
@@ -83,4 +83,3 @@ namespace ckcore
 		virtual bool cancelled() = 0;
     };
 }
-

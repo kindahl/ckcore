@@ -218,19 +218,19 @@ public:
         ckcore::CrcStream crc32(ckcore::CrcStream::ckCRC_32);
 
         ckcore::stream::copy(is1,crc32);
-        TS_ASSERT_EQUALS(crc32.checksum(),0x33d5a2ec);
+        TS_ASSERT_EQUALS(crc32.checksum(),ckcore::tuint32(0x33d5a2ec));
         crc32.reset();
 
         ckcore::stream::copy(is2,crc32);
-        TS_ASSERT_EQUALS(crc32.checksum(),0xfa2e73f4);
+        TS_ASSERT_EQUALS(crc32.checksum(),ckcore::tuint32(0xfa2e73f4));
         crc32.reset();
 
         ckcore::stream::copy(is3,crc32);
-        TS_ASSERT_EQUALS(crc32.checksum(),0x30e06b16);
+        TS_ASSERT_EQUALS(crc32.checksum(),ckcore::tuint32(0x30e06b16));
         crc32.reset();
 
         ckcore::stream::copy(is4,crc32);
-        TS_ASSERT_EQUALS(crc32.checksum(),0x00000000);
+        TS_ASSERT_EQUALS(crc32.checksum(),ckcore::tuint32(0x00000000));
         crc32.reset();
 
         is1.close();
@@ -246,25 +246,25 @@ public:
         ckcore::CrcStream crc16udf(ckcore::CrcStream::ckCRC_CCITT);
 
         ckcore::stream::copy(is1,crc16udf);
-        TS_ASSERT_EQUALS(crc16udf.checksum(),0x8430);
+        TS_ASSERT_EQUALS(crc16udf.checksum(),ckcore::tuint32(0x8430));
         crc16udf.reset();
 
         ckcore::stream::copy(is2,crc16udf);
-        TS_ASSERT_EQUALS(crc16udf.checksum(),0x8bfe);
+        TS_ASSERT_EQUALS(crc16udf.checksum(),ckcore::tuint32(0x8bfe));
         crc16udf.reset();
 
         ckcore::stream::copy(is3,crc16udf);
-        TS_ASSERT_EQUALS(crc16udf.checksum(),0xef2a);
+        TS_ASSERT_EQUALS(crc16udf.checksum(),ckcore::tuint32(0xef2a));
         crc16udf.reset();
 
         ckcore::stream::copy(is4,crc16udf);
-        TS_ASSERT_EQUALS(crc16udf.checksum(),0x0000);
+        TS_ASSERT_EQUALS(crc16udf.checksum(),ckcore::tuint32(0x0000));
         crc16udf.reset();
 
         // Test from the UDF 1.50 reference.
         unsigned char bytes[] = { 0x70, 0x6A, 0x77 };
         crc16udf.write(bytes,3);
-        TS_ASSERT_EQUALS(crc16udf.checksum(),0x3299);
+        TS_ASSERT_EQUALS(crc16udf.checksum(),ckcore::tuint32(0x3299));
 
         is1.close();
         is1.open();
@@ -279,19 +279,19 @@ public:
         ckcore::CrcStream crc16ibm(ckcore::CrcStream::ckCRC_16);
 
         ckcore::stream::copy(is1,crc16ibm);
-        TS_ASSERT_EQUALS(crc16ibm.checksum(),0x398e);
+        TS_ASSERT_EQUALS(crc16ibm.checksum(),ckcore::tuint32(0x398e));
         crc16ibm.reset();
 
         ckcore::stream::copy(is2,crc16ibm);
-        TS_ASSERT_EQUALS(crc16ibm.checksum(),0xd3bb);
+        TS_ASSERT_EQUALS(crc16ibm.checksum(),ckcore::tuint32(0xd3bb));
         crc16ibm.reset();
 
         ckcore::stream::copy(is3,crc16ibm);
-        TS_ASSERT_EQUALS(crc16ibm.checksum(),0xb7d4);
+        TS_ASSERT_EQUALS(crc16ibm.checksum(),ckcore::tuint32(0xb7d4));
         crc16ibm.reset();
 
         ckcore::stream::copy(is4,crc16ibm);
-        TS_ASSERT_EQUALS(crc16ibm.checksum(),0x0000);
+        TS_ASSERT_EQUALS(crc16ibm.checksum(),ckcore::tuint32(0x0000));
         crc16ibm.reset();
     }
 
@@ -299,13 +299,13 @@ public:
     {
         ckcore::NullStream ns;
         ns.write(NULL,42);
-        TS_ASSERT_EQUALS(ns.written(),42);
+        TS_ASSERT_EQUALS(ns.written(),ckcore::tuint64(42));
         
         ns.write(NULL,1);
-        TS_ASSERT_EQUALS(ns.written(),43);
+        TS_ASSERT_EQUALS(ns.written(),ckcore::tuint64(43));
         
         ns.write(NULL,754);
-        TS_ASSERT_EQUALS(ns.written(),797);
+        TS_ASSERT_EQUALS(ns.written(),ckcore::tuint64(797));
     }
 
 	void testCopy()
@@ -323,19 +323,19 @@ public:
 		TS_ASSERT(ckcore::stream::copy(is1,ns1,p,825));
 		TS_ASSERT(ckcore::stream::copy(is2,ns2,p,825));
 
-		TS_ASSERT_EQUALS(ns1.written(),825);
-		TS_ASSERT_EQUALS(ns2.written(),825);
+		TS_ASSERT_EQUALS(ns1.written(),ckcore::tuint64(825));
+		TS_ASSERT_EQUALS(ns2.written(),ckcore::tuint64(825));
 
 		// Try again reaching outside the internal buffer used within the copy
 		// function.
 		TS_ASSERT(is1.seek(0,ckcore::InStream::ckSTREAM_BEGIN));
 		TS_ASSERT(ckcore::stream::copy(is1,ns3,p,8200));
-		TS_ASSERT_EQUALS(ns3.written(),8200);
+		TS_ASSERT_EQUALS(ns3.written(),ckcore::tuint64(8200));
 
 		// Try again reaching outside the internal buffer used within the copy
 		// function and also reaching outside the stream.
 		TS_ASSERT(is1.seek(0,ckcore::InStream::ckSTREAM_BEGIN));
 		TS_ASSERT(ckcore::stream::copy(is1,ns4,p,9200));
-		TS_ASSERT_EQUALS(ns4.written(),9200);
+		TS_ASSERT_EQUALS(ns4.written(),ckcore::tuint64(9200));
 	}
 };
