@@ -99,7 +99,7 @@ namespace ckcore
          *         function returns the number of bytes written (this may be
          *         zero).
          */
-        virtual tint64 write(void *buffer,tuint32 count) = 0;
+        virtual tint64 write(const void *buffer,tuint32 count) = 0;
     };
 
     namespace stream
@@ -111,4 +111,3 @@ namespace ckcore
 				  tuint64 size);
     }
 }
-

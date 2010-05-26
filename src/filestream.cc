@@ -227,7 +227,7 @@ namespace ckcore
      *         function returns the number of bytes written (this may be
      *         zero).
      */
-    tint64 FileOutStream::write(void *buffer,tuint32 count)
+    tint64 FileOutStream::write(const void *buffer,tuint32 count)
     {
         return file_.write(buffer,count);
     }

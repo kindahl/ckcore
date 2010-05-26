@@ -103,7 +103,7 @@ namespace ckcore
 		void remove_block_delim(char delim);
 
         // OutStream interface.
-        tint64 write(void *buffer,tuint32 count);
+        tint64 write(const void *buffer,tuint32 count);
 
         /**
          * Called when the process has finished.
@@ -118,4 +118,3 @@ namespace ckcore
         virtual void event_output(const std::string &block) = 0;
     };
 }
-

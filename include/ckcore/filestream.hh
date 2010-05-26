@@ -68,7 +68,6 @@ namespace ckcore
         bool open();
         bool close();
 
-        tint64 write(void *buffer,tuint32 count);
+        tint64 write(const void *buffer,tuint32 count);
     };
 }
-

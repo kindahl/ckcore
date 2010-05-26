@@ -250,7 +250,7 @@ namespace ckcore
      * @return If the operation failed -1 is returned, otherwise the
      *         function returns the number of bytes written.
      */
-    tint64 BufferedOutStream::write(void *buffer,tuint32 count)
+    tint64 BufferedOutStream::write(const void *buffer,tuint32 count)
     {
         // If we failed to allocate the internal buffer, just redirect the
         // write call.
@@ -300,4 +300,3 @@ namespace ckcore
         return result;
     }
 }
-

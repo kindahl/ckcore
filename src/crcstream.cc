@@ -120,20 +120,20 @@ namespace ckcore
      * @param [in] count The number of bytes in the buffer.
      * @return The number of bytes processed (always the same as count).
      */
-    tint64 CrcStream::write(void *buffer,tuint32 count)
+    tint64 CrcStream::write(const void *buffer,tuint32 count)
     {
         for (unsigned long i = 0; i < count; i++)
         {
             if (reflect_)
             {
                 checksum_ = (checksum_ >> 8) ^ table_[(checksum_ & 0xff) ^
-                            ((unsigned char *)buffer)[i]];
+                            ((const unsigned char *)buffer)[i]];
 
             }
             else
             {
                 checksum_ = ((checksum_ << 8) ^ table_[((checksum_ >> (order_ - 8)) & 0xff) ^
-                            ((unsigned char *)buffer)[i]]) & mask_;
+                            ((const unsigned char *)buffer)[i]]) & mask_;
             }
         }
 
@@ -148,4 +148,3 @@ namespace ckcore
         return count;
     }
 }
-

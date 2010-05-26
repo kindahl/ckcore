@@ -520,7 +520,7 @@ namespace ckcore
      *         function returns the number of bytes written (this may be
      *         zero).
      */
-    tint64 Process::write(void *buffer,tuint32 count)
+    tint64 Process::write(const void *buffer,tuint32 count)
     {
         // Wait if the process has not been started.
         while (!running())

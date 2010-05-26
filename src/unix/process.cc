@@ -604,7 +604,7 @@ namespace ckcore
      *         function returns the number of bytes written (this may be
      *         zero).
      */
-    tint64 Process::write(void *buffer,tuint32 count)
+    tint64 Process::write(const void *buffer,tuint32 count)
     {
         if (pid_ == -1 || !running())
             return -1;
@@ -626,4 +626,3 @@ namespace ckcore
 		return true;
 	}
 }
-
