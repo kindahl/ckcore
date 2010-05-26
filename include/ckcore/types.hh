@@ -79,4 +79,8 @@ namespace ckcore
 #else
 #  define MSC_DECLSPEC_NORETURN
 #endif
+
+#ifndef ckUNUSED
+#define ckUNUSED(x) x
+#endif
 }
