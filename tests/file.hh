@@ -40,8 +40,10 @@ class FileTestSuite : public CxxTest::TestSuite
 public:
     void testOpenClose()
     {
-        // test non-existing file.
-        ckcore::File file1(ckT(TEST_SRC_DIR "/data/file/non-existent"));
+        ckcore::File newFilename = ckcore::File::temp( ckT("ckcore-test-file") );
+      
+        // Test that the file does not exist and therefore cannot be opened for reading.
+        ckcore::File file1( newFilename );
         TS_ASSERT(!file1.test());
 
         TS_ASSERT_THROWS(file1.open2(ckcore::File::ckOPEN_READ), ckcore::Exception2);
@@ -49,6 +51,7 @@ public:
         TS_ASSERT(!file1.close());
         TS_ASSERT(!file1.test());
 
+        // Create the file.
         TS_ASSERT_THROWS_NOTHING(file1.open2(ckcore::File::ckOPEN_WRITE));
         TS_ASSERT(file1.test());
         TS_ASSERT(file1.close());
@@ -58,7 +61,7 @@ public:
         TS_ASSERT(!file1.test());
         TS_ASSERT(!file1.close());
 
-        // test existing file.
+        // Test opening of an existing file.
         ckcore::File file2(ckT(TEST_SRC_DIR "/data/file/0bytes"));
         TS_ASSERT(!file2.test());
 
@@ -67,16 +70,22 @@ public:
         TS_ASSERT(file2.close());
         TS_ASSERT(!file2.test());
 
-        TS_ASSERT_THROWS_NOTHING(file2.open2(ckcore::File::ckOPEN_WRITE));
-        TS_ASSERT(file2.test());
-        TS_ASSERT(file2.close());
-        TS_ASSERT(!file2.test());
+        // We cannot open the file for writing, as under "make distcheck"
+        // the directory is marked as read-only.
+        //   TS_ASSERT_THROWS_NOTHING(file2.open2(ckcore::File::ckOPEN_WRITE));
+        //   TS_ASSERT(file2.test());
+        //   TS_ASSERT(file2.close());
+        //   TS_ASSERT(!file2.test());
     }
 
 	void testAppend()
 	{
-		ckcore::File file1(ckT(TEST_SRC_DIR "/data/file/new1"));
-		ckcore::File file2(ckT(TEST_SRC_DIR "/data/file/new2"));
+        ckcore::File newFilename1 = ckcore::File::temp( ckT("ckcore-test-file") );
+        ckcore::File newFilename2 = ckcore::File::temp( ckT("ckcore-test-file") );
+        TS_ASSERT( newFilename1.name() != newFilename2.name() );
+        
+		ckcore::File file1( newFilename1 );
+		ckcore::File file2( newFilename2 );
 
 		TS_ASSERT_THROWS_NOTHING(file1.open2(ckcore::File::ckOPEN_WRITE));
 		TS_ASSERT_THROWS_NOTHING(file2.open2(ckcore::File::ckOPEN_WRITE));
@@ -102,7 +111,7 @@ public:
 
     void testReadWrite()
     {
-        ckcore::File file(ckT(TEST_SRC_DIR "/data/file/new"));
+        ckcore::File file( ckcore::File::temp( ckT("ckcore-test-file") ) );
         TS_ASSERT_THROWS_NOTHING(file.open2(ckcore::File::ckOPEN_WRITE));
         const char out_data[] = "abcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -180,7 +189,8 @@ public:
 
     void testExistRemove()
     {
-        ckcore::File file1(ckT(TEST_SRC_DIR "/data/file/non-existent"));
+        // Create a file, then delete it.
+        ckcore::File file1( ckcore::File::temp( ckT("ckcore-test-file") ) );
         TS_ASSERT(!file1.exist());
         TS_ASSERT(!file1.remove());
         TS_ASSERT_THROWS_NOTHING(file1.open2(ckcore::File::ckOPEN_WRITE));
@@ -196,10 +206,13 @@ public:
         TS_ASSERT(!ckcore::File::exist(ckT(TEST_SRC_DIR "/data/file/non-existent")));
 
         TS_ASSERT(!ckcore::File::remove(ckT(TEST_SRC_DIR "/data/file/non-existent")));
-        ckcore::File file3(ckT(TEST_SRC_DIR "/data/file/new"));
+
+        // Create a file, then delete it.
+        ckcore::File newFilename2 = ckcore::File::temp( ckT("ckcore-test-file") );
+        ckcore::File file3( newFilename2 );
         TS_ASSERT_THROWS_NOTHING(file3.open2(ckcore::File::ckOPEN_WRITE));
         TS_ASSERT(file3.close());
-        TS_ASSERT(ckcore::File::remove(ckT(TEST_SRC_DIR "/data/file/new")));
+        TS_ASSERT(ckcore::File::remove( newFilename2.name().c_str() ) );
         TS_ASSERT(!ckcore::File::remove(ckT(TEST_SRC_DIR "/data/file/non-existent")));
         TS_ASSERT(!ckcore::File::remove(ckT("")));
     }
@@ -207,23 +220,33 @@ public:
     void testRename()
     {
         // rename file in existing folder (should succeed).
-        ckcore::File file1(ckT(TEST_SRC_DIR "/data/file/new"));
+        ckcore::File newFilename1a = ckcore::File::temp( ckT("ckcore-test-file") );
+        ckcore::File newFilename1b = ckcore::File::temp( ckT("ckcore-test-file") );
+        ckcore::File newFilename1c = ckcore::File::temp( ckT("ckcore-test-file") );
+        TS_ASSERT( newFilename1a.name() != newFilename1b.name() );
+        TS_ASSERT( newFilename1a.name() != newFilename1c.name() );
+      
+        ckcore::File file1( newFilename1a );
         TS_ASSERT_THROWS_NOTHING(file1.open2(ckcore::File::ckOPEN_WRITE));
 
-        TS_ASSERT(file1.rename(ckT(TEST_SRC_DIR "/data/file/new2")));
-        TS_ASSERT(ckcore::File::exist(ckT(TEST_SRC_DIR "/data/file/new2")));
+        TS_ASSERT(file1.rename( newFilename1b.name().c_str() ) );
+        TS_ASSERT(ckcore::File::exist( newFilename1b.name().c_str() ) );
         TS_ASSERT(!file1.close());
 
         // rename file in new non-existing folder (should fail).
-        ckcore::File file2(ckT(TEST_SRC_DIR "/data/file/new"));
+        TS_ASSERT( !ckcore::File::exist( newFilename1a.name().c_str() ) );
+        ckcore::File file2( newFilename1a.name().c_str() );
         TS_ASSERT_THROWS_NOTHING(file2.open2(ckcore::File::ckOPEN_WRITE));
 
-        TS_ASSERT(!file2.rename(ckT(TEST_SRC_DIR "/data/file/new/new2")));
-        TS_ASSERT(!ckcore::File::exist(ckT(TEST_SRC_DIR "/data/file/new/new2")));
+        ckcore::tstring newFilename1csub =newFilename1c.name();
+        newFilename1csub += ckT("/non-existing-folder/new2" );
+
+        TS_ASSERT(!file2.rename( newFilename1csub.c_str() ) );
+        TS_ASSERT(!ckcore::File::exist( newFilename1csub.c_str() ) );
         TS_ASSERT(!file2.close());
 
         // Try to rename file to existing file (should fail).
-        TS_ASSERT(!file2.rename(ckT(TEST_SRC_DIR "/data/file/new2")));
+        TS_ASSERT(!file2.rename(newFilename1b.name().c_str()));
 
         // Clean up.
         TS_ASSERT(file1.remove());
@@ -240,14 +263,19 @@ public:
         TS_ASSERT(!file3.rename(ckT("")));
 
         // test static function.
-        ckcore::File file4(ckT(TEST_SRC_DIR "/data/file/new"));
+        ckcore::File newFilename2a = ckcore::File::temp( ckT("ckcore-test-file") );
+        ckcore::File newFilename2b = ckcore::File::temp( ckT("ckcore-test-file") );
+        TS_ASSERT( newFilename2a.name() != newFilename2b.name() );
+        
+        ckcore::File file4( newFilename2a );
         TS_ASSERT_THROWS_NOTHING(file4.open2(ckcore::File::ckOPEN_WRITE));
         TS_ASSERT(file4.close());
-        TS_ASSERT(ckcore::File::rename (ckT(TEST_SRC_DIR "/data/file/new") ,ckT(TEST_SRC_DIR "/data/file/new2")));
-        TS_ASSERT(!ckcore::File::rename(ckT(TEST_SRC_DIR "/data/file/new2"),ckT(TEST_SRC_DIR "/data/file/new2")));
-        TS_ASSERT(!ckcore::File::rename(ckT(TEST_SRC_DIR "/data/file/new2"),ckT("")));
-        TS_ASSERT(!ckcore::File::rename(ckT(TEST_SRC_DIR "/data/file/new2"),ckT(TEST_SRC_DIR "/data/file/new/new2")));
-        TS_ASSERT(ckcore::File::remove (ckT(TEST_SRC_DIR "/data/file/new2")));
+        TS_ASSERT( ckcore::File::rename( newFilename2a.name().c_str(), newFilename2b.name().c_str()    ) );
+        TS_ASSERT(!ckcore::File::rename( newFilename2b.name().c_str(), newFilename2b.name().c_str()    ) );
+        TS_ASSERT(!ckcore::File::rename( newFilename2b.name().c_str(), ckT("")                         ) );
+        TS_ASSERT(!ckcore::File::rename( newFilename2b.name().c_str(), newFilename1csub.c_str()        ) );
+        
+        TS_ASSERT(ckcore::File::remove ( newFilename2b.name().c_str() ) );
     }
 
     void testSize()
@@ -287,7 +315,9 @@ public:
 	void testExclusiveAccess()
 	{
 		// Create a new file.
-		ckcore::File file(ckT(TEST_SRC_DIR "/data/file/new"));
+        ckcore::File newFilename = ckcore::File::temp( ckT("ckcore-test-file") );
+      
+		ckcore::File file( newFilename );
         TS_ASSERT_THROWS_NOTHING(file.open2(ckcore::File::ckOPEN_WRITE));
         TS_ASSERT(file.close());
 
@@ -298,7 +328,8 @@ public:
 		// (should succeed).
 		SimpleProcess process;
 		ckcore::tstring cmd_line = FILETESTER;
-		cmd_line += ckT(" -r " TEST_SRC_DIR "/data/file/new");
+		cmd_line += ckT(" -r ");
+        cmd_line += newFilename.name().c_str();
 
 		TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
@@ -310,7 +341,8 @@ public:
 		// Launch an external process that tries to write to the test file
 		// (should fail).
 		cmd_line = FILETESTER;
-		cmd_line += ckT(" -w " TEST_SRC_DIR "/data/file/new");
+		cmd_line += ckT(" -w ");
+        cmd_line += newFilename.name().c_str();
 
 		TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();

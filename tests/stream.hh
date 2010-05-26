@@ -135,8 +135,11 @@ public:
     void testOutStream()
     {
         ckcore::FileInStream is1(ckT(TEST_SRC_DIR "/data/file/8253bytes"));
-        ckcore::FileInStream is2(ckT(TEST_SRC_DIR "/data/file/new"));
-        ckcore::FileOutStream fs(ckT(TEST_SRC_DIR "/data/file/new"));
+
+        ckcore::File newFilename = ckcore::File::temp( ckT("ckcore-test-file") );
+        ckcore::FileInStream is2( newFilename.name().c_str() );
+        ckcore::FileOutStream fs( newFilename.name().c_str() );
+        
         ckcore::BufferedOutStream os(fs);
 
         // Run 100 tests with different buffer sizes to capture buffer edge errors.
@@ -196,7 +199,7 @@ public:
             TS_ASSERT(is1.close());
             TS_ASSERT(is2.close());
 
-            TS_ASSERT(ckcore::File::remove(ckT(TEST_SRC_DIR "/data/file/new")));
+            TS_ASSERT(ckcore::File::remove( newFilename.name().c_str() ));
 
             delete [] buffer1;
             delete [] buffer2;
