@@ -27,7 +27,7 @@ class DirectoryTestSuite : public CxxTest::TestSuite
 public:
     void testCreateRemove()
     {
-        ckcore::tstring dirname1 = ckcore::File::temp( ckT("ckcore-test-dir") ).name().c_str();
+        ckcore::tstring dirname1 = ckcore::Directory::temp().name().c_str();
         ckcore::tstring dirname1slash = dirname1;
         dirname1slash += ckT("/");
         
@@ -36,33 +36,33 @@ public:
         ckcore::tstring dirname2slash = dirname2;
         dirname2slash += ckT("/");
       
-        ckcore::Directory dir1( dirname1.c_str() );
+        ckcore::Directory dir1(dirname1.c_str());
         TS_ASSERT(dir1.create());
         TS_ASSERT(dir1.remove());
 
-        ckcore::Directory dir2( dirname1slash.c_str() );
+        ckcore::Directory dir2(dirname1slash.c_str());
         TS_ASSERT(dir2.create());
         TS_ASSERT(dir2.remove());
 
-        ckcore::Directory dir3( dirname2.c_str() );
+        ckcore::Directory dir3(dirname2.c_str());
         TS_ASSERT(dir3.create());
         TS_ASSERT(dir3.remove());
 
-        ckcore::Directory dir4( dirname2slash.c_str() );
+        ckcore::Directory dir4(dirname2slash.c_str());
         TS_ASSERT(dir4.create());
         TS_ASSERT(dir4.remove());
 
         // This is just for clean up since the above calls to remove does not
         // remove more than one directory entry.
-        ckcore::Directory dir5( dirname1.c_str() );
+        ckcore::Directory dir5(dirname1.c_str());
         TS_ASSERT(dir5.remove());
     }
 
     void testIterator()
     {
         ckcore::Directory::Iterator it;
-        ckcore::Directory dir1(ckT(TEST_SRC_DIR "/data"));
-        ckcore::Directory dir2(ckT(TEST_SRC_DIR "/data/file"));
+        ckcore::Directory dir1(ckT(TEST_SRC_DIR)ckT("/data"));
+        ckcore::Directory dir2(ckT(TEST_SRC_DIR)ckT("/data/file"));
 
         std::list<ckcore::tstring> files1,files2;
         std::list<ckcore::tstring>::iterator it_file;

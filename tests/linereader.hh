@@ -28,7 +28,7 @@ public:
     {
         // Read ANSI encoded file with no ending line break.
 
-        ckcore::FileInStream fis(ckT(TEST_SRC_DIR "/data/linereader/text_ansi.txt"));
+        ckcore::FileInStream fis(ckT(TEST_SRC_DIR)ckT("/data/linereader/text_ansi.txt"));
         TS_ASSERT(fis.open());
 
         ckcore::LineReader<char> lr(fis);
@@ -50,7 +50,7 @@ public:
     void testAnsiElb()
     {
         // Read ANSI encoded file with ending line break.
-        ckcore::FileInStream fis(ckT(TEST_SRC_DIR "/data/linereader/text_ansi_elb.txt"));
+        ckcore::FileInStream fis(ckT(TEST_SRC_DIR)ckT("/data/linereader/text_ansi_elb.txt"));
         TS_ASSERT(fis.open());
 
         ckcore::LineReader<char> lr(fis);
@@ -72,7 +72,7 @@ public:
     void testUtf8()
     {
         // Read UTF-8 encoded file with no ending line break.
-        ckcore::FileInStream fis(ckT(TEST_SRC_DIR "/data/linereader/text_utf8.txt"));
+        ckcore::FileInStream fis(ckT(TEST_SRC_DIR)ckT("/data/linereader/text_utf8.txt"));
         TS_ASSERT(fis.open());
 
         ckcore::LineReader<char> lr(fis);
@@ -94,7 +94,7 @@ public:
     void testUtf8Elb()
     {
         // Read UTF-8 encoded file with ending line break.
-        ckcore::FileInStream fis(ckT(TEST_SRC_DIR "/data/linereader/text_utf8_elb.txt"));
+        ckcore::FileInStream fis(ckT(TEST_SRC_DIR)ckT("/data/linereader/text_utf8_elb.txt"));
         TS_ASSERT(fis.open());
 
         ckcore::LineReader<char> lr(fis);
@@ -116,7 +116,7 @@ public:
     void testUtfLe16()
     {
         // Read UTF-16 encoded file with no ending line break.
-        ckcore::FileInStream fis(ckT(TEST_SRC_DIR "/data/linereader/text_utf16le.txt"));
+        ckcore::FileInStream fis(ckT(TEST_SRC_DIR)ckT("/data/linereader/text_utf16le.txt"));
         TS_ASSERT(fis.open());
 
         ckcore::LineReader<short> lr(fis);
@@ -138,7 +138,7 @@ public:
     void testUtf16LeElb()
     {
         // Read UTF-16 encoded file with ending line break.
-        ckcore::FileInStream fis(ckT(TEST_SRC_DIR "/data/linereader/text_utf16le_elb.txt"));
+        ckcore::FileInStream fis(ckT(TEST_SRC_DIR)ckT("/data/linereader/text_utf16le_elb.txt"));
         TS_ASSERT(fis.open());
 
         ckcore::LineReader<short> lr(fis);

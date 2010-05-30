@@ -41,8 +41,8 @@ class StreamTestSuite : public CxxTest::TestSuite
 public:
     void testInStream()
     {
-        ckcore::FileInStream is1(ckT(TEST_SRC_DIR "/data/file/8253bytes"));
-        ckcore::FileInStream fs (ckT(TEST_SRC_DIR "/data/file/8253bytes"));
+        ckcore::FileInStream is1(ckT(TEST_SRC_DIR)ckT("/data/file/8253bytes"));
+        ckcore::FileInStream fs (ckT(TEST_SRC_DIR)ckT("/data/file/8253bytes"));
         ckcore::BufferedInStream is2(fs);
 
 		// Test reading.
@@ -134,11 +134,11 @@ public:
 
     void testOutStream()
     {
-        ckcore::FileInStream is1(ckT(TEST_SRC_DIR "/data/file/8253bytes"));
+        ckcore::FileInStream is1(ckT(TEST_SRC_DIR)ckT("/data/file/8253bytes"));
 
-        ckcore::File newFilename = ckcore::File::temp( ckT("ckcore-test-file") );
-        ckcore::FileInStream is2( newFilename.name().c_str() );
-        ckcore::FileOutStream fs( newFilename.name().c_str() );
+        ckcore::File newFilename = ckcore::File::temp(ckT("ckcore-test-file"));
+        ckcore::FileInStream is2(newFilename.name().c_str());
+        ckcore::FileOutStream fs(newFilename.name().c_str());
         
         ckcore::BufferedOutStream os(fs);
 
@@ -208,13 +208,13 @@ public:
 
     void testCrcStream()
     {
-        ckcore::FileInStream is1(ckT(TEST_SRC_DIR "/data/file/8253bytes"));
+        ckcore::FileInStream is1(ckT(TEST_SRC_DIR)ckT("/data/file/8253bytes"));
         TS_ASSERT(is1.open());
-        ckcore::FileInStream is2(ckT(TEST_SRC_DIR "/data/file/123bytes"));
+        ckcore::FileInStream is2(ckT(TEST_SRC_DIR)ckT("/data/file/123bytes"));
         TS_ASSERT(is2.open());
-        ckcore::FileInStream is3(ckT(TEST_SRC_DIR "/data/file/53bytes"));
+        ckcore::FileInStream is3(ckT(TEST_SRC_DIR)ckT("/data/file/53bytes"));
         TS_ASSERT(is3.open());
-        ckcore::FileInStream is4(ckT(TEST_SRC_DIR "/data/file/0bytes"));
+        ckcore::FileInStream is4(ckT(TEST_SRC_DIR)ckT("/data/file/0bytes"));
         TS_ASSERT(is4.open());
 
         // CRC-32.
@@ -313,9 +313,9 @@ public:
 
 	void testCopy()
 	{
-		ckcore::FileInStream is1(ckT(TEST_SRC_DIR "/data/file/8253bytes"));
+		ckcore::FileInStream is1(ckT(TEST_SRC_DIR)ckT("/data/file/8253bytes"));
         TS_ASSERT(is1.open());
-        ckcore::FileInStream is2(ckT(TEST_SRC_DIR "/data/file/53bytes"));
+        ckcore::FileInStream is2(ckT(TEST_SRC_DIR)ckT("/data/file/53bytes"));
         TS_ASSERT(is2.open());
 
 		ckcore::NullStream ns1,ns2,ns3,ns4;

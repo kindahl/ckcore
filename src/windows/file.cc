@@ -568,6 +568,9 @@ namespace ckcore
 		tchar tmp_name[260];
 		GetTempFileName(dir_name,prefix,0,tmp_name);
 
+		if (File::exist(tmp_name))
+			File::remove(tmp_name);
+
 		return File(tmp_name);
 	}
 

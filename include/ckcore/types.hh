@@ -29,20 +29,31 @@ namespace ckcore
 {
 #ifdef _WINDOWS
 #ifdef _UNICODE
+
     typedef wchar_t tchar;
 	typedef std::wstring tstring;
 	typedef std::wstringstream tstringstream;
+
 #ifndef ckT
-#define ckT(quote) L##quote
+// We need a "second pass" below so that ckT( SOME_SYMBOL ) ,
+// where SOME_SYMBOL is #define'd to be a string,
+// also works fine.
+#define ckT_secondPass(quote) L ## quote
+#define ckT(quote) ckT_secondPass(quote)
 #endif
-#else
+
+#else  // #ifdef _UNICODE
+
 	typedef char tchar;
 	typedef std::string tstring;
 	typedef std::stringstream tstringstream;
+
 #ifndef ckT
 #define ckT(quote) quote
 #endif
+
 #endif  // #ifdef _UNICODE
+
     typedef __int64 tint64;
     typedef unsigned __int64 tuint64;
     typedef long tint32;
