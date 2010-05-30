@@ -92,6 +92,6 @@ namespace ckcore
 #endif
 
 #ifndef ckUNUSED
-#define ckUNUSED(x) x
+#define ckUNUSED(x) (static_cast<void>(x))
 #endif
 }
