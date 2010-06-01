@@ -17,6 +17,9 @@
  */
 
 #include <cxxtest/TestSuite.h>
+
+#include <string.h>
+
 #include "ckcore/types.hh"
 #include "ckcore/string.hh"
 
@@ -49,11 +52,12 @@ public:
 		// Scanning.
 		const ckcore::tchar *str5 = ckT("VTS_7_53.IFO");
 		ckcore::tuint32 i1 = 0,i2 = 0;
-		ckcore::tchar ext[64];
+		ckcore::tchar ext[64+1];
+        memset( ext, 0, sizeof(ext) );  // scanf %c does not append the null-terminator
 
-		TS_ASSERT_EQUALS(asscanf(str5,ckT("VTS_%u_%u.%[^\0]"),&i1,&i2,ext),3);
-		TS_ASSERT_EQUALS(i1,7);
-		TS_ASSERT_EQUALS(i2,53);
+		TS_ASSERT_EQUALS(asscanf(str5,ckT("VTS_%u_%u.%64c"),&i1,&i2,ext),3);
+		TS_ASSERT_EQUALS(i1,ckcore::tuint32(7));
+		TS_ASSERT_EQUALS(i2,ckcore::tuint32(53));
 		TS_ASSERT(!ckcore::string::astrcmp(ext,ckT("IFO")));
 	}
 };
