@@ -21,6 +21,10 @@
 #include "ckcore/linereader.hh"
 #include "ckcore/filestream.hh"
 
+#ifndef TEST_SRC_DIR
+#define TEST_SRC_DIR        "."
+#endif
+
 class LineReaderTestSuite : public CxxTest::TestSuite
 {
 public:

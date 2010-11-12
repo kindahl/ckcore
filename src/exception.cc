@@ -176,103 +176,93 @@ namespace ckcore
     }
 
 	// Parameter pfx_fmt can be NULL if there is no message prefix.
-    static tstring build_last_error_msg(const DWORD lastErrorCode, const tchar * const pfx_fmt, va_list args )
+    static tstring build_last_error_msg(const DWORD last_err_code,const tchar * const pfx_fmt,va_list args)
 	{
         // The caller should have checked whether there was a last error to collect.
-        assert( lastErrorCode != ERROR_SUCCESS );
+        assert(last_err_code != ERROR_SUCCESS);
 
         tstring msg;
 
-		if ( pfx_fmt != NULL )
-		{
+		if (pfx_fmt != NULL)
 			ckcore::string::vformatstr(msg,pfx_fmt,args);
-		}
 
-        tstring errMsgFromLastError;
+        tstring last_err_msg;
 
-        // FormatMessage() does not return the size of the buffer needed.
-        // We could try with a small buffer, and if that's not enough, double it
-        // and so on. However, performance is not important at this point,
-        // so we ask FormatMessage() to allocate a temporary buffer itself.
+        // FormatMessage() does not return the size of the buffer needed. We
+        // could try with a small buffer, and if that's not enough, double it
+        // and so on. However, performance is not important at this point, so
+        // we ask FormatMessage() to allocate a temporary buffer itself.
 
         LPTSTR buffer;
-		DWORD dwLen = FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
-				                     NULL, lastErrorCode, 0, (LPTSTR)&buffer, 1, NULL );
-
-        if( dwLen )
+		DWORD len = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
+			                      NULL,last_err_code,0,(LPTSTR)&buffer,1,NULL);
+        if (len)
         {
-          try
-          {
-            // This can throw an exception if out of memory.
-            errMsgFromLastError = buffer;
-          }
-          catch ( ... )
-          {
-			ATLVERIFY( NULL == LocalFree( buffer ) );
-            throw;
-          }
+            try
+            {
+                // This can throw an exception if out of memory.
+                last_err_msg = buffer;
+            }
+            catch (...)
+            {
+			    ATLVERIFY(NULL == LocalFree(buffer));
+                throw;
+            }
 
-			ATLVERIFY( NULL == LocalFree( buffer ) );
+			ATLVERIFY(NULL == LocalFree(buffer));
         }
         else
         {
-          errMsgFromLastError = ckT("<no error description available>");
+            last_err_msg = ckT("<no error description available>");
         }
 
-        msg.append(errMsgFromLastError);
-
+        msg.append(last_err_msg);
 		return msg;
 	}
 
-    void throw_from_given_last_error(const DWORD lastErrorCode, const tchar * const pfx_fmt,...)
+    void throw_from_given_last_error(const DWORD last_err_code,const tchar * const pfx_fmt,...)
 	{
         va_list args;
         va_start(args,pfx_fmt);
         
-        tstring msg = build_last_error_msg(lastErrorCode, pfx_fmt, args);
+        tstring msg = build_last_error_msg(last_err_code,pfx_fmt,args);
         
         va_end(args);
 
-		throw Exception2( msg );
+		throw Exception2(msg);
 	}
 
 	void throw_from_last_error(const tchar * const pfx_fmt,...)
 	{
 		// Grab the last error as the very first thing,
 		// in case something else overwrites it.
-		const DWORD lastErrorCode = GetLastError();
+		const DWORD last_err_code = GetLastError();
 
         va_list args;
         va_start(args,pfx_fmt);
         
-        tstring msg = build_last_error_msg(lastErrorCode,pfx_fmt,args);
+        tstring msg = build_last_error_msg(last_err_code,pfx_fmt,args);
         
         va_end(args);
 
-		throw Exception2( msg );
+		throw Exception2(msg);
 	}
-
-
 #endif  // #ifdef _WINDOWS
 
     static tstring get_errno_msg(const int errno_code)
     {
-#ifdef WIN32
+#ifdef _WINDOWS
         const tchar * const errno_msg = _tcserror(errno_code);
 #else
         
         // We could write a loop here, but it's unlikely
         // that any errno error messages are so long.
-        tchar strerror_buffer[ 2048 ];
-    
-        const tchar * const errno_msg = strerror_r(errno_code,
-                                                   strerror_buffer,
-                                                   sizeof(strerror_buffer));
+        tchar errno_msg[2048];
+        strerror_r(errno_code,errno_msg,sizeof(errno_msg));
 #endif
         return tstring(errno_msg);
     }
 
-    
     void throw_from_errno(const int errno_code,
                           const tchar * const pfx_fmt,...)
     {
@@ -298,5 +288,4 @@ namespace ckcore
     {
       throw Exception2(string::formatstr(ckT("Internal error in %s at line %d."),file,line));
     }
- 
-}  // namespace ckcore
+}

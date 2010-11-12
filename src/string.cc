@@ -174,7 +174,7 @@ namespace ckcore
          * @param [in] args Variable argument list.
          */
         void vformatstr(tstring &res,const tchar * const fmt,
-                        const va_list args)
+                        va_list args)
         {
 #ifdef _WINDOWS
             // There are here several ways to write this routine:

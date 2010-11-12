@@ -22,6 +22,10 @@
 #include "ckcore/file.hh"
 #include "ckcore/process.hh"
 
+#ifndef TEST_SRC_DIR
+#define TEST_SRC_DIR        "."
+#endif
+
 #ifdef _WINDOWS
 #define FILETESTER		ckT("bin/filetester.exe")
 #else

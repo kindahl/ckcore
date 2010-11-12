@@ -28,6 +28,10 @@
 #include "ckcore/progress.hh"
 #include "ckcore/progresser.hh"
 
+#ifndef TEST_SRC_DIR
+#define TEST_SRC_DIR        "."
+#endif
+
 class DummyProgress : public ckcore::Progress
 {
 public:

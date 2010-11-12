@@ -22,6 +22,10 @@
 #include "ckcore/types.hh"
 #include "ckcore/directory.hh"
 
+#ifndef TEST_SRC_DIR
+#define TEST_SRC_DIR        "."
+#endif
+
 class DirectoryTestSuite : public CxxTest::TestSuite
 {
 public:
@@ -90,7 +94,7 @@ public:
                 files2.erase(it_file);
         }
 
-        TS_ASSERT(files1.size() == 0);
-        TS_ASSERT(files2.size() == 0);
+        TS_ASSERT_EQUALS(files1.size(),0);
+        TS_ASSERT_EQUALS(files2.size(),0);
     }
 };
