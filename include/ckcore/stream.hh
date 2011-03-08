@@ -36,15 +36,15 @@ namespace ckcore
     public:
         virtual ~InStream() {};
 
-		/**
+        /**
          * Defines directives what to use as base offset when performing seek
          * operations.
          */
-		enum StreamWhence
-		{
-			ckSTREAM_CURRENT,
+        enum StreamWhence
+        {
+            ckSTREAM_CURRENT,
             ckSTREAM_BEGIN
-		};
+        };
 
         /**
          * Reads raw data from the stream.
@@ -56,12 +56,12 @@ namespace ckcore
          */
         virtual tint64 read(void *buffer,tuint32 count) = 0;
 
-		/**
-		 * Calculates the size of the data provided by the stream.
-		 * @return If successfull the size in bytes of the stream data is returned,
-		 *		   if unsuccessfull -1 is returned.
-		 */
-		virtual tint64 size() = 0;
+        /**
+         * Calculates the size of the data provided by the stream.
+         * @return If successfull the size in bytes of the stream data is returned,
+         *         if unsuccessfull -1 is returned.
+         */
+        virtual tint64 size() = 0;
 
         /**
          * Checks if the end of the stream has been reached.
@@ -70,16 +70,16 @@ namespace ckcore
          */
         virtual bool end() = 0;
 
-		/**
-		 * Repositions the internal stream pointer to the specified offset accoding
-		 * to the whence directive.
-		 * @param [in] distance The number of bytes that the stream pointer should
-		 *                      move.
-		 * @param [in] whence Specifies what to use as base when calculating the
-		 *                    final stream pointer position.
-		 * @return If successfull true is returned, oterwise false is returned.
-		 */
-		virtual bool seek(tuint32 distance,StreamWhence whence) = 0;
+        /**
+         * Repositions the internal stream pointer to the specified offset accoding
+         * to the whence directive.
+         * @param [in] distance The number of bytes that the stream pointer should
+         *                      move.
+         * @param [in] whence Specifies what to use as base when calculating the
+         *                    final stream pointer position.
+         * @return If successfull true is returned, oterwise false is returned.
+         */
+        virtual bool seek(tuint32 distance,StreamWhence whence) = 0;
     };
 
     /**
@@ -105,9 +105,9 @@ namespace ckcore
     namespace stream
     {
         bool copy(InStream &from,OutStream &to);
-		bool copy(InStream &from,OutStream &to,Progress &progress);
-		bool copy(InStream &from,OutStream &to,Progresser &progresser);
-		bool copy(InStream &from,OutStream &to,Progresser &progresser,
-				  tuint64 size);
+        bool copy(InStream &from,OutStream &to,Progress &progress);
+        bool copy(InStream &from,OutStream &to,Progresser &progresser);
+        bool copy(InStream &from,OutStream &to,Progresser &progresser,
+                  tuint64 size);
     }
 }

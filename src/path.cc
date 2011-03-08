@@ -134,7 +134,7 @@ namespace ckcore
             return (**this) != *it;
     }
 
-	/**
+    /**
      * Constructs an empty Path object.
      */
     Path::Path()

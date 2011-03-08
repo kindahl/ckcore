@@ -420,29 +420,29 @@ public:
         TS_ASSERT_EQUALS(path1,ckT("/this/is/a/test"));
     }
 
-	void testEmpty()
-	{
-		// Test first constructor.
-		ckcore::Path path1;
-		TS_ASSERT_EQUALS(path1,ckT(""));
-		TS_ASSERT_EQUALS(path1.begin(),path1.end());
+    void testEmpty()
+    {
+        // Test first constructor.
+        ckcore::Path path1;
+        TS_ASSERT_EQUALS(path1,ckT(""));
+        TS_ASSERT_EQUALS(path1.begin(),path1.end());
 
-		path1 = ckT("/this/is");
-		TS_ASSERT_EQUALS(path1,ckT("/this/is"));
+        path1 = ckT("/this/is");
+        TS_ASSERT_EQUALS(path1,ckT("/this/is"));
 
-		path1 += ckT("a/test/");
-		TS_ASSERT_EQUALS(path1,ckT("/this/is/a/test/"));
+        path1 += ckT("a/test/");
+        TS_ASSERT_EQUALS(path1,ckT("/this/is/a/test/"));
 
-		// Test second constructor.
-		ckcore::Path path2(ckT(""));
-		TS_ASSERT_EQUALS(path2,ckT(""));
-		TS_ASSERT_EQUALS(path2.begin(),path2.end());
+        // Test second constructor.
+        ckcore::Path path2(ckT(""));
+        TS_ASSERT_EQUALS(path2,ckT(""));
+        TS_ASSERT_EQUALS(path2.begin(),path2.end());
 
-		path2 = ckT("/this/is");
-		TS_ASSERT_EQUALS(path2,ckT("/this/is"));
+        path2 = ckT("/this/is");
+        TS_ASSERT_EQUALS(path2,ckT("/this/is"));
 
-		path2 += ckT("a/test/");
-		TS_ASSERT_EQUALS(path2,ckT("/this/is/a/test/"));
-	}
+        path2 += ckT("a/test/");
+        TS_ASSERT_EQUALS(path2,ckT("/this/is/a/test/"));
+    }
 };
 

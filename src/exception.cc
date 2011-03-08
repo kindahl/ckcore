@@ -51,7 +51,7 @@ namespace ckcore
                                         const_cast<char *>(err_msg_.c_str()),
                                         utf8_size,NULL,NULL);
 #else
-		err_msg_ = err_msg;
+        err_msg_ = err_msg;
 #endif
     }
 
@@ -62,20 +62,20 @@ namespace ckcore
     Exception2::Exception2(const ckcore::tstring &err_msg)
     {
 #if defined(_WINDOWS) && defined(_UNICODE)
-		int utf16_size = static_cast<int>(err_msg.size()) + 1;
-		int utf8_size = WideCharToMultiByte(CP_UTF8,0,err_msg.c_str(),
-											utf16_size,NULL,
+        int utf16_size = static_cast<int>(err_msg.size()) + 1;
+        int utf8_size = WideCharToMultiByte(CP_UTF8,0,err_msg.c_str(),
+                                            utf16_size,NULL,
                                             0,NULL,NULL);
 
         assert(utf8_size != 0);
 
-		err_msg_.resize(utf8_size);
+        err_msg_.resize(utf8_size);
 
-		utf8_size = WideCharToMultiByte(CP_UTF8,0,err_msg.c_str(),utf16_size,
+        utf8_size = WideCharToMultiByte(CP_UTF8,0,err_msg.c_str(),utf16_size,
                                         const_cast<char *>(err_msg_.c_str()),
                                         utf8_size,NULL,NULL);
 #else
-		err_msg_ = err_msg;
+        err_msg_ = err_msg;
 #endif
     }
 
@@ -88,33 +88,33 @@ namespace ckcore
        return err_msg_.c_str();
     }
 
-	/**
+    /**
      * Returns the error message in tstring format.
      * @return The error message.
      */
-	tstring Exception2::message() const
-	{
+    tstring Exception2::message() const
+    {
 #if defined(_WINDOWS) && defined(_UNICODE)
-		const int utf8_size = static_cast<int>(err_msg_.size()) + 1;
+        const int utf8_size = static_cast<int>(err_msg_.size()) + 1;
 
-		int utf16_size = MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,
-											 err_msg_.c_str(),utf8_size,NULL,0);
+        int utf16_size = MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,
+                                             err_msg_.c_str(),utf8_size,NULL,0);
 
-		assert(utf16_size != 0);
+        assert(utf16_size != 0);
 
-		tstring result;
-		result.resize(utf16_size + 1);
+        tstring result;
+        result.resize(utf16_size + 1);
 
-		utf16_size = MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,
-										 err_msg_.c_str(),utf8_size,
-										 const_cast<wchar_t *>(result.c_str()),
-										 utf16_size);
+        utf16_size = MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,
+                                         err_msg_.c_str(),utf8_size,
+                                         const_cast<wchar_t *>(result.c_str()),
+                                         utf16_size);
 
-		return result;
+        return result;
 #else
-		return err_msg_;
+        return err_msg_;
 #endif
-	}
+    }
 
     /**
      * Returns the exception message of the given exception object. The
@@ -126,10 +126,10 @@ namespace ckcore
     ckcore::tstring get_except_msg(const std::exception &e)
     {
         const Exception2 *const ptr = dynamic_cast<const Exception2 *>(&e);
-		if (ptr != NULL)
-			return ptr->message();
+        if (ptr != NULL)
+            return ptr->message();
 
-		return ckcore::string::ansi_to_auto<1024>(e.what());
+        return ckcore::string::ansi_to_auto<1024>(e.what());
     }
 
     /**
@@ -164,7 +164,7 @@ namespace ckcore
             va_list args;
             va_start(args,pfx_fmt);
 
-			string::vformatstr(msg,pfx_fmt,args);
+            string::vformatstr(msg,pfx_fmt,args);
 
             va_end(args);
         }
@@ -175,16 +175,16 @@ namespace ckcore
         throw Exception2(msg);
     }
 
-	// Parameter pfx_fmt can be NULL if there is no message prefix.
+    // Parameter pfx_fmt can be NULL if there is no message prefix.
     static tstring build_last_error_msg(const DWORD last_err_code,const tchar * const pfx_fmt,va_list args)
-	{
+    {
         // The caller should have checked whether there was a last error to collect.
         assert(last_err_code != ERROR_SUCCESS);
 
         tstring msg;
 
-		if (pfx_fmt != NULL)
-			ckcore::string::vformatstr(msg,pfx_fmt,args);
+        if (pfx_fmt != NULL)
+            ckcore::string::vformatstr(msg,pfx_fmt,args);
 
         tstring last_err_msg;
 
@@ -194,8 +194,8 @@ namespace ckcore
         // we ask FormatMessage() to allocate a temporary buffer itself.
 
         LPTSTR buffer;
-		DWORD len = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
-			                      NULL,last_err_code,0,(LPTSTR)&buffer,1,NULL);
+        DWORD len = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER,
+                                  NULL,last_err_code,0,(LPTSTR)&buffer,1,NULL);
         if (len)
         {
             try
@@ -205,11 +205,11 @@ namespace ckcore
             }
             catch (...)
             {
-			    ATLVERIFY(NULL == LocalFree(buffer));
+                ATLVERIFY(NULL == LocalFree(buffer));
                 throw;
             }
 
-			ATLVERIFY(NULL == LocalFree(buffer));
+            ATLVERIFY(NULL == LocalFree(buffer));
         }
         else
         {
@@ -217,11 +217,11 @@ namespace ckcore
         }
 
         msg.append(last_err_msg);
-		return msg;
-	}
+        return msg;
+    }
 
     void throw_from_given_last_error(const DWORD last_err_code,const tchar * const pfx_fmt,...)
-	{
+    {
         va_list args;
         va_start(args,pfx_fmt);
         
@@ -229,14 +229,14 @@ namespace ckcore
         
         va_end(args);
 
-		throw Exception2(msg);
-	}
+        throw Exception2(msg);
+    }
 
-	void throw_from_last_error(const tchar * const pfx_fmt,...)
-	{
-		// Grab the last error as the very first thing,
-		// in case something else overwrites it.
-		const DWORD last_err_code = GetLastError();
+    void throw_from_last_error(const tchar * const pfx_fmt,...)
+    {
+        // Grab the last error as the very first thing,
+        // in case something else overwrites it.
+        const DWORD last_err_code = GetLastError();
 
         va_list args;
         va_start(args,pfx_fmt);
@@ -245,8 +245,8 @@ namespace ckcore
         
         va_end(args);
 
-		throw Exception2(msg);
-	}
+        throw Exception2(msg);
+    }
 #endif  // #ifdef _WINDOWS
 
     static tstring get_errno_msg(const int errno_code)
@@ -273,7 +273,7 @@ namespace ckcore
             va_list args;
             va_start(args,pfx_fmt);
 
-			string::vformatstr(msg,pfx_fmt,args);
+            string::vformatstr(msg,pfx_fmt,args);
 
             va_end(args);
         }

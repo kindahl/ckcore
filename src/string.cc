@@ -32,53 +32,53 @@ namespace ckcore
 {
     namespace string
     {
-		/**
+        /**
          * Wrapper around the strcmp-like functions to be compatible with
-		 * different character encodings.
+         * different character encodings.
          * @param [in] str1 The first string.
-		 * @param [in] str2 The second string.
+         * @param [in] str2 The second string.
          * @return If str1 is less than str2 < 0 is returned, if str1 is
-	     *         identical to str2 0 is returned, if str1 is greater than
-		 *         str2 > 0 is returned.
+         *         identical to str2 0 is returned, if str1 is greater than
+         *         str2 > 0 is returned.
          */
-		int astrcmp(const tchar *str1,const tchar *str2)
-		{
+        int astrcmp(const tchar *str1,const tchar *str2)
+        {
 #if defined(_WINDOWS) && defined(_UNICODE)
-			return wcscmp(str1,str2);
+            return wcscmp(str1,str2);
 #else
-			return strcmp(str1,str2);
+            return strcmp(str1,str2);
 #endif
-		}
+        }
 
-		/**
+        /**
          * Wrapper around the strncmp-like functions to be compatible with
-		 * different character encodings.
+         * different character encodings.
          * @param [in] str1 The first string.
-		 * @param [in] str2 The second string.
-		 * @param [in] n The number of characters to compare.
+         * @param [in] str2 The second string.
+         * @param [in] n The number of characters to compare.
          * @return If str1 is less than str2 < 0 is returned, if str1 is
-	     *         identical to str2 0 is returned, if str1 is greater than
-		 *         str2 > 0 is returned.
+         *         identical to str2 0 is returned, if str1 is greater than
+         *         str2 > 0 is returned.
          */
-		int astrncmp(const tchar *str1,const tchar *str2,size_t n)
-		{
+        int astrncmp(const tchar *str1,const tchar *str2,size_t n)
+        {
 #if defined(_WINDOWS) && defined(_UNICODE)
-			return wcsncmp(str1,str2,n);
+            return wcsncmp(str1,str2,n);
 #else
-			return strncmp(str1,str2,n);
+            return strncmp(str1,str2,n);
 #endif
-		}
+        }
 
-		/**
+        /**
          * Compares two strings in a case insensitive way.
          * @param [in] str1 The first string.
-		 * @param [in] str2 The second string.
+         * @param [in] str2 The second string.
          * @return If str1 is less than str2 < 0 is returned, if str1 is
-	     *         identical to str2 0 is returned, if str1 is greater than
-		 *         str2 > 0 is returned.
+         *         identical to str2 0 is returned, if str1 is greater than
+         *         str2 > 0 is returned.
          */
-		int astrcmpi(const tchar *str1,const tchar *str2)
-		{
+        int astrcmpi(const tchar *str1,const tchar *str2)
+        {
 #ifdef _WINDOWS
 #ifdef _UNICODE
             return _wcsicmp(str1,str2);
@@ -86,21 +86,21 @@ namespace ckcore
             return _stricmp(str1,str2);
 #endif
 #else
-			return strcasecmp(str1,str2);
+            return strcasecmp(str1,str2);
 #endif
-		}
+        }
 
-		/**
+        /**
          * Compares two strings in a case insensitive way.
          * @param [in] str1 The first string.
-		 * @param [in] str2 The second string.
-		 * @param [in] n The number of characters to compare.
+         * @param [in] str2 The second string.
+         * @param [in] n The number of characters to compare.
          * @return If str1 is less than str2 < 0 is returned, if str1 is
-	     *         identical to str2 0 is returned, if str1 is greater than
-		 *         str2 > 0 is returned.
+         *         identical to str2 0 is returned, if str1 is greater than
+         *         str2 > 0 is returned.
          */
-		int astrncmpi(const tchar *str1,const tchar *str2,size_t n)
-		{
+        int astrncmpi(const tchar *str1,const tchar *str2,size_t n)
+        {
 #ifdef _WINDOWS
 #ifdef _UNICODE
             return _wcsnicmp(str1,str2,n);
@@ -108,63 +108,63 @@ namespace ckcore
             return _strnicmp(str1,str2,n);
 #endif
 #else
-			return strncasecmp(str1,str2,n);
+            return strncasecmp(str1,str2,n);
 #endif
-		}
+        }
 
-		/**
+        /**
          * Wrapper around the strlen-like functions to be compatible with
-		 * different character encodings.
+         * different character encodings.
          * @param [in] str1 The first string.
          * @return If str1 is less than str2 < 0 is returned, if str1 is
-	     *         identical to str2 0 is returned, if str1 is greater than
-		 *         str2 > 0 is returned.
+         *         identical to str2 0 is returned, if str1 is greater than
+         *         str2 > 0 is returned.
          */
-		size_t astrlen(const tchar *str)
-		{
+        size_t astrlen(const tchar *str)
+        {
 #if defined(_WINDOWS) && defined(_UNICODE)
-			return wcslen(str);
+            return wcslen(str);
 #else
-			return strlen(str);
+            return strlen(str);
 #endif
-		}
+        }
 
-		/**
+        /**
          * Wrapper around the strcpy-like functions to be compatible with
-		 * different character encodings.
+         * different character encodings.
          * @param [in] str1 The first string.
-		 * @param [in] str2 The second string.
+         * @param [in] str2 The second string.
          * @return If str1 is less than str2 < 0 is returned, if str1 is
-	     *         identical to str2 0 is returned, if str1 is greater than
-		 *         str2 > 0 is returned.
+         *         identical to str2 0 is returned, if str1 is greater than
+         *         str2 > 0 is returned.
          */
-		tchar *astrcpy(tchar *str1,const tchar *str2)
-		{
+        tchar *astrcpy(tchar *str1,const tchar *str2)
+        {
 #if defined(_WINDOWS) && defined(_UNICODE)
-			return wcscpy(str1,str2);
+            return wcscpy(str1,str2);
 #else
-			return strcpy(str1,str2);
+            return strcpy(str1,str2);
 #endif
-		}
+        }
 
-		/**
+        /**
          * Wrapper around the strncpy-like functions to be compatible with
-		 * different character encodings.
+         * different character encodings.
          * @param [in] str1 The first string.
-		 * @param [in] str2 The second string.
-		 * @param [in] n The number of characters to copy.
+         * @param [in] str2 The second string.
+         * @param [in] n The number of characters to copy.
          * @return If str1 is less than str2 < 0 is returned, if str1 is
-	     *         identical to str2 0 is returned, if str1 is greater than
-		 *         str2 > 0 is returned.
+         *         identical to str2 0 is returned, if str1 is greater than
+         *         str2 > 0 is returned.
          */
-		tchar *astrncpy(tchar *str1,const tchar *str2,size_t n)
-		{
+        tchar *astrncpy(tchar *str1,const tchar *str2,size_t n)
+        {
 #if defined(_WINDOWS) && defined(_UNICODE)
-			return wcsncpy(str1,str2,n);
+            return wcsncpy(str1,str2,n);
 #else
-			return strncpy(str1,str2,n);
+            return strncpy(str1,str2,n);
 #endif
-		}
+        }
 
         /**
          * Creates a formatted string from a format description similar to that
@@ -301,9 +301,9 @@ namespace ckcore
             return ansi;
         }
 
-		/**
+        /**
          * Converts an ANSI string if necessary into UTF-16 format. If UTF-16 is not
-		 * used the very same ANSI string is copied.
+         * used the very same ANSI string is copied.
          * @param [in] ansi The ANSI string to convert.
          * @param [in] out Pointer to buffer to which the ANSI or UTF-16 string
          *                 should be written.
@@ -314,9 +314,9 @@ namespace ckcore
         tchar *ansi_to_auto(const char *ansi,tchar *out,int out_len)
         {
 #if defined(_WINDOWS) && defined(_UNICODE)
-			return ansi_to_utf16(ansi,out,out_len);
+            return ansi_to_utf16(ansi,out,out_len);
 #else
-			return strncpy(out,ansi,out_len);
+            return strncpy(out,ansi,out_len);
 #endif
         }
     }

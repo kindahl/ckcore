@@ -49,7 +49,7 @@ public:
         TS_ASSERT(lr.end());
 
         TS_ASSERT(fis.close());
-	}
+    }
 
     void testAnsiElb()
     {
@@ -71,7 +71,7 @@ public:
         TS_ASSERT(lr.end());
 
         TS_ASSERT(fis.close());
-	}
+    }
 
     void testUtf8()
     {
@@ -93,7 +93,7 @@ public:
         TS_ASSERT(lr.end());
 
         TS_ASSERT(fis.close());
-	}
+    }
 
     void testUtf8Elb()
     {
@@ -115,7 +115,7 @@ public:
         TS_ASSERT(lr.end());
 
         TS_ASSERT(fis.close());
-	}
+    }
 
     void testUtfLe16()
     {
@@ -137,7 +137,7 @@ public:
         TS_ASSERT(lr.end());
 
         TS_ASSERT(fis.close());
-	}
+    }
 
     void testUtf16LeElb()
     {
@@ -159,5 +159,5 @@ public:
         TS_ASSERT(lr.end());
 
         TS_ASSERT(fis.close());
-	}
+    }
 };

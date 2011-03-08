@@ -48,18 +48,18 @@ namespace ckcore
     public:
         virtual ~Log() {};
 
-		/**
-		 * Prints a message string to the logging system.
-		 * @param [in] format The message format or the message itself.
-		 */
-		virtual void print(const tchar *format,...) __attribute__ ((format (printf, 2, 3))) = 0;
+        /**
+         * Prints a message string to the logging system.
+         * @param [in] format The message format or the message itself.
+         */
+        virtual void print(const tchar *format,...) __attribute__ ((format (printf, 2, 3))) = 0;
 
         /**
          * Prints a message string followed by a new line to the logging
          * system.
          * @param [in] format The message format or message itself.
          */
-		virtual void print_line(const tchar *format,...) __attribute__ ((format (printf, 2, 3))) = 0;
+        virtual void print_line(const tchar *format,...) __attribute__ ((format (printf, 2, 3))) = 0;
     };
 }
 

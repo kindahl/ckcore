@@ -21,44 +21,44 @@
 
 namespace ckcore
 {
-	/**
-	 * Converts a SYSTEMTIME structure to a struct tm structure.
-	 * @param [in] stime The input time.
-	 * @param [out] time The output time.
-	 */
-	void SysTimeToTm(SYSTEMTIME &stime,struct tm &time)
-	{
-		time.tm_sec = stime.wSecond;
-		time.tm_min = stime.wMinute;
-		time.tm_hour = stime.wHour;
-		time.tm_mday = stime.wDay;
-		time.tm_mon = stime.wMonth - 1;
-		time.tm_year = stime.wYear - 1900;
-		time.tm_wday = stime.wDayOfWeek;
+    /**
+     * Converts a SYSTEMTIME structure to a struct tm structure.
+     * @param [in] stime The input time.
+     * @param [out] time The output time.
+     */
+    void SysTimeToTm(SYSTEMTIME &stime,struct tm &time)
+    {
+        time.tm_sec = stime.wSecond;
+        time.tm_min = stime.wMinute;
+        time.tm_hour = stime.wHour;
+        time.tm_mday = stime.wDay;
+        time.tm_mon = stime.wMonth - 1;
+        time.tm_year = stime.wYear - 1900;
+        time.tm_wday = stime.wDayOfWeek;
 
-		// Caclulate the day of the year.
-		int days = 0;
+        // Caclulate the day of the year.
+        int days = 0;
 
-		if ((time.tm_year % 400 == 0) ||
-			((time.tm_year % 4 == 0) && (time.tm_year % 100 != 0)))
-		{
-			unsigned char month_len[] = { 31,29,31,30,31,30,31,31,30,31,30,31 };
+        if ((time.tm_year % 400 == 0) ||
+            ((time.tm_year % 4 == 0) && (time.tm_year % 100 != 0)))
+        {
+            unsigned char month_len[] = { 31,29,31,30,31,30,31,31,30,31,30,31 };
 
-			for (int i = 0; i < time.tm_mon; i++)
-				days += month_len[0];
-		}
-		else
-		{
-			unsigned char month_len[] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
+            for (int i = 0; i < time.tm_mon; i++)
+                days += month_len[0];
+        }
+        else
+        {
+            unsigned char month_len[] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
 
-			for (int i = 0; i < time.tm_mon; i++)
-				days += month_len[0];
-		}
+            for (int i = 0; i < time.tm_mon; i++)
+                days += month_len[0];
+        }
 
-		time.tm_yday = days + time.tm_mday;
+        time.tm_yday = days + time.tm_mday;
 
-		// Get day light saving attribute.
-		TIME_ZONE_INFORMATION tzi;
-		time.tm_isdst = GetTimeZoneInformation(&tzi) - 1;
-	}
+        // Get day light saving attribute.
+        TIME_ZONE_INFORMATION tzi;
+        time.tm_isdst = GetTimeZoneInformation(&tzi) - 1;
+    }
 };

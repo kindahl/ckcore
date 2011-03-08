@@ -43,13 +43,13 @@ namespace ckcore
       }
     }
 
-	/**
+    /**
      * Closes the stream and destructs the object.
      */
-	FileInStream::~FileInStream()
-	{
-		close();
-	}
+    FileInStream::~FileInStream()
+    {
+        close();
+    }
 
     /**
      * Opens the file for access through the stream.
@@ -103,7 +103,7 @@ namespace ckcore
         return read_ >= size_;
     }
 
-	/**
+    /**
      * Repositions the file pointer to the specified offset accoding to the
      * whence directive in the file.
      * @param [in] distance The number of bytes that the file pointer should
@@ -112,42 +112,42 @@ namespace ckcore
      *                    final file pointer position.
      * @return If successfull true is returned, otherwise false is returned.
      */
-	bool FileInStream::seek(tuint32 distance,StreamWhence whence)
-	{
-		File::FileWhence file_whence;
-		switch (whence)
-		{
-			case ckSTREAM_CURRENT:
-				file_whence = File::ckFILE_CURRENT;
-				break;
+    bool FileInStream::seek(tuint32 distance,StreamWhence whence)
+    {
+        File::FileWhence file_whence;
+        switch (whence)
+        {
+            case ckSTREAM_CURRENT:
+                file_whence = File::ckFILE_CURRENT;
+                break;
 
-			default:
-				file_whence = File::ckFILE_BEGIN;
-				break;
-		}
+            default:
+                file_whence = File::ckFILE_BEGIN;
+                break;
+        }
 
         try
         {
             tint64 result = file_.seek2(distance,file_whence);
             assert( result != -1 );  // Errors throw now exceptions.
-			read_ = result;
-			return true;
-		}
+            read_ = result;
+            return true;
+        }
         catch ( ... )
         {
           return false;
         }
-	}
+    }
 
-	/**
+    /**
      * Checks whether the file stream has been opened or not.
      * @return If a file stream is open true is returned, otherwise false is
-	 *		   returned.
+     *         returned.
      */
-	bool FileInStream::test() const
-	{
-		return file_.test();
-	}
+    bool FileInStream::test() const
+    {
+        return file_.test();
+    }
 
     /**
      * Reads raw data from the stream.
@@ -166,15 +166,15 @@ namespace ckcore
         return result;
     }
 
-	/**
-	 * Returns the size of the file provoding data for the stream.
-	 * @return If successfull the size in bytes of the file is returned,
-	 *		   if unsuccessfull -1 is returned.
-	 */
-	tint64 FileInStream::size()
-	{
-		return size_;
-	}
+    /**
+     * Returns the size of the file provoding data for the stream.
+     * @return If successfull the size in bytes of the file is returned,
+     *         if unsuccessfull -1 is returned.
+     */
+    tint64 FileInStream::size()
+    {
+        return size_;
+    }
 
     /**
      * Constructs a FileOutStream object.
@@ -183,13 +183,13 @@ namespace ckcore
     {
     }
 
-	/**
+    /**
      * Closes the stream and destructs the object.
      */
-	FileOutStream::~FileOutStream()
-	{
-		close();
-	}
+    FileOutStream::~FileOutStream()
+    {
+        close();
+    }
 
     /**
      * Opens the file for access through the stream.

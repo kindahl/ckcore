@@ -27,9 +27,9 @@
 #endif
 
 #ifdef _WINDOWS
-#define FILETESTER		ckT("bin/filetester.exe")
+#define FILETESTER      ckT("bin/filetester.exe")
 #else
-#define FILETESTER		ckT("./bin/filetester")
+#define FILETESTER      ckT("./bin/filetester")
 #endif
 
 class SimpleProcess: public ckcore::Process
@@ -82,36 +82,36 @@ public:
         //   TS_ASSERT(!file2.test());
     }
 
-	void testAppend()
-	{
+    void testAppend()
+    {
         ckcore::File newFilename1 = ckcore::File::temp( ckT("ckcore-test-file") );
         ckcore::File newFilename2 = ckcore::File::temp( ckT("ckcore-test-file") );
         TS_ASSERT( newFilename1.name() != newFilename2.name() );
         
-		ckcore::File file1( newFilename1 );
-		ckcore::File file2( newFilename2 );
+        ckcore::File file1( newFilename1 );
+        ckcore::File file2( newFilename2 );
 
-		TS_ASSERT_THROWS_NOTHING(file1.open2(ckcore::File::ckOPEN_WRITE));
-		TS_ASSERT_THROWS_NOTHING(file2.open2(ckcore::File::ckOPEN_WRITE));
-		TS_ASSERT(file1.write("1234",4) != -1);
-		TS_ASSERT(file2.write("1234",4) != -1);
-		TS_ASSERT(file1.close());
-		TS_ASSERT(file2.close());
+        TS_ASSERT_THROWS_NOTHING(file1.open2(ckcore::File::ckOPEN_WRITE));
+        TS_ASSERT_THROWS_NOTHING(file2.open2(ckcore::File::ckOPEN_WRITE));
+        TS_ASSERT(file1.write("1234",4) != -1);
+        TS_ASSERT(file2.write("1234",4) != -1);
+        TS_ASSERT(file1.close());
+        TS_ASSERT(file2.close());
 
-		TS_ASSERT_THROWS_NOTHING(file1.open2(ckcore::File::ckOPEN_WRITE));
-		TS_ASSERT_THROWS_NOTHING(file2.open2(ckcore::File::ckOPEN_READWRITE));
-		TS_ASSERT_THROWS_NOTHING(file2.seek2(0,ckcore::File::ckFILE_END));
-		TS_ASSERT(file1.write("5678",4) != -1);
-		TS_ASSERT(file2.write("5678",4) != -1);
-		TS_ASSERT(file1.close());
-		TS_ASSERT(file2.close());
+        TS_ASSERT_THROWS_NOTHING(file1.open2(ckcore::File::ckOPEN_WRITE));
+        TS_ASSERT_THROWS_NOTHING(file2.open2(ckcore::File::ckOPEN_READWRITE));
+        TS_ASSERT_THROWS_NOTHING(file2.seek2(0,ckcore::File::ckFILE_END));
+        TS_ASSERT(file1.write("5678",4) != -1);
+        TS_ASSERT(file2.write("5678",4) != -1);
+        TS_ASSERT(file1.close());
+        TS_ASSERT(file2.close());
 
-		TS_ASSERT_EQUALS(file1.size2(),4);
-		TS_ASSERT_EQUALS(file2.size2(),8);
+        TS_ASSERT_EQUALS(file1.size2(),4);
+        TS_ASSERT_EQUALS(file2.size2(),8);
 
-		TS_ASSERT(file1.remove());
-		TS_ASSERT(file2.remove());
-	}
+        TS_ASSERT(file1.remove());
+        TS_ASSERT(file2.remove());
+    }
 
     void testReadWrite()
     {
@@ -121,10 +121,10 @@ public:
 
         const ckcore::tint32 out_data_size = sizeof( out_data );
 
-		ckcore::tint32 tot_write = 0;
+        ckcore::tint32 tot_write = 0;
         while (tot_write < out_data_size)
         {
-			ckcore::tint32 write = file.write(out_data + tot_write, out_data_size - tot_write);
+            ckcore::tint32 write = file.write(out_data + tot_write, out_data_size - tot_write);
             TS_ASSERT(write != -1);
 
             tot_write += write;
@@ -134,7 +134,7 @@ public:
         TS_ASSERT_THROWS_NOTHING( file.open2(ckcore::File::ckOPEN_READ) );
         char in_data[out_data_size];
 
-		ckcore::tint32 tot_read = 0;
+        ckcore::tint32 tot_read = 0;
         while (tot_read < out_data_size)
         {
             ckcore::tint32 read = file.read(in_data,out_data_size - tot_read);
@@ -316,59 +316,59 @@ public:
         }
     }
 
-	void testExclusiveAccess()
-	{
-		// Create a new file.
+    void testExclusiveAccess()
+    {
+        // Create a new file.
         ckcore::File newFilename = ckcore::File::temp( ckT("ckcore-test-file") );
       
-		ckcore::File file( newFilename );
+        ckcore::File file( newFilename );
         TS_ASSERT_THROWS_NOTHING(file.open2(ckcore::File::ckOPEN_WRITE));
         TS_ASSERT(file.close());
 
         TS_ASSERT_THROWS_NOTHING(file.open2(ckcore::File::ckOPEN_READ));
         TS_ASSERT(file.test());
 
-		// Launch an external process that tries to read from the test file
-		// (should succeed).
-		SimpleProcess process;
-		ckcore::tstring cmd_line = FILETESTER;
-		cmd_line += ckT(" -r ");
+        // Launch an external process that tries to read from the test file
+        // (should succeed).
+        SimpleProcess process;
+        ckcore::tstring cmd_line = FILETESTER;
+        cmd_line += ckT(" -r ");
         cmd_line += newFilename.name().c_str();
 
-		TS_ASSERT(process.create(cmd_line.c_str()));
+        TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
 
-		ckcore::tuint32 exit_code = -1;
-		TS_ASSERT(process.exit_code(exit_code));
-		TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(0));
+        ckcore::tuint32 exit_code = -1;
+        TS_ASSERT(process.exit_code(exit_code));
+        TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(0));
 
-		// Launch an external process that tries to write to the test file
-		// (should fail).
-		cmd_line = FILETESTER;
-		cmd_line += ckT(" -w ");
+        // Launch an external process that tries to write to the test file
+        // (should fail).
+        cmd_line = FILETESTER;
+        cmd_line += ckT(" -w ");
         cmd_line += newFilename.name().c_str();
 
-		TS_ASSERT(process.create(cmd_line.c_str()));
+        TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
 
-		exit_code = -1;
-		TS_ASSERT(process.exit_code(exit_code));
-		TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(1));
+        exit_code = -1;
+        TS_ASSERT(process.exit_code(exit_code));
+        TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(1));
 
-		// Launch an external process that tries to remove the test file
-		// (should fail).
-		cmd_line = FILETESTER;
-		cmd_line += ckT(" -d ")ckT(TEST_SRC_DIR)ckT("/data/file/new");
+        // Launch an external process that tries to remove the test file
+        // (should fail).
+        cmd_line = FILETESTER;
+        cmd_line += ckT(" -d ")ckT(TEST_SRC_DIR)ckT("/data/file/new");
 
-		TS_ASSERT(process.create(cmd_line.c_str()));
+        TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
 
-		exit_code = -1;
-		TS_ASSERT(process.exit_code(exit_code));
-		TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(1));
+        exit_code = -1;
+        TS_ASSERT(process.exit_code(exit_code));
+        TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(1));
 
-		// Finally, close  and remove the file.
+        // Finally, close  and remove the file.
         TS_ASSERT(file.close());
-		TS_ASSERT(file.remove());
-	}
+        TS_ASSERT(file.remove());
+    }
 };

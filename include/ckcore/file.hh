@@ -60,7 +60,7 @@ namespace ckcore
         {
             ckOPEN_READ,
             ckOPEN_WRITE,
-			ckOPEN_READWRITE
+            ckOPEN_READWRITE
         };
 
         /**
@@ -71,7 +71,7 @@ namespace ckcore
         {
             ckFILE_CURRENT,
             ckFILE_BEGIN,
-			ckFILE_END
+            ckFILE_END
         };
 
     private:
@@ -124,14 +124,14 @@ namespace ckcore
         static bool time(const Path &file_path,struct tm &access_time,
                          struct tm &modify_time,struct tm &create_time);
         static bool access(const Path &file_path,FileMode file_mode);
-		static bool hidden(const Path &file_path);
+        static bool hidden(const Path &file_path);
         static tint64 size(const Path &file_path) throw();
         static tint64 size2(const Path &file_path) throw(std::exception);
-		static File temp(const tchar *prefix);
-		static File temp(const Path &file_path,const tchar *prefix);
+        static File temp(const tchar *prefix);
+        static File temp(const Path &file_path,const tchar *prefix);
 
-	private:
-		void check_file_is_open ( void ) const throw(std::exception);
+    private:
+        void check_file_is_open ( void ) const throw(std::exception);
     };
 
 
@@ -229,13 +229,13 @@ namespace ckcore
       }
     }
 
-	inline void File::check_file_is_open ( void ) const throw(std::exception)
-	{
+    inline void File::check_file_is_open ( void ) const throw(std::exception)
+    {
         if (!test())
-		{
+        {
           throw Exception2( ckT("File not yet opened.") );
-		}
-	}
+        }
+    }
 
 #ifdef _WINDOWS
 #pragma warning( pop )

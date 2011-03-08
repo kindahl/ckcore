@@ -25,13 +25,13 @@
 
 namespace ckcore
 {
-	namespace thread
-	{
-		/**
-		 * Defines the thread function type.
-		 */
-		typedef void (* tfunction)(void *param);
-	}
+    namespace thread
+    {
+        /**
+         * Defines the thread function type.
+         */
+        typedef void (* tfunction)(void *param);
+    }
 }
 
 #ifdef _WINDOWS

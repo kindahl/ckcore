@@ -31,8 +31,8 @@ namespace ckcore
 #ifdef _UNICODE
 
     typedef wchar_t tchar;
-	typedef std::wstring tstring;
-	typedef std::wstringstream tstringstream;
+    typedef std::wstring tstring;
+    typedef std::wstringstream tstringstream;
 
 #ifndef ckT
 // We need a "second pass" below so that ckT( SOME_SYMBOL ) ,
@@ -44,9 +44,9 @@ namespace ckcore
 
 #else  // #ifdef _UNICODE
 
-	typedef char tchar;
-	typedef std::string tstring;
-	typedef std::stringstream tstringstream;
+    typedef char tchar;
+    typedef std::string tstring;
+    typedef std::stringstream tstringstream;
 
 #ifndef ckT
 #define ckT(quote) quote
@@ -58,8 +58,8 @@ namespace ckcore
     typedef unsigned __int64 tuint64;
     typedef long tint32;
     typedef unsigned long tuint32;
-	typedef short tint16;
-	typedef unsigned short tuint16;
+    typedef short tint16;
+    typedef unsigned short tuint16;
 
 #elif defined(_UNIX)
     typedef char tchar;
@@ -67,10 +67,10 @@ namespace ckcore
     typedef unsigned long long tuint64;
     typedef int tint32;
     typedef unsigned int tuint32;
-	typedef short tint16;
-	typedef unsigned short tuint16;
+    typedef short tint16;
+    typedef unsigned short tuint16;
     typedef std::string tstring;
-	typedef std::stringstream tstringstream;
+    typedef std::stringstream tstringstream;
 #ifndef ckT
 #define ckT(quote) quote
 #endif

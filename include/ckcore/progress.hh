@@ -28,25 +28,25 @@ namespace ckcore
 {
     /**
      * @brief Interface for receiving and providing progress information.
-	 *
-	 * This interface is designed for implementation by user interfaces displaying
-	 * progress information with the option to cancel the operation.
+     *
+     * This interface is designed for implementation by user interfaces displaying
+     * progress information with the option to cancel the operation.
      */
     class Progress
     {
     public:
         virtual ~Progress() {};
 
-		/**
-		 * Defines different message types.
-		 */
-		enum MessageType
-		{
-			ckINFORMATION,
-			ckWARNING,
-			ckERROR,
-			ckEXTERNAL
-		};
+        /**
+         * Defines different message types.
+         */
+        enum MessageType
+        {
+            ckINFORMATION,
+            ckWARNING,
+            ckERROR,
+            ckEXTERNAL
+        };
 
         /**
          * Notifies change in progress.
@@ -56,30 +56,30 @@ namespace ckcore
 
         /**
          * Enables or disables marquee progress reporting
-		 * @param [in] enable Set to true to enable marquee mode or set to false to
-		 *			   disable the marquee mode.
+         * @param [in] enable Set to true to enable marquee mode or set to false to
+         *             disable the marquee mode.
          */
         virtual void set_marquee(bool enable) { ckUNUSED(enable); };
 
-		/**
-		 * Sets the status message describing the current operation.
-		 * @param [in] format The status message format.
-		 */
-		virtual void set_status(const tchar *format,...) __attribute__ ((format (printf, 2, 3))) = 0;
+        /**
+         * Sets the status message describing the current operation.
+         * @param [in] format The status message format.
+         */
+        virtual void set_status(const tchar *format,...) __attribute__ ((format (printf, 2, 3))) = 0;
 
-		/**
-		 * Transmits a message to the interface implementor. This message is
-		 * intended to be displayed to the end user.
-		 * @param [in] type The type of message.
-		 * @param [in] format The message format.
-		 */
-		virtual void notify(MessageType type,const tchar *format,...) __attribute__ ((format (printf, 3, 4))) = 0;
+        /**
+         * Transmits a message to the interface implementor. This message is
+         * intended to be displayed to the end user.
+         * @param [in] type The type of message.
+         * @param [in] format The message format.
+         */
+        virtual void notify(MessageType type,const tchar *format,...) __attribute__ ((format (printf, 3, 4))) = 0;
 
-		/**
-		 * Checks wether the operation has been cancelled or not.
-		 * @return If the process has been cancelled true is returned, if not
-		 *		   cancelled false is returned.
-		 */
-		virtual bool cancelled() = 0;
+        /**
+         * Checks wether the operation has been cancelled or not.
+         * @return If the process has been cancelled true is returned, if not
+         *         cancelled false is returned.
+         */
+        virtual bool cancelled() = 0;
     };
 }

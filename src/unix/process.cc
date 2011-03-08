@@ -85,13 +85,13 @@ namespace ckcore
 
             // Change process status to stopped.
             if (ProcessMonitor::instance().pid_map_.count(pid) > 0)
-			{
-				Process *process = ProcessMonitor::instance().pid_map_[pid];
+            {
+                Process *process = ProcessMonitor::instance().pid_map_[pid];
                 process->state_ = Process::STATE_STOPPED;
 
                 if (WIFEXITED(status))
                     process->exit_code_ = WEXITSTATUS(status);
-			}
+            }
 
             // Call the old SIGCHLD signal handler.
             void (*old_sigchld_handler)(int) = ProcessMonitor::instance().old_sigchld_handler_;
@@ -124,8 +124,8 @@ namespace ckcore
      * Constructs a Process object.
      */
     Process::Process() : invalid_inheritor_(false),
-		pid_(-1),state_(STATE_STOPPED),exit_code_(0),
-		started_event_(false)
+        pid_(-1),state_(STATE_STOPPED),exit_code_(0),
+        started_event_(false)
     {
         pipe_stdin_[0] = pipe_stdin_[1] = -1;
         pipe_stdout_[0] = pipe_stdout_[1] = -1;
@@ -137,9 +137,9 @@ namespace ckcore
         pthread_mutex_init(&started_mutex_,NULL);
         pthread_cond_init(&started_cond_,NULL);
 
-		// Insert default delimiters.
-		block_delims_.insert('\n');
-		block_delims_.insert('\r');
+        // Insert default delimiters.
+        block_delims_.insert('\n');
+        block_delims_.insert('\r');
     }
 
     /**
@@ -225,18 +225,18 @@ namespace ckcore
         // Split the buffer into blocks.
         for (ssize_t i = 0; i < read_bytes; i++)
         {
-			// Check if we have found a block delimiter.
-			bool is_delim = false;
+            // Check if we have found a block delimiter.
+            bool is_delim = false;
 
-			std::set<char>::const_iterator it;
-			for (it = block_delims_.begin(); it != block_delims_.end(); it++)
-			{
-				if (buffer[i] == *it)
-				{
-					is_delim = true;
-					break;
-				}
-			}
+            std::set<char>::const_iterator it;
+            for (it = block_delims_.begin(); it != block_delims_.end(); it++)
+            {
+                if (buffer[i] == *it)
+                {
+                    is_delim = true;
+                    break;
+                }
+            }
 
             if (is_delim)
             {
@@ -278,17 +278,17 @@ namespace ckcore
         for (ssize_t i = 0; i < read_bytes; i++)
         {
             // Check if we have found a block delimiter.
-			bool is_delim = false;
+            bool is_delim = false;
 
-			std::set<char>::const_iterator it;
-			for (it = block_delims_.begin(); it != block_delims_.end(); it++)
-			{
-				if (buffer[i] == *it)
-				{
-					is_delim = true;
-					break;
-				}
-			}
+            std::set<char>::const_iterator it;
+            for (it = block_delims_.begin(); it != block_delims_.end(); it++)
+            {
+                if (buffer[i] == *it)
+                {
+                    is_delim = true;
+                    break;
+                }
+            }
 
             if (is_delim)
             {
@@ -380,7 +380,7 @@ namespace ckcore
         process->close();
 
         pthread_mutex_unlock(&process->mutex_exec_);
-	return NULL;
+    return NULL;
     }
 
     /**
@@ -573,27 +573,27 @@ namespace ckcore
         return ::kill(pid,SIGTERM) == 0;
     }
 
-	/**
-	 * Adds a new block delimiter to be used when splitting process output
-	 * into blocks.
-	 * @param [in] delim The delimiter to add.
-	 */
-	void Process::add_block_delim(char delim)
-	{
-		block_delims_.insert(delim);
-	}
+    /**
+     * Adds a new block delimiter to be used when splitting process output
+     * into blocks.
+     * @param [in] delim The delimiter to add.
+     */
+    void Process::add_block_delim(char delim)
+    {
+        block_delims_.insert(delim);
+    }
 
-	/**
-	 * Removes a block delimiter from being used when splitting process output
-	 * into blocks.
-	 * @param [in] delim The delimiter to remove.
-	 */
-	void Process::remove_block_delim(char delim)
-	{
-		std::set<char>::iterator it = block_delims_.find(delim);
-		if (it != block_delims_.end())
-			block_delims_.erase(it);
-	}
+    /**
+     * Removes a block delimiter from being used when splitting process output
+     * into blocks.
+     * @param [in] delim The delimiter to remove.
+     */
+    void Process::remove_block_delim(char delim)
+    {
+        std::set<char>::iterator it = block_delims_.find(delim);
+        if (it != block_delims_.end())
+            block_delims_.erase(it);
+    }
 
     /**
      * Writes raw data to the process standard input.
@@ -612,17 +612,17 @@ namespace ckcore
         return ::write(pipe_stdin_[FD_WRITE],buffer,count);
     }
 
-	/**
-	 * Obtains the exit code of the process.
-	 * @param [out] exit_code The process exit code.
-	 * @return If successful true is returned, if not false is returned.
-	 */
-	bool Process::exit_code(ckcore::tuint32 &exit_code) const
-	{
-		if (running())
-			return false;
+    /**
+     * Obtains the exit code of the process.
+     * @param [out] exit_code The process exit code.
+     * @return If successful true is returned, if not false is returned.
+     */
+    bool Process::exit_code(ckcore::tuint32 &exit_code) const
+    {
+        if (running())
+            return false;
 
-		exit_code = exit_code_;
-		return true;
-	}
+        exit_code = exit_code_;
+        return true;
+    }
 }

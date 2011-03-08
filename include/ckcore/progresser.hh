@@ -27,25 +27,25 @@
 
 namespace ckcore
 {
-	/**
-	 * @brief Class for calculating and updating progress.
-	 *
-	 * This class calculates the total progress from partially processed data.
-	 */
-	class Progresser
-	{
-	private:
-		Progress &progress_;
-		tuint64 total_;
-		tuint64 count_;
+    /**
+     * @brief Class for calculating and updating progress.
+     *
+     * This class calculates the total progress from partially processed data.
+     */
+    class Progresser
+    {
+    private:
+        Progress &progress_;
+        tuint64 total_;
+        tuint64 count_;
 
-	public:
-		Progresser(Progress &progress,tuint64 total);
+    public:
+        Progresser(Progress &progress,tuint64 total);
 
-		void update(tuint64 count);
-		void notify(Progress::MessageType type,const tchar *format,...) __attribute__ ((format (printf, 3, 4)));
+        void update(tuint64 count);
+        void notify(Progress::MessageType type,const tchar *format,...) __attribute__ ((format (printf, 3, 4)));
 
-		bool cancelled();
-	};
+        bool cancelled();
+    };
 }
 

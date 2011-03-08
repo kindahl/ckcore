@@ -48,58 +48,58 @@ namespace ckcore
   
     void File::open2(FileMode file_mode) throw(std::exception)
     {
-		try
-		{
-			// Check a file handle has already been opened, in that case try to close
-			// it.
-			if (file_handle_ != -1 && !close())
-				throw Exception2(ckT("Cannot close previously open file handle."));
+        try
+        {
+            // Check a file handle has already been opened, in that case try to close
+            // it.
+            if (file_handle_ != -1 && !close())
+                throw Exception2(ckT("Cannot close previously open file handle."));
 
-			// Open the file handle.
-			switch (file_mode)
-			{
-			case ckOPEN_READ:
-				file_handle_ = ::open(file_path_.name().c_str(),O_RDONLY);
-				break;
+            // Open the file handle.
+            switch (file_mode)
+            {
+            case ckOPEN_READ:
+                file_handle_ = ::open(file_path_.name().c_str(),O_RDONLY);
+                break;
 
-			case ckOPEN_WRITE:
-				file_handle_ = ::open(file_path_.name().c_str(),O_CREAT | O_WRONLY,S_IRUSR | S_IWUSR);
-				break;
+            case ckOPEN_WRITE:
+                file_handle_ = ::open(file_path_.name().c_str(),O_CREAT | O_WRONLY,S_IRUSR | S_IWUSR);
+                break;
 
-			case ckOPEN_READWRITE:
-				file_handle_ = ::open(file_path_.name().c_str(),O_RDWR,S_IRUSR | S_IWUSR);
-				break;
+            case ckOPEN_READWRITE:
+                file_handle_ = ::open(file_path_.name().c_str(),O_RDWR,S_IRUSR | S_IWUSR);
+                break;
 
-			default:
-				assert( false );
-			}
+            default:
+                assert( false );
+            }
 
-			if (file_handle_ == -1)
-				throw_from_errno( errno, NULL );
+            if (file_handle_ == -1)
+                throw_from_errno( errno, NULL );
 
-			// Set lock.
-			struct flock file_lock;
-			file_lock.l_start = 0;
-			file_lock.l_len = 0;
-			file_lock.l_type = file_mode == ckOPEN_READ ? F_RDLCK : F_WRLCK;
-			file_lock.l_whence = SEEK_SET;
+            // Set lock.
+            struct flock file_lock;
+            file_lock.l_start = 0;
+            file_lock.l_len = 0;
+            file_lock.l_type = file_mode == ckOPEN_READ ? F_RDLCK : F_WRLCK;
+            file_lock.l_whence = SEEK_SET;
 
-			if (fcntl(file_handle_,F_SETLK,&file_lock) == -1)
-			{
-				const int saved_errno = errno; // close() can overwrite errno.
-				if (saved_errno == EACCES || saved_errno == EAGAIN)
-				{
-					close();
-					throw_from_errno( saved_errno, ckT("Error setting the file lock: ") );
-				}
-			}
-		}
-		catch ( const std::exception & e )
-		{
-			rethrow_with_pfx( e,
-				ckT("Error opening file \"%s\": "),
-				file_path_.name().c_str() );
-		}
+            if (fcntl(file_handle_,F_SETLK,&file_lock) == -1)
+            {
+                const int saved_errno = errno; // close() can overwrite errno.
+                if (saved_errno == EACCES || saved_errno == EAGAIN)
+                {
+                    close();
+                    throw_from_errno( saved_errno, ckT("Error setting the file lock: ") );
+                }
+            }
+        }
+        catch ( const std::exception & e )
+        {
+            rethrow_with_pfx( e,
+                ckT("Error opening file \"%s\": "),
+                file_path_.name().c_str() );
+        }
     }
 
     /**
@@ -142,7 +142,7 @@ namespace ckcore
      */
     tint64 File::seek2(tint64 distance,FileWhence whence) throw(std::exception)
     {
-		check_file_is_open();
+        check_file_is_open();
 
         int ret = -1;
 
@@ -177,7 +177,7 @@ namespace ckcore
      */
     tint64 File::tell2() const throw(std::exception)
     {
-		check_file_is_open();
+        check_file_is_open();
 
         // Obtain the current file pointer position by seeking 0 bytes from the
         // current position.
@@ -348,8 +348,8 @@ namespace ckcore
 
             seek2(cur_pos,ckFILE_BEGIN);
 
-			return size;
-		}
+            return size;
+        }
         catch ( const std::exception & e )
         {
             rethrow_with_pfx( e,
@@ -449,26 +449,26 @@ namespace ckcore
             case ckOPEN_WRITE:
                 return ::access(file_path.name().c_str(),W_OK) == 0;
 
-			case ckOPEN_READWRITE:
+            case ckOPEN_READWRITE:
                 return ::access(file_path.name().c_str(),W_OK | R_OK) == 0;
         }
 
         return false;
     }
 
-	/**
-	 * Checks if the file is hidden or not.
-	 * @return If successful and if the file is hidden true is returned,
-	 * 		   otherwise false is returned.
-	 */
-	bool File::hidden(const Path &file_path)
-	{
-		tstring base_name = file_path.base_name();
-		if (base_name.size() < 1)
-			return false;
+    /**
+     * Checks if the file is hidden or not.
+     * @return If successful and if the file is hidden true is returned,
+     *         otherwise false is returned.
+     */
+    bool File::hidden(const Path &file_path)
+    {
+        tstring base_name = file_path.base_name();
+        if (base_name.size() < 1)
+            return false;
 
-		return base_name[0] == '.';
-	}
+        return base_name[0] == '.';
+    }
 
     /**
      * Calculates the size of the specified file.
@@ -491,79 +491,79 @@ namespace ckcore
      * @param [in] prefix Prefix to use on temporary file name.
      * @return File object to a temporary file.
      */
-	File File::temp(const tchar *prefix)
-	{
+    File File::temp(const tchar *prefix)
+    {
         if (prefix == NULL)
             prefix = ckT("file");
 
-		tchar *tmp_name = tmpnam(NULL);
-		if (tmp_name != NULL)
-		{
+        tchar *tmp_name = tmpnam(NULL);
+        if (tmp_name != NULL)
+        {
             Path tmp_path(tmp_name);
 
             tstring file_name = prefix;
             file_name += tmp_path.base_name();
 
-			Path full_path = tmp_path.dir_name().c_str();
+            Path full_path = tmp_path.dir_name().c_str();
             full_path += file_name.c_str();
-			return File(full_path);
+            return File(full_path);
             
-			//return File(tmp_name);
-		}
-		else
-		{
-			tchar tmp_name2[PATH_MAX+1];
-			strcpy(tmp_name2,ckT("/tmp/"));
-			strcat(tmp_name2,prefix);
+            //return File(tmp_name);
+        }
+        else
+        {
+            tchar tmp_name2[PATH_MAX+1];
+            strcpy(tmp_name2,ckT("/tmp/"));
+            strcat(tmp_name2,prefix);
 
             tchar convBuffer[convert::INT_TO_STR_BUFLEN];
             convert::ui32_to_str2(rand(), convBuffer);
-			strcat(tmp_name2, convBuffer);
+            strcat(tmp_name2, convBuffer);
             
-			strcat(tmp_name2,ckT(".tmp"));
+            strcat(tmp_name2,ckT(".tmp"));
 
-			return File(tmp_name2);
-		}
-	}
+            return File(tmp_name2);
+        }
+    }
 
-	/**
-	 * Creates a File object of a temporary file. The file path is generated
-	 * to be placed in the specified path.
-	 * @param [in] file_path The path to where the temporary file should be
-	 *                       stored.
+    /**
+     * Creates a File object of a temporary file. The file path is generated
+     * to be placed in the specified path.
+     * @param [in] file_path The path to where the temporary file should be
+     *                       stored.
      * @param [in] prefix Prefix to use on temporary file name.
-	 * @return File object of temp file.
-	 */
-	File File::temp(const Path &file_path,const tchar *prefix)
-	{
+     * @return File object of temp file.
+     */
+    File File::temp(const Path &file_path,const tchar *prefix)
+    {
         if (prefix == NULL)
             prefix = ckT("file");
 
-		tchar *tmp_name = tmpnam(NULL);
-		if (tmp_name != NULL)
-		{
+        tchar *tmp_name = tmpnam(NULL);
+        if (tmp_name != NULL)
+        {
             tstring file_name = prefix;
             file_name += Path(tmp_name).base_name();
 
-			Path full_path = file_path;
+            Path full_path = file_path;
             full_path += file_name.c_str();
-			return File(full_path);
-		}
-		else
-		{
-			tchar tmp_name2[PATH_MAX+1];
-			strcpy(tmp_name2,prefix);
+            return File(full_path);
+        }
+        else
+        {
+            tchar tmp_name2[PATH_MAX+1];
+            strcpy(tmp_name2,prefix);
             
             tchar convBuffer[convert::INT_TO_STR_BUFLEN];
             convert::ui32_to_str2(rand(), convBuffer);
-			strcat(tmp_name2, convBuffer);
+            strcat(tmp_name2, convBuffer);
             
-			strcat(tmp_name2,ckT(".tmp"));
+            strcat(tmp_name2,ckT(".tmp"));
 
-			Path full_path = file_path;
-			full_path += tmp_name2;
+            Path full_path = file_path;
+            full_path += tmp_name2;
 
-			return File(full_path);
-		}
-	}
+            return File(full_path);
+        }
+    }
 }

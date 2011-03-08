@@ -34,17 +34,17 @@ namespace ckcore
     {
     private:
         InStream &stream_;
-		tstring ident_;
+        tstring ident_;
 
     public:
-		virtual ~CanexInStream() {}
+        virtual ~CanexInStream() {}
 
         CanexInStream(InStream &stream,const tchar *ident);
-		CanexInStream(InStream &stream,const tstring &ident);
+        CanexInStream(InStream &stream,const tstring &ident);
 
-		virtual void seek(tuint32 distance,InStream::StreamWhence whence);
+        virtual void seek(tuint32 distance,InStream::StreamWhence whence);
         virtual tint64 read(void *buffer,tuint32 count);
-		bool end();
+        bool end();
     };
 
     /**
@@ -54,22 +54,22 @@ namespace ckcore
     {
     private:
         OutStream &stream_;
-		tstring ident_;
+        tstring ident_;
 
     public:
-		virtual ~CanexOutStream() {}
+        virtual ~CanexOutStream() {}
 
-		CanexOutStream(OutStream &stream,const tchar *ident);
-		CanexOutStream(OutStream &stream,const tstring &ident);
+        CanexOutStream(OutStream &stream,const tchar *ident);
+        CanexOutStream(OutStream &stream,const tstring &ident);
 
         virtual void write(void *buffer,tuint32 count);
     };
 
-	namespace canexstream
+    namespace canexstream
     {
-		void copy(CanexInStream &from,CanexOutStream &to,Progresser &progresser);
-		void copy(CanexInStream &from,CanexOutStream &to,Progresser &progresser,
-				  tuint64 size);
+        void copy(CanexInStream &from,CanexOutStream &to,Progresser &progresser);
+        void copy(CanexInStream &from,CanexOutStream &to,Progresser &progresser,
+                  tuint64 size);
     }
 }
 

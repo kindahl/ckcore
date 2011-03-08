@@ -35,9 +35,9 @@
 class DummyProgress : public ckcore::Progress
 {
 public:
-	void set_status(const ckcore::tchar *format,...) __attribute__ ((format (printf, 2, 3))) {}
-	void notify(MessageType type,const ckcore::tchar *format,...) __attribute__ ((format (printf, 3, 4))) {}
-	bool cancelled() { return false; }
+    void set_status(const ckcore::tchar *format,...) __attribute__ ((format (printf, 2, 3))) {}
+    void notify(MessageType type,const ckcore::tchar *format,...) __attribute__ ((format (printf, 3, 4))) {}
+    bool cancelled() { return false; }
 };
 
 class StreamTestSuite : public CxxTest::TestSuite
@@ -49,7 +49,7 @@ public:
         ckcore::FileInStream fs (ckT(TEST_SRC_DIR)ckT("/data/file/8253bytes"));
         ckcore::BufferedInStream is2(fs);
 
-		// Test reading.
+        // Test reading.
         for (int i = 0; i < 100; i++)
         {
             TS_ASSERT(is1.open());
@@ -85,46 +85,46 @@ public:
             delete [] buffer2;
         }
 
-		// Test seeking.
-		TS_ASSERT(is1.open());
+        // Test seeking.
+        TS_ASSERT(is1.open());
         TS_ASSERT(fs.open());
 
-		for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 100; i++)
         {
-			// reset stream pointer.
-			TS_ASSERT(is1.seek(0,ckcore::InStream::ckSTREAM_BEGIN));
-			TS_ASSERT(is2.seek(0,ckcore::InStream::ckSTREAM_BEGIN));
+            // reset stream pointer.
+            TS_ASSERT(is1.seek(0,ckcore::InStream::ckSTREAM_BEGIN));
+            TS_ASSERT(is2.seek(0,ckcore::InStream::ckSTREAM_BEGIN));
 
             size_t buffer_size = (rand() % 2100) + 50;
             unsigned char *buffer1 = new unsigned char[buffer_size];
             unsigned char *buffer2 = new unsigned char[buffer_size];
-			
-			ckcore::tint64 read1 = 0,read2 = 0,count = 0;
+            
+            ckcore::tint64 read1 = 0,read2 = 0,count = 0;
             while (!is1.end() && !is2.end())
             {
-				// After reading one time seek instead.
-				if (count == 1)
-				{
-					TS_ASSERT(is1.seek((ckcore::tuint32)buffer_size,ckcore::InStream::ckSTREAM_CURRENT));
-					TS_ASSERT(is2.seek((ckcore::tuint32)buffer_size,ckcore::InStream::ckSTREAM_CURRENT));
-					read1 += buffer_size;
-					read2 += buffer_size;
-				}
-				else
-				{
-					ckcore::tint64 res1 = is1.read(buffer1,(ckcore::tuint32)buffer_size);
-					ckcore::tint64 res2 = is2.read(buffer2,(ckcore::tuint32)buffer_size);
+                // After reading one time seek instead.
+                if (count == 1)
+                {
+                    TS_ASSERT(is1.seek((ckcore::tuint32)buffer_size,ckcore::InStream::ckSTREAM_CURRENT));
+                    TS_ASSERT(is2.seek((ckcore::tuint32)buffer_size,ckcore::InStream::ckSTREAM_CURRENT));
+                    read1 += buffer_size;
+                    read2 += buffer_size;
+                }
+                else
+                {
+                    ckcore::tint64 res1 = is1.read(buffer1,(ckcore::tuint32)buffer_size);
+                    ckcore::tint64 res2 = is2.read(buffer2,(ckcore::tuint32)buffer_size);
 
-					TS_ASSERT(res1 != -1);
-					TS_ASSERT(res2 != -1);
+                    TS_ASSERT(res1 != -1);
+                    TS_ASSERT(res2 != -1);
 
-					TS_ASSERT_SAME_DATA(buffer1,buffer2,(unsigned int)buffer_size);
+                    TS_ASSERT_SAME_DATA(buffer1,buffer2,(unsigned int)buffer_size);
 
-					read1 += res1;
-					read2 += res2;
-				}
+                    read1 += res1;
+                    read2 += res2;
+                }
 
-				count++;
+                count++;
             }
 
             TS_ASSERT_EQUALS(is1.end(),is2.end());
@@ -315,34 +315,34 @@ public:
         TS_ASSERT_EQUALS(ns.written(),ckcore::tuint64(797));
     }
 
-	void testCopy()
-	{
-		ckcore::FileInStream is1(ckT(TEST_SRC_DIR)ckT("/data/file/8253bytes"));
+    void testCopy()
+    {
+        ckcore::FileInStream is1(ckT(TEST_SRC_DIR)ckT("/data/file/8253bytes"));
         TS_ASSERT(is1.open());
         ckcore::FileInStream is2(ckT(TEST_SRC_DIR)ckT("/data/file/53bytes"));
         TS_ASSERT(is2.open());
 
-		ckcore::NullStream ns1,ns2,ns3,ns4;
+        ckcore::NullStream ns1,ns2,ns3,ns4;
 
-		DummyProgress dp;
-		ckcore::Progresser p(dp,0xffffffff);
+        DummyProgress dp;
+        ckcore::Progresser p(dp,0xffffffff);
 
-		TS_ASSERT(ckcore::stream::copy(is1,ns1,p,825));
-		TS_ASSERT(ckcore::stream::copy(is2,ns2,p,825));
+        TS_ASSERT(ckcore::stream::copy(is1,ns1,p,825));
+        TS_ASSERT(ckcore::stream::copy(is2,ns2,p,825));
 
-		TS_ASSERT_EQUALS(ns1.written(),ckcore::tuint64(825));
-		TS_ASSERT_EQUALS(ns2.written(),ckcore::tuint64(825));
+        TS_ASSERT_EQUALS(ns1.written(),ckcore::tuint64(825));
+        TS_ASSERT_EQUALS(ns2.written(),ckcore::tuint64(825));
 
-		// Try again reaching outside the internal buffer used within the copy
-		// function.
-		TS_ASSERT(is1.seek(0,ckcore::InStream::ckSTREAM_BEGIN));
-		TS_ASSERT(ckcore::stream::copy(is1,ns3,p,8200));
-		TS_ASSERT_EQUALS(ns3.written(),ckcore::tuint64(8200));
+        // Try again reaching outside the internal buffer used within the copy
+        // function.
+        TS_ASSERT(is1.seek(0,ckcore::InStream::ckSTREAM_BEGIN));
+        TS_ASSERT(ckcore::stream::copy(is1,ns3,p,8200));
+        TS_ASSERT_EQUALS(ns3.written(),ckcore::tuint64(8200));
 
-		// Try again reaching outside the internal buffer used within the copy
-		// function and also reaching outside the stream.
-		TS_ASSERT(is1.seek(0,ckcore::InStream::ckSTREAM_BEGIN));
-		TS_ASSERT(ckcore::stream::copy(is1,ns4,p,9200));
-		TS_ASSERT_EQUALS(ns4.written(),ckcore::tuint64(9200));
-	}
+        // Try again reaching outside the internal buffer used within the copy
+        // function and also reaching outside the stream.
+        TS_ASSERT(is1.seek(0,ckcore::InStream::ckSTREAM_BEGIN));
+        TS_ASSERT(ckcore::stream::copy(is1,ns4,p,9200));
+        TS_ASSERT_EQUALS(ns4.written(),ckcore::tuint64(9200));
+    }
 };

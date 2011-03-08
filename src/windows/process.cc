@@ -32,23 +32,23 @@ namespace ckcore
     Process::Process() : invalid_inheritor_(false),
         pipe_stdin_(NULL),pipe_output_(NULL),
         process_handle_(NULL),thread_handle_(NULL),
-		start_event_(NULL),stop_event_(NULL),
+        start_event_(NULL),stop_event_(NULL),
         thread_id_(0),state_(STATE_STOPPED),exit_code_(0),
         mutex_(NULL),mutex_exec_(NULL)
     {
         mutex_ = CreateMutex(NULL,FALSE,NULL);
         mutex_exec_ = CreateMutex(NULL,FALSE,NULL);
 
-		// Create the start event that will notify the create function when the
-		// listening thread has been started.
-		start_event_ = CreateEvent(NULL,true,false,NULL);
+        // Create the start event that will notify the create function when the
+        // listening thread has been started.
+        start_event_ = CreateEvent(NULL,true,false,NULL);
 
-		// Create the stop event that will be used to kill the listening thread.
-		stop_event_ = CreateEvent(NULL,true,false,NULL);
+        // Create the stop event that will be used to kill the listening thread.
+        stop_event_ = CreateEvent(NULL,true,false,NULL);
 
-		// Insert default delimiters.
-		block_delims_.insert('\n');
-		block_delims_.insert('\r');
+        // Insert default delimiters.
+        block_delims_.insert('\n');
+        block_delims_.insert('\r');
     }
 
     /**
@@ -63,15 +63,15 @@ namespace ckcore
 
         close();
 
-		// Destroy start event.
-		if (start_event_ != NULL)
-		{
-			ATLVERIFY( 0 != CloseHandle(start_event_) );
-			start_event_ = NULL;
-		}
+        // Destroy start event.
+        if (start_event_ != NULL)
+        {
+            ATLVERIFY( 0 != CloseHandle(start_event_) );
+            start_event_ = NULL;
+        }
 
-		// Destroy stop event.
-		if (stop_event_ != NULL)
+        // Destroy stop event.
+        if (stop_event_ != NULL)
         {
             ATLVERIFY( 0 != CloseHandle(stop_event_) );
             stop_event_ = NULL;
@@ -80,7 +80,7 @@ namespace ckcore
         // Closes mutexes.
         if (mutex_exec_ != NULL)
         {
-			ATLVERIFY( 0 != CloseHandle(mutex_exec_) );
+            ATLVERIFY( 0 != CloseHandle(mutex_exec_) );
             mutex_exec_ = NULL;
         }
 
@@ -108,14 +108,14 @@ namespace ckcore
                 ATLVERIFY( 0 != SetEvent(stop_event_) );
 
                 /*if (WaitForSingleObject(thread_handle_,5000) == WAIT_TIMEOUT)
-					TerminateThread(thread_handle_,-2);*/
-				// UPDATE: Rather let the program hang to make the problem present to the
-				//		   user.
-				if (WaitForSingleObject(thread_handle_,INFINITE) != WAIT_OBJECT_0)
-				{
-					ATLASSERT( false );
-					ATLVERIFY( 0 != TerminateThread(thread_handle_,-2) );
-				}
+                    TerminateThread(thread_handle_,-2);*/
+                // UPDATE: Rather let the program hang to make the problem present to the
+                //         user.
+                if (WaitForSingleObject(thread_handle_,INFINITE) != WAIT_OBJECT_0)
+                {
+                    ATLASSERT( false );
+                    ATLVERIFY( 0 != TerminateThread(thread_handle_,-2) );
+                }
             }
 
             ATLVERIFY( 0 != CloseHandle(thread_handle_) );
@@ -123,17 +123,17 @@ namespace ckcore
         }
 
 
-		// Close the pipes before closing the child process.
-		// That way, if the child process is still alive,
-		// it will get an error when writing to stdout or reading
-		// from stdin. If the child process properly checks for errors
-		// (which is normally the case at least for stdin),
-		// it will terminate early. If not, it will carry on
-		// and terminate at some point time.
-		// If we don't close the pipes, there is a risk
-		// that the process will forever hang waiting for us
-		// to read its output or to write its input. If we then
-		// wait for the child to terminate, we'll get a nice deadlock.
+        // Close the pipes before closing the child process.
+        // That way, if the child process is still alive,
+        // it will get an error when writing to stdout or reading
+        // from stdin. If the child process properly checks for errors
+        // (which is normally the case at least for stdin),
+        // it will terminate early. If not, it will carry on
+        // and terminate at some point time.
+        // If we don't close the pipes, there is a risk
+        // that the process will forever hang waiting for us
+        // to read its output or to write its input. If we then
+        // wait for the child to terminate, we'll get a nice deadlock.
         if (pipe_stdin_ != NULL)
         {
             ATLVERIFY( 0 != CloseHandle(pipe_stdin_) );
@@ -148,32 +148,32 @@ namespace ckcore
 
         if (process_handle_ != NULL)
         {
-			// We expect all our child processes to properly terminate
-			// and don't freeze on exit. However, there is a risk
-			// that they don't behave properly. Therefore,
-			// instead of forever waiting at this point, we could wait for some time,
-			// and then forcibly terminate the child process. But we don't really
-			// want to kill children that way, as we may end up with garbage on
-			// the hard disk or get into some other kind of trouble. The best thing
-			// to do would be to warn the user and let him decide. This
-			// is not implemented yet.
-			ATLVERIFY( WAIT_OBJECT_0 == WaitForSingleObject( process_handle_, INFINITE ) );
+            // We expect all our child processes to properly terminate
+            // and don't freeze on exit. However, there is a risk
+            // that they don't behave properly. Therefore,
+            // instead of forever waiting at this point, we could wait for some time,
+            // and then forcibly terminate the child process. But we don't really
+            // want to kill children that way, as we may end up with garbage on
+            // the hard disk or get into some other kind of trouble. The best thing
+            // to do would be to warn the user and let him decide. This
+            // is not implemented yet.
+            ATLVERIFY( WAIT_OBJECT_0 == WaitForSingleObject( process_handle_, INFINITE ) );
 
-			if (GetExitCodeProcess(process_handle_,&exit_code_) == FALSE)
-			{
-				ATLASSERT( false );  // Actually, this should never fail.
-				exit_code_ = -1;
-			}
+            if (GetExitCodeProcess(process_handle_,&exit_code_) == FALSE)
+            {
+                ATLASSERT( false );  // Actually, this should never fail.
+                exit_code_ = -1;
+            }
 
-			ATLASSERT( exit_code_ != STILL_ACTIVE );
+            ATLASSERT( exit_code_ != STILL_ACTIVE );
 
             ATLVERIFY( 0 != CloseHandle(process_handle_) );
             process_handle_ = NULL;
         }
 
         // Reset state.
-		ATLVERIFY( 0 != ResetEvent(start_event_) );
-		ATLVERIFY( 0 != ResetEvent(stop_event_) );
+        ATLVERIFY( 0 != ResetEvent(start_event_) );
+        ATLVERIFY( 0 != ResetEvent(stop_event_) );
 
         thread_id_ = 0;
         state_ = STATE_STOPPED;
@@ -209,20 +209,20 @@ namespace ckcore
             // Split the buffer into blocks.
             for (unsigned long i = 0; i < read; i++)
             {
-				// Check if we have found a block delimiter.
-				bool is_delim = false;
+                // Check if we have found a block delimiter.
+                bool is_delim = false;
 
-				std::set<char>::const_iterator it;
-				for (it = block_delims_.begin(); it != block_delims_.end(); it++)
-				{
-					if (buffer[i] == *it)
-					{
-						is_delim = true;
-						break;
-					}
-				}
+                std::set<char>::const_iterator it;
+                for (it = block_delims_.begin(); it != block_delims_.end(); it++)
+                {
+                    if (buffer[i] == *it)
+                    {
+                        is_delim = true;
+                        break;
+                    }
+                }
 
-				if (is_delim)
+                if (is_delim)
                 {
                     // Avoid flushing an empty buffer.
                     if (block_buffer_.size() >  0)
@@ -258,9 +258,9 @@ namespace ckcore
         // Prevent the object from being destroyed while running the separate thread.
         WaitForSingleObject(process->mutex_exec_,INFINITE);
 
-		// Now when we have the mutex we can notify the thread creator that we have
-		// started.
-		SetEvent(process->start_event_);
+        // Now when we have the mutex we can notify the thread creator that we have
+        // started.
+        SetEvent(process->start_event_);
 
         HANDLE handles[2];
         handles[0] = process->process_handle_;
@@ -290,10 +290,10 @@ namespace ckcore
 
         ReleaseMutex(process->mutex_exec_);
 
-		// Notify that the process has finished.
+        // Notify that the process has finished.
         if (!process->invalid_inheritor_)
             process->event_finished();
-		return 0;
+        return 0;
     }
 
     /**
@@ -311,122 +311,122 @@ namespace ckcore
         // Close prevous data.
         close();
 
-		HANDLE output_read_temp = NULL,output_write = NULL;
-		HANDLE input_write_temp = NULL,input_read = NULL;
-		HANDLE error_write = NULL;
+        HANDLE output_read_temp = NULL,output_write = NULL;
+        HANDLE input_write_temp = NULL,input_read = NULL;
+        HANDLE error_write = NULL;
 
-		SECURITY_ATTRIBUTES sa;
-		sa.nLength = sizeof(SECURITY_ATTRIBUTES);
-		sa.lpSecurityDescriptor = NULL;
-		sa.bInheritHandle = true;
+        SECURITY_ATTRIBUTES sa;
+        sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+        sa.lpSecurityDescriptor = NULL;
+        sa.bInheritHandle = true;
 
-		// Create the child output pipe.
-		if (!CreatePipe(&output_read_temp,&output_write,&sa,0))
-			return false;
+        // Create the child output pipe.
+        if (!CreatePipe(&output_read_temp,&output_write,&sa,0))
+            return false;
 
-		// Duplicate the output write handle since the application might close
-		// one of its handles.
-		if (!DuplicateHandle(GetCurrentProcess(),output_write,GetCurrentProcess(),
-			&error_write,0,true,DUPLICATE_SAME_ACCESS))
-		{
-			ATLVERIFY( 0 != CloseHandle(output_read_temp) );
-			ATLVERIFY( 0 != CloseHandle(output_write) );
+        // Duplicate the output write handle since the application might close
+        // one of its handles.
+        if (!DuplicateHandle(GetCurrentProcess(),output_write,GetCurrentProcess(),
+            &error_write,0,true,DUPLICATE_SAME_ACCESS))
+        {
+            ATLVERIFY( 0 != CloseHandle(output_read_temp) );
+            ATLVERIFY( 0 != CloseHandle(output_write) );
 
-			return false;
-		}
+            return false;
+        }
 
-		// Create the child input pipe.
-		if (!CreatePipe(&input_read,&input_write_temp,&sa,0))
-		{
-			ATLVERIFY( 0 != CloseHandle(output_read_temp) );
-			ATLVERIFY( 0 != CloseHandle(output_write) );
-			ATLVERIFY( 0 != CloseHandle(error_write) );
+        // Create the child input pipe.
+        if (!CreatePipe(&input_read,&input_write_temp,&sa,0))
+        {
+            ATLVERIFY( 0 != CloseHandle(output_read_temp) );
+            ATLVERIFY( 0 != CloseHandle(output_write) );
+            ATLVERIFY( 0 != CloseHandle(error_write) );
 
-			return false;
-		}
+            return false;
+        }
 
-		// Create new output read handle and the input write handles. The properties
-		// must be set to false, otherwise we can't close the handles since they will
-		// be inherited.
-		if (!DuplicateHandle(GetCurrentProcess(),output_read_temp,GetCurrentProcess(),
-			&pipe_output_,0,false,DUPLICATE_SAME_ACCESS))
-		{
-			ATLVERIFY( 0 != CloseHandle(output_read_temp) );
-			ATLVERIFY( 0 != CloseHandle(output_write) );
-			ATLVERIFY( 0 != CloseHandle(error_write) );
-			ATLVERIFY( 0 != CloseHandle(input_write_temp) );
-			ATLVERIFY( 0 != CloseHandle(input_read) );
+        // Create new output read handle and the input write handles. The properties
+        // must be set to false, otherwise we can't close the handles since they will
+        // be inherited.
+        if (!DuplicateHandle(GetCurrentProcess(),output_read_temp,GetCurrentProcess(),
+            &pipe_output_,0,false,DUPLICATE_SAME_ACCESS))
+        {
+            ATLVERIFY( 0 != CloseHandle(output_read_temp) );
+            ATLVERIFY( 0 != CloseHandle(output_write) );
+            ATLVERIFY( 0 != CloseHandle(error_write) );
+            ATLVERIFY( 0 != CloseHandle(input_write_temp) );
+            ATLVERIFY( 0 != CloseHandle(input_read) );
 
-			return false;
-		}
+            return false;
+        }
 
-		if (!DuplicateHandle(GetCurrentProcess(),input_write_temp,GetCurrentProcess(),
-			&pipe_stdin_,0,false,DUPLICATE_SAME_ACCESS))
-		{
-			ATLVERIFY( 0 != CloseHandle(output_read_temp) );
-			ATLVERIFY( 0 != CloseHandle(output_write) );
-			ATLVERIFY( 0 != CloseHandle(error_write) );
-			ATLVERIFY( 0 != CloseHandle(input_write_temp) );
-			ATLVERIFY( 0 != CloseHandle(input_read) );
+        if (!DuplicateHandle(GetCurrentProcess(),input_write_temp,GetCurrentProcess(),
+            &pipe_stdin_,0,false,DUPLICATE_SAME_ACCESS))
+        {
+            ATLVERIFY( 0 != CloseHandle(output_read_temp) );
+            ATLVERIFY( 0 != CloseHandle(output_write) );
+            ATLVERIFY( 0 != CloseHandle(error_write) );
+            ATLVERIFY( 0 != CloseHandle(input_write_temp) );
+            ATLVERIFY( 0 != CloseHandle(input_read) );
 
-			ATLVERIFY( 0 != CloseHandle(pipe_output_) );
+            ATLVERIFY( 0 != CloseHandle(pipe_output_) );
 
-			return false;
-		}
+            return false;
+        }
 
-		// Now we can close the inherited pipes.
-		ATLVERIFY( 0 != CloseHandle(output_read_temp) );
-		ATLVERIFY( 0 != CloseHandle(input_write_temp) );
+        // Now we can close the inherited pipes.
+        ATLVERIFY( 0 != CloseHandle(output_read_temp) );
+        ATLVERIFY( 0 != CloseHandle(input_write_temp) );
 
-		// Create the process.
-		PROCESS_INFORMATION pi;
+        // Create the process.
+        PROCESS_INFORMATION pi;
 
-		STARTUPINFO si;
-		memset(&si,0,sizeof(STARTUPINFO));
+        STARTUPINFO si;
+        memset(&si,0,sizeof(STARTUPINFO));
 
-		si.cb = sizeof(STARTUPINFO);
-		si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
-		si.hStdInput = input_read;
-		si.hStdOutput = output_write;
-		si.hStdError = error_write;
-		si.wShowWindow = SW_HIDE;
+        si.cb = sizeof(STARTUPINFO);
+        si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+        si.hStdInput = input_read;
+        si.hStdOutput = output_write;
+        si.hStdError = error_write;
+        si.wShowWindow = SW_HIDE;
 
-		bool result = CreateProcess(NULL,const_cast<tchar *>(cmd_line),NULL,
-									NULL,true,CREATE_NEW_CONSOLE,NULL,NULL,
-									&si,&pi) != 0;
+        bool result = CreateProcess(NULL,const_cast<tchar *>(cmd_line),NULL,
+                                    NULL,true,CREATE_NEW_CONSOLE,NULL,NULL,
+                                    &si,&pi) != 0;
 
-		process_handle_ = pi.hProcess;
+        process_handle_ = pi.hProcess;
 
-		// Close any unnecessary handles.
-		ATLVERIFY( 0 != CloseHandle(pi.hThread) );
+        // Close any unnecessary handles.
+        ATLVERIFY( 0 != CloseHandle(pi.hThread) );
 
-		ATLVERIFY( 0 != CloseHandle(input_read) );
-		ATLVERIFY( 0 != CloseHandle(output_write) );
-		ATLVERIFY( 0 != CloseHandle(error_write) );
+        ATLVERIFY( 0 != CloseHandle(input_read) );
+        ATLVERIFY( 0 != CloseHandle(output_write) );
+        ATLVERIFY( 0 != CloseHandle(error_write) );
 
-		if (!result)
-		{
-			ATLVERIFY( 0 != CloseHandle(pipe_stdin_) );
-			ATLVERIFY( 0 != CloseHandle(pipe_output_) );
-			pipe_stdin_ = NULL;
-			pipe_output_ = NULL;
+        if (!result)
+        {
+            ATLVERIFY( 0 != CloseHandle(pipe_stdin_) );
+            ATLVERIFY( 0 != CloseHandle(pipe_output_) );
+            pipe_stdin_ = NULL;
+            pipe_output_ = NULL;
 
-			return false;
-		}
+            return false;
+        }
 
-		// Create the listener thread.
-		thread_handle_ = CreateThread(NULL,0,listen,this,0,const_cast<unsigned long *>(&thread_id_));
-		if (thread_handle_ == NULL)
-		{
-			close();
-			return false;
-		}
+        // Create the listener thread.
+        thread_handle_ = CreateThread(NULL,0,listen,this,0,const_cast<unsigned long *>(&thread_id_));
+        if (thread_handle_ == NULL)
+        {
+            close();
+            return false;
+        }
 
-		state_ = STATE_RUNNING;
+        state_ = STATE_RUNNING;
 
-		// Wait for the thread to start before returning.
-		if (WaitForSingleObject(start_event_,INFINITE) == WAIT_FAILED)
-			Sleep(200);
+        // Wait for the thread to start before returning.
+        if (WaitForSingleObject(start_event_,INFINITE) == WAIT_FAILED)
+            Sleep(200);
 
         return true;
     }
@@ -461,8 +461,8 @@ namespace ckcore
         if (thread_handle == NULL || !running())
             return false;
 
-		if (WaitForSingleObject(thread_handle,INFINITE) == WAIT_FAILED)
-			return false;
+        if (WaitForSingleObject(thread_handle,INFINITE) == WAIT_FAILED)
+            return false;
 
         // Make sure that the state is valid.
         while (state_ != STATE_STOPPED)
@@ -471,45 +471,45 @@ namespace ckcore
         return true;
     }
 
-	/**
-	 * Kills the process.
+    /**
+     * Kills the process.
      * @return If successful and a process is running true is returned,
      *         otherwise false is returned.
-	 */
-	bool Process::kill() const
-	{
-		bool locked = WaitForSingleObject(mutex_,INFINITE) == WAIT_OBJECT_0;
+     */
+    bool Process::kill() const
+    {
+        bool locked = WaitForSingleObject(mutex_,INFINITE) == WAIT_OBJECT_0;
         HANDLE process_handle = process_handle_;
         if (locked)
             ReleaseMutex(mutex_);
 
-		if (process_handle == NULL || !running())
+        if (process_handle == NULL || !running())
             return false;
 
-		return TerminateProcess(process_handle,0) == TRUE;
-	}
+        return TerminateProcess(process_handle,0) == TRUE;
+    }
 
-	/**
-	 * Adds a new block delimiter to be used when splitting process output
-	 * into blocks.
-	 * @param [in] delim The delimiter to add.
-	 */
-	void Process::add_block_delim(char delim)
-	{
-		block_delims_.insert(delim);
-	}
+    /**
+     * Adds a new block delimiter to be used when splitting process output
+     * into blocks.
+     * @param [in] delim The delimiter to add.
+     */
+    void Process::add_block_delim(char delim)
+    {
+        block_delims_.insert(delim);
+    }
 
-	/**
-	 * Removes a block delimiter from being used when splitting process output
-	 * into blocks.
-	 * @param [in] delim The delimiter to remove.
-	 */
-	void Process::remove_block_delim(char delim)
-	{
-		std::set<char>::iterator it = block_delims_.find(delim);
-		if (it != block_delims_.end())
-			block_delims_.erase(it);
-	}
+    /**
+     * Removes a block delimiter from being used when splitting process output
+     * into blocks.
+     * @param [in] delim The delimiter to remove.
+     */
+    void Process::remove_block_delim(char delim)
+    {
+        std::set<char>::iterator it = block_delims_.find(delim);
+        if (it != block_delims_.end())
+            block_delims_.erase(it);
+    }
 
     /**
      * Writes raw data to the process standard input.
@@ -532,17 +532,17 @@ namespace ckcore
         return written;
     }
 
-	/**
-	 * Obtains the exit code of the process.
-	 * @param [out] exit_code The process exit code.
-	 * @return If successful true is returned, if not false is returned.
-	 */
-	bool Process::exit_code(ckcore::tuint32 &exit_code) const
-	{
-		if (running())
-			return false;
+    /**
+     * Obtains the exit code of the process.
+     * @param [out] exit_code The process exit code.
+     * @return If successful true is returned, if not false is returned.
+     */
+    bool Process::exit_code(ckcore::tuint32 &exit_code) const
+    {
+        if (running())
+            return false;
 
-		exit_code = exit_code_;
-		return true;
-	}
+        exit_code = exit_code_;
+        return true;
+    }
 };

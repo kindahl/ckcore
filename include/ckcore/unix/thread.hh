@@ -26,27 +26,27 @@
 namespace ckcore
 {
     namespace thread
-	{
-		bool create(tfunction func,void *param);
-		bool sleep(ckcore::tuint32 milliseconds);
+    {
+        bool create(tfunction func,void *param);
+        bool sleep(ckcore::tuint32 milliseconds);
 
-		/**
-		 * @brief Thead mutex class.
-		 */
-		class Mutex
-		{
-		private:
+        /**
+         * @brief Thead mutex class.
+         */
+        class Mutex
+        {
+        private:
             pthread_mutex_t mutex_;
             bool initialized_;
-			bool locked_;
+            bool locked_;
 
-		public:
-			Mutex();
-			~Mutex();
+        public:
+            Mutex();
+            ~Mutex();
 
-			bool lock();
-			bool unlock();
-		};
-	}
+            bool lock();
+            bool unlock();
+        };
+    }
 }
 

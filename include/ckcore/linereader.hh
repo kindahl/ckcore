@@ -138,16 +138,16 @@ namespace ckcore
             return line;
         }
 
-		/**
-		 * Checks the text encoding used in the specified stream.
-		 * @return The text encoding used in the specified stream. If no
-		 *         encoding is specified ANSI is assumed.
-		 */
-		static Encoding encoding(InStream &stream)
-		{
-			Encoding result = ckENCODING_ANSI;
+        /**
+         * Checks the text encoding used in the specified stream.
+         * @return The text encoding used in the specified stream. If no
+         *         encoding is specified ANSI is assumed.
+         */
+        static Encoding encoding(InStream &stream)
+        {
+            Encoding result = ckENCODING_ANSI;
 
-			unsigned char bom[4];
+            unsigned char bom[4];
             tint64 read = stream.read(bom,4);
             stream.seek(0,InStream::ckSTREAM_BEGIN);
 
@@ -227,7 +227,7 @@ namespace ckcore
                 }
             }
 
-			return result;
-		}
+            return result;
+        }
     };
 }

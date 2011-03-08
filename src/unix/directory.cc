@@ -116,7 +116,7 @@ namespace ckcore
         if (cur_ent_ == NULL && it.cur_ent_ == NULL)
             return true;
 
-		if ((cur_ent_ == NULL && it.cur_ent_ != NULL) ||
+        if ((cur_ent_ == NULL && it.cur_ent_ != NULL) ||
             (cur_ent_ != NULL && it.cur_ent_ == NULL))
             return false;
 
@@ -155,14 +155,14 @@ namespace ckcore
         dir_handles_.clear();
     }
 
-	/**
-	 * Returns the full directory path name.
-	 * @return The full directory path name.
-	 */
-	const tstring &Directory::name() const
-	{
-		return dir_path_.name();
-	}
+    /**
+     * Returns the full directory path name.
+     * @return The full directory path name.
+     */
+    const tstring &Directory::name() const
+    {
+        return dir_path_.name();
+    }
 
     /**
      * Creates an iterator pointing to the first file or directory in the
@@ -309,9 +309,9 @@ namespace ckcore
      * automatically created.
      * @return Directory object to a temporary directory.
      */
-	Directory Directory::temp()
-	{
-		tchar *tmp_name = tmpnam(NULL);
+    Directory Directory::temp()
+    {
+        tchar *tmp_name = tmpnam(NULL);
         if (tmp_name != NULL)
         {
             return Directory(tmp_name);
@@ -329,5 +329,5 @@ namespace ckcore
 
             return Directory(tmp_name2);
         }
-	}
+    }
 }

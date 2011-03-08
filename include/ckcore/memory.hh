@@ -26,25 +26,25 @@
 
 namespace ckcore
 {
-	/**
-	 * @brief Template class for scope based array deallocation.
-	 */
-	template <typename T>
+    /**
+     * @brief Template class for scope based array deallocation.
+     */
+    template <typename T>
     class AutoArray
     {
-	private:
-		T *ptr_;
+    private:
+        T *ptr_;
 
-	public:
-		AutoArray(T *ptr) : ptr_(ptr) {}
+    public:
+        AutoArray(T *ptr) : ptr_(ptr) {}
 
-		~AutoArray()
-		{
-			if (ptr_ != NULL)
-			{
-				delete [] ptr_;
-				ptr_ = NULL;
-			}
-		}
+        ~AutoArray()
+        {
+            if (ptr_ != NULL)
+            {
+                delete [] ptr_;
+                ptr_ = NULL;
+            }
+        }
     };
 }

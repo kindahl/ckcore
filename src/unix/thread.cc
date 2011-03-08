@@ -21,50 +21,50 @@
 
 namespace ckcore
 {
-	namespace thread
-	{
-		/**
-		 * @brief Class for passing parameters to a native thread instance.
-		 */
-		class NativeThreadParam
-		{
-		public:
-			tfunction func_;
-			void *param_;
-			
-			NativeThreadParam(tfunction func,void *param) :
-				func_(func),param_(param)
-			{
-			}
-		};
+    namespace thread
+    {
+        /**
+         * @brief Class for passing parameters to a native thread instance.
+         */
+        class NativeThreadParam
+        {
+        public:
+            tfunction func_;
+            void *param_;
+            
+            NativeThreadParam(tfunction func,void *param) :
+                func_(func),param_(param)
+            {
+            }
+        };
 
-		/**
-		 * The main thread entry point for new threads.
-		 * @param [in] param The thread parameter.
-		 * @return Always returns NULL.
-		 */
-		void *native_thread(void *param)
-		{
-			std::auto_ptr<NativeThreadParam> native_param(
-				static_cast<NativeThreadParam *>(param));
-			native_param->func_(native_param->param_);
+        /**
+         * The main thread entry point for new threads.
+         * @param [in] param The thread parameter.
+         * @return Always returns NULL.
+         */
+        void *native_thread(void *param)
+        {
+            std::auto_ptr<NativeThreadParam> native_param(
+                static_cast<NativeThreadParam *>(param));
+            native_param->func_(native_param->param_);
 
-			return NULL;
-		}
+            return NULL;
+        }
 
-		/**
-		 * Creates and starts the execution of a new thread.
-		 * @param [in] func The thread function entry point.
-		 * @param [in] param Optional thread parameter.
-		 * @return If the thread was successfully created true is returned, if
-		 *		   not false is returned.
-		 */
-		bool create(tfunction func,void *param)
-		{
-			// Setup the parameters to pass to the native thread.
-			NativeThreadParam *native_param = new NativeThreadParam(func,param);
-			if (native_param == NULL)
-				return false;
+        /**
+         * Creates and starts the execution of a new thread.
+         * @param [in] func The thread function entry point.
+         * @param [in] param Optional thread parameter.
+         * @return If the thread was successfully created true is returned, if
+         *         not false is returned.
+         */
+        bool create(tfunction func,void *param)
+        {
+            // Setup the parameters to pass to the native thread.
+            NativeThreadParam *native_param = new NativeThreadParam(func,param);
+            if (native_param == NULL)
+                return false;
 
             // Create the thread.
             pthread_t thread;
@@ -73,66 +73,66 @@ namespace ckcore
                 delete native_param;
                 return false;
             }
-			
-			return true;
-		}
+            
+            return true;
+        }
 
-		/**
-		 * Sleeps the current thread for a specified amount of milliseconds.
-		 * @param [in] milliseconds The number of milliseconds to sleep the
-		 *							thread.
-		 * @return If successful true is returned, if not false is returned.
-		 */
-		bool sleep(ckcore::tuint32 milliseconds)
-		{
-			return usleep(milliseconds * 1000) == 0;
-		}
+        /**
+         * Sleeps the current thread for a specified amount of milliseconds.
+         * @param [in] milliseconds The number of milliseconds to sleep the
+         *                          thread.
+         * @return If successful true is returned, if not false is returned.
+         */
+        bool sleep(ckcore::tuint32 milliseconds)
+        {
+            return usleep(milliseconds * 1000) == 0;
+        }
 
-		/**
-		 * Constructs a Mutex object.
-		 */
-		Mutex::Mutex() : initialized_(false),locked_(false)
-		{
+        /**
+         * Constructs a Mutex object.
+         */
+        Mutex::Mutex() : initialized_(false),locked_(false)
+        {
             initialized_ = pthread_mutex_init(&mutex_,NULL) == 0;
-		}
+        }
 
-		/**
-		 * Destructs the Mutex object.
-		 */
-		Mutex::~Mutex()
-		{
-			if (initialized_)
-			{
+        /**
+         * Destructs the Mutex object.
+         */
+        Mutex::~Mutex()
+        {
+            if (initialized_)
+            {
                 if (pthread_mutex_destroy(&mutex_) == 0)
                     initialized_ = false;
-			}
-		}
+            }
+        }
 
-		/**
-		 * Locks the mutex.
-		 * @return If successful true is returned, if unsuccessful false is
-		 *		   returned.
-		 */
-		bool Mutex::lock()
-		{
-			if (!initialized_ || locked_)
-				return false;
+        /**
+         * Locks the mutex.
+         * @return If successful true is returned, if unsuccessful false is
+         *         returned.
+         */
+        bool Mutex::lock()
+        {
+            if (!initialized_ || locked_)
+                return false;
 
             return locked_ = pthread_mutex_lock(&mutex_) == 0;
-		}
+        }
 
-		/**
-		 * Unlocks the mutex.
-		 * @return If successful true is returned, if unsuccessful false is
-		 *		   returned.
-		 */
-		bool Mutex::unlock()
-		{
-			if (!initialized_ || !locked_)
-				return false;
+        /**
+         * Unlocks the mutex.
+         * @return If successful true is returned, if unsuccessful false is
+         *         returned.
+         */
+        bool Mutex::unlock()
+        {
+            if (!initialized_ || !locked_)
+                return false;
 
-			return !(locked_ = !(pthread_mutex_unlock(&mutex_) == 0));
-		}
-	}
+            return !(locked_ = !(pthread_mutex_unlock(&mutex_) == 0));
+        }
+    }
 }
 

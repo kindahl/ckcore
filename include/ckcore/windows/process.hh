@@ -61,13 +61,13 @@ namespace ckcore
 
         HANDLE process_handle_;
         HANDLE thread_handle_;
-		HANDLE start_event_;
+        HANDLE start_event_;
         HANDLE stop_event_;
         volatile unsigned long thread_id_;  // Thread identifier.
         volatile State state_;              // Process state.
-		ckcore::tuint32 exit_code_;
+        ckcore::tuint32 exit_code_;
 
-		std::set<char> block_delims_;
+        std::set<char> block_delims_;
         std::string block_buffer_;      // For buffering partial standard output blocks before commiting them.
 
         void close();
@@ -85,15 +85,15 @@ namespace ckcore
         bool create(const tchar *cmd_line);
         bool running() const;
         bool wait() const;
-		bool kill() const;
-		bool exit_code(ckcore::tuint32 &exit_code) const;
+        bool kill() const;
+        bool exit_code(ckcore::tuint32 &exit_code) const;
 
-		void add_block_delim(char delim);
-		void remove_block_delim(char delim);
+        void add_block_delim(char delim);
+        void remove_block_delim(char delim);
 
         /*
-		 * OutStream interface.
-		 */
+         * OutStream interface.
+         */
         tint64 write(const void *buffer,tuint32 count);
 
         /**

@@ -46,8 +46,8 @@ namespace ckcore
         {
         private:
             HANDLE dir_handle_;
-			WIN32_FIND_DATA cur_ent_;
-			bool at_end_;
+            WIN32_FIND_DATA cur_ent_;
+            bool at_end_;
 
             void next();
 
@@ -71,7 +71,7 @@ namespace ckcore
         Directory(const Path &dir_path);
         ~Directory();
 
-		const tstring &name() const;
+        const tstring &name() const;
 
         Iterator begin() const;
         Iterator end() const;
@@ -87,7 +87,7 @@ namespace ckcore
         static bool exist(const Path &dir_path);
         static bool time(const Path &dir_path,struct tm &access_time,
                          struct tm &modify_time,struct tm &create_time);
-		static Directory temp();
+        static Directory temp();
     };
 };
 

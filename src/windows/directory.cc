@@ -27,7 +27,7 @@ namespace ckcore
      * Constructs an Iterator object.
      */
     Directory::Iterator::Iterator() : dir_handle_(INVALID_HANDLE_VALUE),
-		at_end_(true)
+        at_end_(true)
     {
     }
 
@@ -36,7 +36,7 @@ namespace ckcore
      * @param [in] dir A reference to the Directory object to iterate over.
      */
     Directory::Iterator::Iterator(const Directory &dir) :
-		dir_handle_(INVALID_HANDLE_VALUE),at_end_(false)
+        dir_handle_(INVALID_HANDLE_VALUE),at_end_(false)
     {
         if (dir.dir_handles_.count(this) > 0)
         {
@@ -44,45 +44,45 @@ namespace ckcore
         }
         else
         {
-			tstring path = dir.dir_path_.name();
-			tchar last = path[path.size() - 1];
+            tstring path = dir.dir_path_.name();
+            tchar last = path[path.size() - 1];
 
-			// Make sure we have a trailing delimiter.
-			if (last != '/' && last != '\\')
-				path += '/';
-			
-			path += '*';
+            // Make sure we have a trailing delimiter.
+            if (last != '/' && last != '\\')
+                path += '/';
+            
+            path += '*';
 
-			dir_handle_ = FindFirstFile(path.c_str(),&cur_ent_);
+            dir_handle_ = FindFirstFile(path.c_str(),&cur_ent_);
             const_cast<Directory &>(dir).dir_handles_[this] = dir_handle_;
         }
-		
-		if (dir_handle_ == INVALID_HANDLE_VALUE)
-		{
-			at_end_ = true;
-		}
-		else
-		{
-			// Skip system '.' and '..' directories.
-			if (!lstrcmp(cur_ent_.cFileName,ckT(".")) ||
-				!lstrcmp(cur_ent_.cFileName,ckT("..")))
-			{
-				next();
-			}
-		}
+        
+        if (dir_handle_ == INVALID_HANDLE_VALUE)
+        {
+            at_end_ = true;
+        }
+        else
+        {
+            // Skip system '.' and '..' directories.
+            if (!lstrcmp(cur_ent_.cFileName,ckT(".")) ||
+                !lstrcmp(cur_ent_.cFileName,ckT("..")))
+            {
+                next();
+            }
+        }
     }
 
     void Directory::Iterator::next()
     {
-		while (!(at_end_ = !FindNextFile(dir_handle_,&cur_ent_)))
-		{
-			// Skip system '.' and '..' directories.
-			if (lstrcmp(cur_ent_.cFileName,ckT(".")) &&
-				lstrcmp(cur_ent_.cFileName,ckT("..")))
-			{
-				break;
-			}
-		}
+        while (!(at_end_ = !FindNextFile(dir_handle_,&cur_ent_)))
+        {
+            // Skip system '.' and '..' directories.
+            if (lstrcmp(cur_ent_.cFileName,ckT(".")) &&
+                lstrcmp(cur_ent_.cFileName,ckT("..")))
+            {
+                break;
+            }
+        }
     }
 
     /**
@@ -173,14 +173,14 @@ namespace ckcore
         dir_handles_.clear();
     }
 
-	/**
+    /**
      * Returns the full directory path name.
      * @return The full directory path name.
      */
-	const tstring &Directory::name() const
-	{
-		return dir_path_.name();
-	}
+    const tstring &Directory::name() const
+    {
+        return dir_path_.name();
+    }
 
     /**
      * Creates an iterator pointing to the first file or directory in the
@@ -217,7 +217,7 @@ namespace ckcore
      */
     bool Directory::remove() const
     {
-		return RemoveDirectory(dir_path_.name().c_str()) != FALSE;
+        return RemoveDirectory(dir_path_.name().c_str()) != FALSE;
     }
 
     /**
@@ -226,9 +226,9 @@ namespace ckcore
      */
     bool Directory::exist() const
     {
-		unsigned long attr = GetFileAttributes(dir_path_.name().c_str());
+        unsigned long attr = GetFileAttributes(dir_path_.name().c_str());
 
-		return (attr != -1) && (attr & FILE_ATTRIBUTE_DIRECTORY);
+        return (attr != -1) && (attr & FILE_ATTRIBUTE_DIRECTORY);
     }
 
     /**
@@ -242,7 +242,7 @@ namespace ckcore
     bool Directory::time(struct tm &accessckTime,struct tm &modifyckTime,
                          struct tm &createckTime) const
     {
-		return time(dir_path_,accessckTime,modifyckTime,createckTime);
+        return time(dir_path_,accessckTime,modifyckTime,createckTime);
     }
 
     /**
@@ -251,7 +251,7 @@ namespace ckcore
      */
     bool Directory::create(const Path &dir_path)
     {
-		tstring cur_path;
+        tstring cur_path;
 
         Path::Iterator it;
         for (it = dir_path.begin(); it != dir_path.end(); it++)
@@ -259,7 +259,7 @@ namespace ckcore
             cur_path += *it + ckT("/");
             if (!exist(cur_path.c_str()))
             {
-				if (CreateDirectory(cur_path.c_str(),NULL) == FALSE)
+                if (CreateDirectory(cur_path.c_str(),NULL) == FALSE)
                     return false;
             }
         }
@@ -273,7 +273,7 @@ namespace ckcore
      */
     bool Directory::remove(const Path &dir_path)
     {
-		return RemoveDirectory(dir_path.name().c_str()) != FALSE;
+        return RemoveDirectory(dir_path.name().c_str()) != FALSE;
     }
 
     /**
@@ -282,9 +282,9 @@ namespace ckcore
      */
     bool Directory::exist(const Path &dir_path)
     {
-		unsigned long attr = GetFileAttributes(dir_path.name().c_str());
+        unsigned long attr = GetFileAttributes(dir_path.name().c_str());
 
-		return (attr != -1) && (attr & FILE_ATTRIBUTE_DIRECTORY);
+        return (attr != -1) && (attr & FILE_ATTRIBUTE_DIRECTORY);
     }
 
     /**
@@ -299,63 +299,63 @@ namespace ckcore
     bool Directory::time(const Path &dir_path,struct tm &accessckTime,
                          struct tm &modifyckTime,struct tm &createckTime)
     {
-		WIN32_FILE_ATTRIBUTE_DATA file_info;
-		if (GetFileAttributesEx(dir_path.name().c_str(),GetFileExInfoStandard,
-								&file_info) == FALSE)
-		{
-			return false;
-		}
+        WIN32_FILE_ATTRIBUTE_DATA file_info;
+        if (GetFileAttributesEx(dir_path.name().c_str(),GetFileExInfoStandard,
+                                &file_info) == FALSE)
+        {
+            return false;
+        }
 
-		// Convert to system time.
-		SYSTEMTIME access_stime,modify_stime,create_stime;
+        // Convert to system time.
+        SYSTEMTIME access_stime,modify_stime,create_stime;
 
-		if (FileTimeToSystemTime(&file_info.ftLastAccessTime,&access_stime) == FALSE)
-			return false;
+        if (FileTimeToSystemTime(&file_info.ftLastAccessTime,&access_stime) == FALSE)
+            return false;
 
-		if (FileTimeToSystemTime(&file_info.ftLastWriteTime,&modify_stime) == FALSE)
-			return false;
+        if (FileTimeToSystemTime(&file_info.ftLastWriteTime,&modify_stime) == FALSE)
+            return false;
 
-		if (FileTimeToSystemTime(&file_info.ftCreationTime,&create_stime) == FALSE)
-			return false;
+        if (FileTimeToSystemTime(&file_info.ftCreationTime,&create_stime) == FALSE)
+            return false;
 
-		// Convert to struct tm.
-		SysTimeToTm(access_stime,accessckTime);
-		SysTimeToTm(modify_stime,modifyckTime);
-		SysTimeToTm(create_stime,createckTime);
+        // Convert to struct tm.
+        SysTimeToTm(access_stime,accessckTime);
+        SysTimeToTm(modify_stime,modifyckTime);
+        SysTimeToTm(create_stime,createckTime);
 
-		return true;
+        return true;
     }
 
-	/**
-	 * Creates a Directory object of a temporary directory. The directory path is
-	 * generated to be placed in the systems default temporary directory.
-	 * @return Directory object of temp directory.
-	 */
-	Directory Directory::temp()
-	{
-		tchar dir_name[246];
-		if (GetTempPath(sizeof(dir_name) / sizeof(tchar),dir_name) == 0)
-			dir_name[0] = '\0';
+    /**
+     * Creates a Directory object of a temporary directory. The directory path is
+     * generated to be placed in the systems default temporary directory.
+     * @return Directory object of temp directory.
+     */
+    Directory Directory::temp()
+    {
+        tchar dir_name[246];
+        if (GetTempPath(sizeof(dir_name) / sizeof(tchar),dir_name) == 0)
+            dir_name[0] = '\0';
 
-		tchar tmp_name[_MAX_PATH];
-		if (GetTempFileName(dir_name,ckT("tmp"),0,tmp_name) == 0)
-		{
-			// Fall back on random name generation.
-			lstrcpy(tmp_name,dir_name);
-			lstrcat(tmp_name,ckT("file"));
+        tchar tmp_name[_MAX_PATH];
+        if (GetTempFileName(dir_name,ckT("tmp"),0,tmp_name) == 0)
+        {
+            // Fall back on random name generation.
+            lstrcpy(tmp_name,dir_name);
+            lstrcat(tmp_name,ckT("file"));
 
             tchar convBuffer[convert::INT_TO_STR_BUFLEN];
             convert::ui32_to_str2((tuint32)rand(), convBuffer);
-			lstrcat(tmp_name,convBuffer);
+            lstrcat(tmp_name,convBuffer);
                                  
-			lstrcat(tmp_name,ckT(".tmp"));
-		}
+            lstrcat(tmp_name,ckT(".tmp"));
+        }
 
-		Path tmp_path(tmp_name);
+        Path tmp_path(tmp_name);
 
-		if (File::exist(tmp_path))
-			File::remove(tmp_path);
+        if (File::exist(tmp_path))
+            File::remove(tmp_path);
 
-		return Directory(tmp_path);
-	}
+        return Directory(tmp_path);
+    }
 };

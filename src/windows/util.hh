@@ -27,5 +27,5 @@
 
 namespace ckcore
 {
-	void SysTimeToTm(SYSTEMTIME &stime,struct tm &time);
+    void SysTimeToTm(SYSTEMTIME &stime,struct tm &time);
 };

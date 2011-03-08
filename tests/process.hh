@@ -22,9 +22,9 @@
 #include "ckcore/process.hh"
 
 #ifdef _WINDOWS
-#define SMALLCLIENT		ckT("bin/smallclient.exe")
+#define SMALLCLIENT     ckT("bin/smallclient.exe")
 #else
-#define SMALLCLIENT		ckT("./bin/smallclient")
+#define SMALLCLIENT     ckT("./bin/smallclient")
 #endif
 
 class ProcessWrapper : public ckcore::Process
@@ -76,7 +76,7 @@ public:
     {
         ProcessWrapper process;
 
-		ckcore::tstring cmd_line = SMALLCLIENT;
+        ckcore::tstring cmd_line = SMALLCLIENT;
 
         TS_ASSERT(!process.finished());
         TS_ASSERT(!process.running());
@@ -85,28 +85,28 @@ public:
         TS_ASSERT(process.finished());
         TS_ASSERT_SAME_DATA(process.next().c_str(),"SmallClient",12);
         TS_ASSERT_SAME_DATA(process.next().c_str(),"MESSAGE 1",9);
-	}
+    }
 
     void testInterleaved()
     {
         ProcessWrapper process;
 
-		ckcore::tstring cmd_line = SMALLCLIENT;
-		cmd_line += ckT(" -m2");
+        ckcore::tstring cmd_line = SMALLCLIENT;
+        cmd_line += ckT(" -m2");
 
         TS_ASSERT(!process.finished());
         TS_ASSERT(!process.running());
-		TS_ASSERT(process.create(cmd_line.c_str()));
+        TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
         TS_ASSERT(process.finished());
 
 #ifdef _WINDOWS
-		// The Windows implementation does not yet support interleaved writing.
+        // The Windows implementation does not yet support interleaved writing.
         TS_ASSERT_SAME_DATA(process.next().c_str(),"SmallClient",12);
         TS_ASSERT_SAME_DATA(process.next().c_str(),"MESSAGE MESSAGE 1",17);
-		TS_ASSERT_SAME_DATA(process.next().c_str(),"2",1);
+        TS_ASSERT_SAME_DATA(process.next().c_str(),"2",1);
 #else
-		// The Windows implementation does not yet support interleaved writing.
+        // The Windows implementation does not yet support interleaved writing.
         TS_ASSERT_SAME_DATA(process.next().c_str(),"SmallClient",12);
 
         // The order of which the messages arrive may be different on different
@@ -126,45 +126,45 @@ public:
             TS_ASSERT_SAME_DATA(str1.c_str(),"MESSAGE 2",9);
         }
 #endif
-	}
+    }
 
     void testBadExec()
     {
         ProcessWrapper process;
 
-		ckcore::tstring cmd_line = ckT("ls -l");	// Does not exist in Unix as well as Windows.
+        ckcore::tstring cmd_line = ckT("ls -l");    // Does not exist in Unix as well as Windows.
 
         TS_ASSERT(!process.finished());
         TS_ASSERT(!process.running());
-		TS_ASSERT(!process.create(cmd_line.c_str()));
+        TS_ASSERT(!process.create(cmd_line.c_str()));
         TS_ASSERT(!process.running());
         TS_ASSERT(!process.finished());
-	}
+    }
 
-	void testKill()
-	{
-		ProcessWrapper process;
+    void testKill()
+    {
+        ProcessWrapper process;
 
-		ckcore::tstring cmd_line = SMALLCLIENT;
-		cmd_line += ckT(" -m3");	// Cause the client to sleep for 30 seconds.
+        ckcore::tstring cmd_line = SMALLCLIENT;
+        cmd_line += ckT(" -m3");    // Cause the client to sleep for 30 seconds.
 
         TS_ASSERT(!process.finished());
         TS_ASSERT(!process.running());
-		TS_ASSERT(process.create(cmd_line.c_str()));
-		TS_ASSERT(process.kill());
+        TS_ASSERT(process.create(cmd_line.c_str()));
+        TS_ASSERT(process.kill());
         TS_ASSERT(!process.finished());
-	}
+    }
 
     void testWrite()
     {
-		ProcessWrapper process;
+        ProcessWrapper process;
 
-		ckcore::tstring cmd_line = SMALLCLIENT;
-		cmd_line += ckT(" -m4");	// Cause the client to read from standard input.
+        ckcore::tstring cmd_line = SMALLCLIENT;
+        cmd_line += ckT(" -m4");    // Cause the client to read from standard input.
 
         TS_ASSERT(!process.finished());
         TS_ASSERT(!process.running());
-		TS_ASSERT(process.create(cmd_line.c_str()));
+        TS_ASSERT(process.create(cmd_line.c_str()));
         TS_ASSERT(!process.finished());
         TS_ASSERT(process.running());
         process.write((void *)"TEST 1\n",7);
@@ -175,12 +175,12 @@ public:
         TS_ASSERT(process.finished());
     }
 
-	void testDelimiters()
-	{
-		ProcessWrapper process;
-		process.add_block_delim('G');
+    void testDelimiters()
+    {
+        ProcessWrapper process;
+        process.add_block_delim('G');
 
-		ckcore::tstring cmd_line = SMALLCLIENT;
+        ckcore::tstring cmd_line = SMALLCLIENT;
 
         TS_ASSERT(!process.finished());
         TS_ASSERT(!process.running());
@@ -189,42 +189,42 @@ public:
         TS_ASSERT(process.finished());
         TS_ASSERT_SAME_DATA(process.next().c_str(),"SmallClient",12);
         TS_ASSERT_SAME_DATA(process.next().c_str(),"MESSA",5);
-		TS_ASSERT_SAME_DATA(process.next().c_str(),"E 1",3);
-	}
+        TS_ASSERT_SAME_DATA(process.next().c_str(),"E 1",3);
+    }
 
-	void testExitCode()
-	{
-		ProcessWrapper process;
+    void testExitCode()
+    {
+        ProcessWrapper process;
 
-		// Expected exit code zero.
-		ckcore::tstring cmd_line = SMALLCLIENT;
-		TS_ASSERT(process.create(cmd_line.c_str()));
+        // Expected exit code zero.
+        ckcore::tstring cmd_line = SMALLCLIENT;
+        TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
-		TS_ASSERT(process.finished());
+        TS_ASSERT(process.finished());
 
-		ckcore::tuint32 exit_code = -1;
-		TS_ASSERT(process.exit_code(exit_code));
-		TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(0));
+        ckcore::tuint32 exit_code = -1;
+        TS_ASSERT(process.exit_code(exit_code));
+        TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(0));
 
-		// Expected exit code 42.
-		cmd_line += ckT(" -m5");	// Cause the client to return 42 instead of zero.
+        // Expected exit code 42.
+        cmd_line += ckT(" -m5");    // Cause the client to return 42 instead of zero.
 
-		TS_ASSERT(process.create(cmd_line.c_str()));
+        TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
-		TS_ASSERT(process.finished());
+        TS_ASSERT(process.finished());
 
-		exit_code = -1;
-		TS_ASSERT(process.exit_code(exit_code));
-		TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(42));
+        exit_code = -1;
+        TS_ASSERT(process.exit_code(exit_code));
+        TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(42));
 
-		// Expected exit code zero.
-		cmd_line = SMALLCLIENT;
-		TS_ASSERT(process.create(cmd_line.c_str()));
+        // Expected exit code zero.
+        cmd_line = SMALLCLIENT;
+        TS_ASSERT(process.create(cmd_line.c_str()));
         process.wait();
-		TS_ASSERT(process.finished());
+        TS_ASSERT(process.finished());
 
-		exit_code = -1;
-		TS_ASSERT(process.exit_code(exit_code));
-		TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(0));
-	}
+        exit_code = -1;
+        TS_ASSERT(process.exit_code(exit_code));
+        TS_ASSERT_EQUALS(exit_code,ckcore::tuint32(0));
+    }
 };

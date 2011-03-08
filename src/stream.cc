@@ -34,8 +34,8 @@ namespace ckcore
          */
         bool copy(InStream &from,OutStream &to)
         {
-			// UPDATE: Hangs the application on some systems.
-			tuint32 buffer_size = 8192;
+            // UPDATE: Hangs the application on some systems.
+            tuint32 buffer_size = 8192;
             /*tuint32 buffer_size = System::Cache(System::ckLEVEL_1);
             if (buffer_size == 0)
                 buffer_size = 8192;*/
@@ -66,20 +66,20 @@ namespace ckcore
             return true;
         }
 
-		/**
+        /**
          * Copies the contents of the input stream to the output stream. An
          * internal buffer is used to optimize the process. Progress is
-		 * reported through the Progress interface.
+         * reported through the Progress interface.
          * @param [in] from The source stream.
          * @param [in] to The target stream.
-		 * @param [in] progress The progress interface to report progress to.
+         * @param [in] progress The progress interface to report progress to.
          * @return If successfull true is returned, otherwise false is
          *         returned. Cancelling the operation is considered a failure.
          */
         bool copy(InStream &from,OutStream &to,Progress &progress)
         {
-			// UPDATE: Hangs the application on some systems.
-			tuint32 buffer_size = 8192;
+            // UPDATE: Hangs the application on some systems.
+            tuint32 buffer_size = 8192;
             /*tuint32 buffer_size = System::Cache(System::ckLEVEL_1);
             if (buffer_size == 0)
                 buffer_size = 8192;*/
@@ -88,16 +88,16 @@ namespace ckcore
             if (buffer == NULL)
                 return false;
 
-			// Initialize progress.
-			tint64 total = from.size(),written = 0;
-			progress.set_marquee(total == -1);
+            // Initialize progress.
+            tint64 total = from.size(),written = 0;
+            progress.set_marquee(total == -1);
 
             tint64 res = 0;
             while (!from.end())
             {
-				// Check if we should cancel.
-				if (progress.cancelled())
-					return false;
+                // Check if we should cancel.
+                if (progress.cancelled())
+                    return false;
 
                 res = from.read(buffer,buffer_size);
                 if (res == -1)
@@ -113,37 +113,37 @@ namespace ckcore
                     return false;
                 }
 
-				// Update progress.
-				if (total != -1)
-				{
-					written += res;
-					progress.set_progress((unsigned char)((written * 100)/total));
-				}
+                // Update progress.
+                if (total != -1)
+                {
+                    written += res;
+                    progress.set_progress((unsigned char)((written * 100)/total));
+                }
             }
 
-			// Set to 100 in case of rounding errors.
-			if (total != -1)
-				progress.set_progress(100);
+            // Set to 100 in case of rounding errors.
+            if (total != -1)
+                progress.set_progress(100);
 
             delete [] buffer;
             return true;
         }
 
-		/**
+        /**
          * Copies the contents of the input stream to the output stream. An
          * internal buffer is used to optimize the process. Progress is
-		 * reported through a Progresser object.
+         * reported through a Progresser object.
          * @param [in] from The source stream.
          * @param [in] to The target stream.
-		 * @param [in] progresser A reference to the progresser object to use
-		 *                        for reporting progress.
+         * @param [in] progresser A reference to the progresser object to use
+         *                        for reporting progress.
          * @return If successfull true is returned, otherwise false is
          *         returned. Cancelling the operation is considered a failure.
          */
         bool copy(InStream &from,OutStream &to,Progresser &progresser)
         {
-			// UPDATE: Hangs the application on some systems.
-			tuint32 buffer_size = 8192;
+            // UPDATE: Hangs the application on some systems.
+            tuint32 buffer_size = 8192;
             /*tuint32 buffer_size = System::Cache(System::ckLEVEL_1);
             if (buffer_size == 0)
                 buffer_size = 8192;*/
@@ -155,9 +155,9 @@ namespace ckcore
             tint64 res = 0;
             while (!from.end())
             {
-				// Check if we should cancel.
-				if (progresser.cancelled())
-					return false;
+                // Check if we should cancel.
+                if (progresser.cancelled())
+                    return false;
 
                 res = from.read(buffer,buffer_size);
                 if (res == -1)
@@ -173,35 +173,35 @@ namespace ckcore
                     return false;
                 }
 
-				// Update progress.
-				progresser.update(res);
+                // Update progress.
+                progresser.update(res);
             }
 
             delete [] buffer;
             return true;
         }
 
-		/**
+        /**
          * Copies the contents of the input stream to the output stream. An
          * internal buffer is used to optimize the process. Progress is
-		 * reported through a Progresser object. If the available data in the
-		 * input stream is less than requested the output stream will be padded
-		 * to match the requested ammount. If more data is available in the
-		 * input stream than what is requested the additional data will be ignored.
+         * reported through a Progresser object. If the available data in the
+         * input stream is less than requested the output stream will be padded
+         * to match the requested ammount. If more data is available in the
+         * input stream than what is requested the additional data will be ignored.
          * @param [in] from The source stream.
          * @param [in] to The target stream.
-		 * @param [in] progresser A reference to the progresser object to use
-		 *                        for reporting progress.
-		 * @param [in] size The exact number of bytes to write to the output
-		 *					stream.
+         * @param [in] progresser A reference to the progresser object to use
+         *                        for reporting progress.
+         * @param [in] size The exact number of bytes to write to the output
+         *                  stream.
          * @return If successfull true is returned, otherwise false is
          *         returned. Cancelling the operation is considered a failure.
          */
         bool copy(InStream &from,OutStream &to,Progresser &progresser,
-				  tuint64 size)
+                  tuint64 size)
         {
-			// UPDATE: Hangs the application on some systems.
-			tuint32 buffer_size = 8192;
+            // UPDATE: Hangs the application on some systems.
+            tuint32 buffer_size = 8192;
             /*tuint32 buffer_size = System::Cache(System::ckLEVEL_1);
             if (buffer_size == 0)
                 buffer_size = 8192;*/
@@ -213,12 +213,12 @@ namespace ckcore
             tint64 res = 0;
             while (!from.end() && size > 0)
             {
-				// Check if we should cancel.
-				if (progresser.cancelled())
-					return false;
+                // Check if we should cancel.
+                if (progresser.cancelled())
+                    return false;
 
-				tuint32 to_read = size < buffer_size ?
-								  static_cast<tuint32>(size) : buffer_size;
+                tuint32 to_read = size < buffer_size ?
+                                  static_cast<tuint32>(size) : buffer_size;
                 res = from.read(buffer,to_read);
                 if (res == -1)
                 {
@@ -233,32 +233,32 @@ namespace ckcore
                     return false;
                 }
 
-				size -= res;
+                size -= res;
 
-				// Update progress.
-				progresser.update(res);
+                // Update progress.
+                progresser.update(res);
             }
 
-			// Pad if necessary. This is not very efficient but it should also not
-			// happen.
-			while (size > 0)
-			{
-				tuint32 to_write = size < buffer_size ?
-								   static_cast<tuint32>(size) : buffer_size;
-				memset(buffer,0,buffer_size);
+            // Pad if necessary. This is not very efficient but it should also not
+            // happen.
+            while (size > 0)
+            {
+                tuint32 to_write = size < buffer_size ?
+                                   static_cast<tuint32>(size) : buffer_size;
+                memset(buffer,0,buffer_size);
 
-				res = to.write(buffer,to_write);
+                res = to.write(buffer,to_write);
                 if (res == -1)
                 {
                     delete [] buffer;
                     return false;
                 }
 
-				size -= res;
+                size -= res;
 
-				// Update progress.
-				progresser.update(res);
-			}
+                // Update progress.
+                progresser.update(res);
+            }
 
             delete [] buffer;
             return true;

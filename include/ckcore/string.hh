@@ -30,7 +30,7 @@
 #ifdef _WINDOWS
 #ifdef _UNICODE
 //#define ckcore::string::asscanf swscanf
-#define asscanf	swscanf
+#define asscanf swscanf
 #else
 //#define ckcore::string::asscanf sscanf
 #define asscanf sscanf
@@ -51,71 +51,71 @@ namespace ckcore
 {
     namespace string
     {
-		int astrcmp(const tchar *str1,const tchar *str2);
-		int astrncmp(const tchar *str1,const tchar *str2,size_t n);
-		int astrcmpi(const tchar *str1,const tchar *str2);
-		int astrncmpi(const tchar *str1,const tchar *str2,size_t n);
-		size_t astrlen(const tchar *str);
-		tchar *astrcpy(tchar *str1,const tchar *str2);
-		tchar *astrncpy(tchar *str1,const tchar *str2,size_t n);
+        int astrcmp(const tchar *str1,const tchar *str2);
+        int astrncmp(const tchar *str1,const tchar *str2,size_t n);
+        int astrcmpi(const tchar *str1,const tchar *str2);
+        int astrncmpi(const tchar *str1,const tchar *str2,size_t n);
+        size_t astrlen(const tchar *str);
+        tchar *astrcpy(tchar *str1,const tchar *str2);
+        tchar *astrncpy(tchar *str1,const tchar *str2,size_t n);
 
         wchar_t *ansi_to_utf16(const char *ansi,wchar_t *utf,int utf_len);
         char *utf16_to_ansi(const wchar_t *utf,char *ansi,int ansi_len);
-		tchar *ansi_to_auto(const char *ansi,tchar *out,int out_len);
+        tchar *ansi_to_auto(const char *ansi,tchar *out,int out_len);
 
-		void vformatstr(tstring &res,const tchar * fmt,
+        void vformatstr(tstring &res,const tchar * fmt,
                         va_list args);
         tstring formatstr(const tchar * fmt,...) __attribute__ ((format (printf, 1, 2)));
 
-		/**
-		 * Converts an ANSI string if necessary into UTF-16 format. If UTF-16 is not
-		 * used the very same ANSI string is returned.
-		 * @param [in] str The ANSI string to return and maybe convert.
-		 * @return The specified ANSI string either in ANSI or in UTF-16 format.
-		 */
-		template<size_t S>
-		tstring ansi_to_auto(const char *str)
-		{
+        /**
+         * Converts an ANSI string if necessary into UTF-16 format. If UTF-16 is not
+         * used the very same ANSI string is returned.
+         * @param [in] str The ANSI string to return and maybe convert.
+         * @return The specified ANSI string either in ANSI or in UTF-16 format.
+         */
+        template<size_t S>
+        tstring ansi_to_auto(const char *str)
+        {
 #if defined(_WINDOWS) && defined(_UNICODE)
-			tchar res[S];
-			return tstring(ansi_to_utf16(str,res,sizeof(res)/sizeof(tchar)));
+            tchar res[S];
+            return tstring(ansi_to_utf16(str,res,sizeof(res)/sizeof(tchar)));
 #else
-			return tstring(str);
+            return tstring(str);
 #endif
-		}
+        }
 
-		/**
-		 * Converts an ANSI or an UTF-16 string (depending on compilation options)
-		 * into ANSI format.
-		 * @param [in] str The ANSI or UTF-16 string to convert.
-		 * @return The specified string converted into ANSI format.
-		 */
-		template<size_t S>
-		std::string auto_to_ansi(const tchar *str)
-		{
+        /**
+         * Converts an ANSI or an UTF-16 string (depending on compilation options)
+         * into ANSI format.
+         * @param [in] str The ANSI or UTF-16 string to convert.
+         * @return The specified string converted into ANSI format.
+         */
+        template<size_t S>
+        std::string auto_to_ansi(const tchar *str)
+        {
 #if defined(_WINDOWS) && defined(_UNICODE)
-			char res[S];
-			return std::string(utf16_to_ansi(str,res,sizeof(res)));
+            char res[S];
+            return std::string(utf16_to_ansi(str,res,sizeof(res)));
 #else
-			return std::string(str);
+            return std::string(str);
 #endif
-		}
+        }
 
-		/**
-		 * Converts an UTF-16 string if necessary into ANSI format. If ANSI is not
-		 * used the very same UTF-16 string is returned.
-		 * @param [in] str The UTF-16 string to return and maybe convert.
-		 * @return The specified UTF-16 string either in ANSI or in UTF-16 format.
-		 */
-		template<size_t S>
-		tstring utf16_to_auto(const wchar_t *str)
-		{
+        /**
+         * Converts an UTF-16 string if necessary into ANSI format. If ANSI is not
+         * used the very same UTF-16 string is returned.
+         * @param [in] str The UTF-16 string to return and maybe convert.
+         * @return The specified UTF-16 string either in ANSI or in UTF-16 format.
+         */
+        template<size_t S>
+        tstring utf16_to_auto(const wchar_t *str)
+        {
 #if defined(_WINDOWS) && defined(_UNICODE)
-			return tstring(str);
+            return tstring(str);
 #else
-			tchar res[S];
-			return tstring(utf16_to_ansi(str,res,sizeof(res)/sizeof(tchar)));
+            tchar res[S];
+            return tstring(utf16_to_ansi(str,res,sizeof(res)/sizeof(tchar)));
 #endif
-		}
+        }
     }
 }

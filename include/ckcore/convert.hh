@@ -28,15 +28,15 @@ namespace ckcore
 {
     namespace convert
     {
-		void sprintf(tchar *buffer,size_t size,const tchar *format,...) __attribute__ ((format (printf, 3, 4)));
+        void sprintf(tchar *buffer,size_t size,const tchar *format,...) __attribute__ ((format (printf, 3, 4)));
 
         enum { INT_TO_STR_BUFLEN = 30 };  // more than enough for 64-bit integers, used by b_to_str2() too.
 
-		void b_to_str2(bool value, tchar * buffer);
+        void b_to_str2(bool value, tchar * buffer);
 
-		void ui64_to_str2(tuint64 value, tchar * buffer);
+        void ui64_to_str2(tuint64 value, tchar * buffer);
 
-		inline void i64_to_str2(tint64 value, tchar * buffer)
+        inline void i64_to_str2(tint64 value, tchar * buffer)
         {
           if (value >= 0)
           {
@@ -54,15 +54,15 @@ namespace ckcore
           i64_to_str2(value, buffer);
         }
 
-		inline void ui32_to_str2(tuint32 value, tchar * buffer)
+        inline void ui32_to_str2(tuint32 value, tchar * buffer)
         {
           ui64_to_str2(value, buffer);
         }
 
-		tuint32 be_to_le32(tuint32 value);
-		tuint16 be_to_le16(tuint16 value);
+        tuint32 be_to_le32(tuint32 value);
+        tuint16 be_to_le16(tuint16 value);
 
-		void tm_to_dostime(struct tm &time,unsigned short &dos_date,
-						   unsigned short &dos_time);
+        void tm_to_dostime(struct tm &time,unsigned short &dos_date,
+                           unsigned short &dos_time);
     }
 }

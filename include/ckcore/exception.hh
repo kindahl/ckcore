@@ -32,13 +32,13 @@
 
 namespace ckcore
 {
-	/**
+    /**
      * @brief Exception class.
      */
     class Exception2 : public std::exception
     {
     private:
-		std::string err_msg_;
+        std::string err_msg_;
 
     public:
         Exception2(const tchar * const err_msg);
@@ -46,7 +46,7 @@ namespace ckcore
         virtual ~Exception2() throw() {};
 
         virtual const char *what(void) const throw();
-		tstring message() const;
+        tstring message() const;
     };
 
     tstring get_except_msg(const std::exception &e);
@@ -55,9 +55,9 @@ namespace ckcore
 #ifdef _WINDOWS
     void MSC_DECLSPEC_NORETURN throw_from_hresult(HRESULT res,const tchar * pfx_fmt,...);
     void MSC_DECLSPEC_NORETURN throw_from_last_error(const tchar * pfx_fmt,...);
-	// Sometimes the caller needs to clean something up before calling throw_from_last_error(),
-	// and that can reset the last error, so we need another version of this routine with a
-	// manually-stored error code.
+    // Sometimes the caller needs to clean something up before calling throw_from_last_error(),
+    // and that can reset the last error, so we need another version of this routine with a
+    // manually-stored error code.
     void MSC_DECLSPEC_NORETURN throw_from_given_last_error(DWORD lastErrorCode, const tchar * pfx_fmt,...);
 #endif
     void MSC_DECLSPEC_NORETURN throw_from_errno(int errno_code,const tchar * pfx_fmt,... ) __attribute__ ((noreturn, format (printf, 2, 3)));

@@ -51,7 +51,7 @@ namespace ckcore
         switch (type)
         {
             case ckCRC_16:
-                poly = 0x8005;		// CRC-16-IBM.
+                poly = 0x8005;      // CRC-16-IBM.
                 order_ = 16;
                 initial_ = 0xffff;
                 final_ = 0xffff;
@@ -63,7 +63,7 @@ namespace ckcore
                 break;
 
             case ckCRC_CCITT:
-                poly = 0x1021;		// From UDF 1.50 reference documentation.
+                poly = 0x1021;      // From UDF 1.50 reference documentation.
                 reflect_ = false;
                 order_ = 16;
                 initial_ = 0x0000;
@@ -71,8 +71,8 @@ namespace ckcore
                 checksum_ = 0x0000;
                 break;
 
-			default:
-				assert(false);
+            default:
+                assert(false);
         }
 
         tuint32 high = (tuint32)1 << (order_ - 1);

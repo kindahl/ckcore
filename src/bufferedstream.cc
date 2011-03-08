@@ -30,7 +30,7 @@ namespace ckcore
     BufferedInStream::BufferedInStream(InStream &stream) : stream_(stream),
         buffer_(NULL),buffer_size_(0),buffer_pos_(0),buffer_data_(0)
     {
-		// UPDATE: Hangs the application on some systems.
+        // UPDATE: Hangs the application on some systems.
         /*buffer_size_ = System::Cache(System::ckLEVEL_1);
         if (buffer_size_ == 0)*/
             buffer_size_ = 8192;
@@ -85,52 +85,52 @@ namespace ckcore
         return stream_.end() && buffer_data_ == 0;
     }
 
-	/**
+    /**
      * Repositions the file pointer to the specified offset accoding to the
      * whence directive in the stream. Please note that the seeking performance
-	 * is very poor since it calls the read function and throws the data.
+     * is very poor since it calls the read function and throws the data.
      * @param [in] distance The number of bytes that the stream pointer should
      *                      move.
      * @param [in] whence Specifies what to use as base when calculating the
      *                    final stream pointer position.
      * @return If successfull true is returned, otherwise false is returned.
      */
-	bool BufferedInStream::seek(tuint32 distance,StreamWhence whence)
-	{
-		// Reset the internal state if necessary.
-		if (whence == ckSTREAM_BEGIN)
-		{
-			if (!stream_.seek(0,ckSTREAM_BEGIN))
-				return false;
+    bool BufferedInStream::seek(tuint32 distance,StreamWhence whence)
+    {
+        // Reset the internal state if necessary.
+        if (whence == ckSTREAM_BEGIN)
+        {
+            if (!stream_.seek(0,ckSTREAM_BEGIN))
+                return false;
 
-			buffer_pos_ = 0;
-			buffer_data_ = 0;
-		}
+            buffer_pos_ = 0;
+            buffer_data_ = 0;
+        }
 
-		// Optimization.
-		if (distance == 0)
-			return true;
+        // Optimization.
+        if (distance == 0)
+            return true;
 
-		// Perform the seek operation.
-		tuint32 buffer_size = buffer_size_ == 0 ? 8192 : buffer_size_;
-		unsigned char *temp_buffer = new unsigned char[buffer_size];
-		while (distance > 0)
-		{
-			tuint32 read_bytes = distance > buffer_size ? buffer_size : distance;
+        // Perform the seek operation.
+        tuint32 buffer_size = buffer_size_ == 0 ? 8192 : buffer_size_;
+        unsigned char *temp_buffer = new unsigned char[buffer_size];
+        while (distance > 0)
+        {
+            tuint32 read_bytes = distance > buffer_size ? buffer_size : distance;
 
-			tint64 res = read(temp_buffer,read_bytes);
-			if (res == -1)
-			{
-				delete [] temp_buffer;
-				return false;
-			}
+            tint64 res = read(temp_buffer,read_bytes);
+            if (res == -1)
+            {
+                delete [] temp_buffer;
+                return false;
+            }
 
-			distance -= (tuint32)res;
-		}
+            distance -= (tuint32)res;
+        }
 
-		delete [] temp_buffer;
-		return true;
-	}
+        delete [] temp_buffer;
+        return true;
+    }
 
     /**
      * Reads raw data from the stream.
@@ -177,15 +177,15 @@ namespace ckcore
         return pos + count;
     }
 
-	/**
-	 * Calculates the size of the data provided by the stream.
-	 * @return If successfull the size in bytes of the stream data is returned,
-	 *		   if unsuccessfull -1 is returned.
-	 */
-	tint64 BufferedInStream::size()
-	{
-		return stream_.size();
-	}
+    /**
+     * Calculates the size of the data provided by the stream.
+     * @return If successfull the size in bytes of the stream data is returned,
+     *         if unsuccessfull -1 is returned.
+     */
+    tint64 BufferedInStream::size()
+    {
+        return stream_.size();
+    }
 
     /**
      * Constructs an BufferedOutStream object. The default internal buffer size
@@ -195,7 +195,7 @@ namespace ckcore
     BufferedOutStream::BufferedOutStream(OutStream &stream) : stream_(stream),
         buffer_(NULL),buffer_size_(0),buffer_pos_(0)
     {
-		// UPDATE: Hangs the application on some systems.
+        // UPDATE: Hangs the application on some systems.
         /*buffer_size_ = System::Cache(System::ckLEVEL_1);
         if (buffer_size_ == 0)*/
             buffer_size_ = 8192;
@@ -228,11 +228,11 @@ namespace ckcore
 
     /**
      * Destructs the BufferedOutStream object and flushes any remaining data in
-	 * the buffer.
+     * the buffer.
      */
     BufferedOutStream::~BufferedOutStream()
     {
-		flush();
+        flush();
 
         // Free the memory allocated for the internal buffer.
         if (buffer_ != NULL)
