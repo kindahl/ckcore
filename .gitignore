@@ -1,0 +1,8 @@
+/lib/*
+/lib64/*
+/obj/*
+/tests/bin/test.*
+*.ncb
+*.suo
+/src/windows/*.vcproj.*.user
+/src/windows/test.cc
