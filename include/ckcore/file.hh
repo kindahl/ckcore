@@ -43,8 +43,8 @@ namespace ckcore
 {
 
 #ifdef _WINDOWS
-#pragma warning( push )
-#pragma warning( disable : 4290 )  // C++ exception specification ignored except to ...
+#pragma warning(push)
+#pragma warning(disable: 4290)  // C++ exception specification ignored except to...
 #endif
 
     /**
@@ -75,14 +75,14 @@ namespace ckcore
         };
 
     private:
-
 #ifdef _WINDOWS
         HANDLE file_handle_;
 #else
         int file_handle_;
 #endif
-
         Path file_path_;
+
+        void check_file_is_open() const throw(std::exception);
 
     public:
         File(const Path &file_path);
@@ -129,11 +129,7 @@ namespace ckcore
         static tint64 size2(const Path &file_path) throw(std::exception);
         static File temp(const tchar *prefix);
         static File temp(const Path &file_path,const tchar *prefix);
-
-    private:
-        void check_file_is_open ( void ) const throw(std::exception);
     };
-
 
     /**
      * Opens the file in the requested mode.
@@ -142,14 +138,13 @@ namespace ckcore
      *                       exist.
      * @return If successfull true is returned, otherwise false.
      */
-
     inline bool File::open(FileMode file_mode) throw()
     {
         try
         {
             open2(file_mode);
         }
-        catch ( ... )
+        catch (...)
         {
             return false;
         }
@@ -169,14 +164,14 @@ namespace ckcore
      */
     inline tint64 File::seek(tint64 distance,FileWhence whence) throw()
     {
-      try
-      {
-        return seek2(distance, whence);
-      }
-      catch ( ... )
-      {
-        return -1;
-      }
+        try
+        {
+            return seek2(distance,whence);
+        }
+        catch (...)
+        {
+            return -1;
+        }
     }
 
     /**
@@ -186,14 +181,14 @@ namespace ckcore
      */
     inline tint64 File::tell() const throw()
     {
-      try
-      {
-        return tell2();
-      }
-      catch ( ... )
-      {
-        return -1;
-      }
+        try
+        {
+            return tell2();
+        }
+        catch (...)
+        {
+            return -1;
+        }
     }
 
     /**
@@ -206,7 +201,7 @@ namespace ckcore
         {
             return size2();
         }
-        catch ( ... )
+        catch (...)
         {
             return -1;
         }
@@ -219,26 +214,23 @@ namespace ckcore
      */
     inline tint64 File::size(const Path &file_path) throw()
     {
-      try
-      {
-        return size2(file_path);
-      }
-      catch ( ... )
-      {
-        return -1;
-      }
-    }
-
-    inline void File::check_file_is_open ( void ) const throw(std::exception)
-    {
-        if (!test())
+        try
         {
-          throw Exception2( ckT("File not yet opened.") );
+            return size2(file_path);
+        }
+        catch (...)
+        {
+            return -1;
         }
     }
 
-#ifdef _WINDOWS
-#pragma warning( pop )
-#endif
+    inline void File::check_file_is_open() const throw(std::exception)
+    {
+        if (!test())
+            throw Exception2(ckT("file not yet opened."));
+    }
 
+#ifdef _WINDOWS
+#pragma warning(pop)
+#endif
 };
