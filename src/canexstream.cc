@@ -43,6 +43,15 @@ namespace ckcore
     }
 
     /**
+     * Returns the stream identifier name.
+     * @return The stream identifier name.
+     */
+    const tstring &CanexInStream::identifier() const
+    {
+        return ident_;
+    }
+
+    /**
      * Repositions the file pointer to the specified offset accoding to the
      * whence directive in the file.
      * @param [in] distance The number of bytes that the file pointer should
@@ -106,6 +115,15 @@ namespace ckcore
     CanexOutStream::CanexOutStream(OutStream &stream,const tstring &ident) :
         stream_(stream),ident_(ident)
     {
+    }
+
+    /**
+     * Returns the stream identifier name.
+     * @return The stream identifier name.
+     */
+    const tstring &CanexOutStream::identifier() const
+    {
+        return ident_;
     }
 
     /**

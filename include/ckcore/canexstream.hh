@@ -42,6 +42,7 @@ namespace ckcore
         CanexInStream(InStream &stream,const tchar *ident);
         CanexInStream(InStream &stream,const tstring &ident);
 
+        const tstring &identifier() const;
         virtual void seek(tuint32 distance,InStream::StreamWhence whence);
         virtual tint64 read(void *buffer,tuint32 count);
         bool end();
@@ -62,6 +63,7 @@ namespace ckcore
         CanexOutStream(OutStream &stream,const tchar *ident);
         CanexOutStream(OutStream &stream,const tstring &ident);
 
+        const tstring &identifier() const;
         virtual void write(void *buffer,tuint32 count);
     };
 
