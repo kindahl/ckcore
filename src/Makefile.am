@@ -1,14 +1,15 @@
 EXTRA_DIST = ../include/ckcore/buffer.hh ../include/ckcore/bufferedstream.hh \
-			 ../include/ckcore/canexstream.hh ../include/ckcore/convert.hh \
-			 ../include/ckcore/crcstream.hh ../include/ckcore/directory.hh \
-			 ../include/ckcore/dynlib.hh ../include/ckcore/exception.hh \
-			 ../include/ckcore/file.hh ../include/ckcore/filestream.hh \
-			 ../include/ckcore/log.hh ../include/ckcore/memory.hh \
-			 ../include/ckcore/nullstream.hh ../include/ckcore/path.hh \
-			 ../include/ckcore/process.hh ../include/ckcore/progress.hh \
-			 ../include/ckcore/progresser.hh ../include/ckcore/stream.hh \
-			 ../include/ckcore/string.hh ../include/ckcore/system.hh \
-			 ../include/ckcore/thread.hh ../include/ckcore/types.hh
+			 ../include/ckcore/canexstream.hh ../include/ckcore/cast.hh \
+			 ../include/ckcore/convert.hh ../include/ckcore/crcstream.hh \
+			 ../include/ckcore/directory.hh ../include/ckcore/dynlib.hh \
+			 ../include/ckcore/exception.hh ../include/ckcore/file.hh \
+			 ../include/ckcore/filestream.hh ../include/ckcore/log.hh \
+			 ../include/ckcore/memory.hh ../include/ckcore/nullstream.hh \
+			 ../include/ckcore/path.hh ../include/ckcore/process.hh \
+			 ../include/ckcore/progress.hh ../include/ckcore/progresser.hh \
+			 ../include/ckcore/stream.hh ../include/ckcore/string.hh \
+			 ../include/ckcore/system.hh ../include/ckcore/thread.hh \
+			 ../include/ckcore/types.hh
 AM_CPPFLAGS = -I$(srcdir)/../include
 SUBDIRS = unix
 
@@ -25,6 +26,7 @@ library_includedir = $(includedir)/ckcore
 library_include_HEADERS = ../include/ckcore/buffer.hh \
 						  ../include/ckcore/bufferedstream.hh \
 						  ../include/ckcore/canexstream.hh \
+						  ../include/ckcore/cast.hh \
 						  ../include/ckcore/convert.hh \
 						  ../include/ckcore/crcstream.hh \
 						  ../include/ckcore/directory.hh \
