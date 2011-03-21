@@ -286,6 +286,6 @@ namespace ckcore
 
     void throw_internal_error(const tchar *file,int line)
     {
-      throw Exception2(string::formatstr(ckT("Internal error in %s at line %d."),file,line));
+      throw Exception2(string::formatstr(ckT("internal error in %s at line %d."),file,line));
     }
 }
