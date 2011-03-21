@@ -71,10 +71,8 @@ public:
         std::list<ckcore::tstring> files1,files2;
         std::list<ckcore::tstring>::iterator it_file;
 
-        files1.push_back(ckT(".svn"));
         files1.push_back(ckT("file"));
 
-        files2.push_back(ckT(".svn"));
         files2.push_back(ckT("0bytes"));
         files2.push_back(ckT("53bytes"));
         files2.push_back(ckT("123bytes"));

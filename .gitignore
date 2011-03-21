@@ -2,10 +2,13 @@
 /lib64/*
 /obj/*
 /tests/bin/test*
-/tests/bin/filetester
-/tests/bin/smallclient
+/tests/bin/filetester*
+/tests/bin/smallclient*
 /tests/bin/streambench
 /tests/test.cc
+/tests/Debug/*
+/tests/Release/*
+/tests/*.vcproj.*.user
 *.ncb
 *.suo
 /src/windows/*.vcproj.*.user
