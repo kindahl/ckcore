@@ -34,8 +34,8 @@ public:
         const ckcore::tchar *str4 = ckT("128.0");
         const ckcore::tchar *str5 = ckT("-128.0");
 
-        std::string res_str;
-        TS_ASSERT_THROWS_NOTHING(res_str = ckcore::lexical_cast<std::string>(str1));
+        ckcore::tstring res_str;
+        TS_ASSERT_THROWS_NOTHING(res_str = ckcore::lexical_cast<ckcore::tstring>(str1));
         TS_ASSERT_EQUALS(res_str,ckT("string"));
 
         int res_int = 0;

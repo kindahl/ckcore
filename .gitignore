@@ -1,7 +1,7 @@
 /lib/*
 /lib64/*
 /obj/*
-/tests/bin/test
+/tests/bin/test*
 /tests/bin/filetester
 /tests/bin/smallclient
 /tests/bin/streambench

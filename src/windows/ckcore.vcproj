@@ -913,6 +913,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\ckcore\cast.hh"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\ckcore\convert.hh"
 				>
 			</File>

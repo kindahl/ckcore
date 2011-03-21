@@ -28,7 +28,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="Generating test program."
-				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh ../../tests/process.hh"
+				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh ../../tests/process.hh ../../tests/cast.hh"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -111,7 +111,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="Generating test program."
-				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh"
+				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh ../../tests/cast.hh"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -196,7 +196,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="Generating test program."
-				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh ../../tests/process.hh"
+				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh ../../tests/process.hh ../../tests/cast.hh"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -276,7 +276,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="Generating test program."
-				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh"
+				CommandLine="perl -w &quot;c:\program files\cxxtest\cxxtestgen.pl&quot; --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh ../../tests/cast.hh"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -365,6 +365,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\..\tests\cast.hh"
+				>
+			</File>
 			<File
 				RelativePath="..\..\tests\convert.hh"
 				>
