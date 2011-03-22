@@ -340,7 +340,7 @@ namespace ckcore
      * @param [in] p The second path to use for concatination.
      * @return A new Path object containing the two paths concatinated.
      */
-    Path Path::operator+(const Path &p)
+    Path Path::operator+(const Path &p) const
     {
         if (path_name_.size() < 1)
             return Path(p.path_name_.c_str());

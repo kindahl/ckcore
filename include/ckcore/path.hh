@@ -78,7 +78,7 @@ namespace ckcore
         bool operator==(const Path &p) const;
         bool operator!=(const Path &p) const;
         Path &operator=(const Path &p);
-        Path operator+(const Path &p);
+        Path operator+(const Path &p) const;
         Path &operator+=(const Path &p);
     };
 }
