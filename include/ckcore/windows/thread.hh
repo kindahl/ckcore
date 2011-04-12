@@ -40,7 +40,6 @@ namespace ckcore
         {
         private:
             HANDLE handle_;
-            bool locked_;
 
         public:
             Mutex();

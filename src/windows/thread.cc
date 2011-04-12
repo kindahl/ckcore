@@ -17,10 +17,8 @@
  */
 
 #include "stdafx.hh"
-
 #include <atlbase.h>
 #include <atlapp.h>
-
 #include <memory>
 #include "ckcore/thread.hh"
 
@@ -113,13 +111,13 @@ namespace ckcore
          */
         thandle identifier()
         {
-            return static_cast<thandle>(GetCurrentThreadId());
+            return (thandle)static_cast<tuint64>(GetCurrentThreadId());
         }
 
         /**
          * Constructs a Mutex object.
          */
-        Mutex::Mutex() : handle_(CreateMutex(NULL,FALSE,NULL)),locked_(false)
+        Mutex::Mutex() : handle_(CreateMutex(NULL,FALSE,NULL))
         {
         }
 
@@ -130,7 +128,7 @@ namespace ckcore
         {
             if (handle_ != NULL)
             {
-                ATLVERIFY( 0 != CloseHandle(handle_) );
+                ATLVERIFY(0 != CloseHandle(handle_));
                 handle_ = NULL;
             }
         }
@@ -142,10 +140,10 @@ namespace ckcore
          */
         bool Mutex::lock()
         {
-            if (handle_ == NULL || locked_)
+            if (handle_ == NULL)
                 return false;
 
-            return locked_ = WaitForSingleObject(handle_,INFINITE) == WAIT_OBJECT_0;
+            return WaitForSingleObject(handle_,INFINITE) == WAIT_OBJECT_0;
         }
 
         /**
@@ -155,10 +153,10 @@ namespace ckcore
          */
         bool Mutex::unlock()
         {
-            if (handle_ == NULL || !locked_)
+            if (handle_ == NULL)
                 return false;
 
-            return !(locked_ = !(ReleaseMutex(handle_) == TRUE));
+            return ReleaseMutex(handle_) == TRUE;
         }
     };
 };
