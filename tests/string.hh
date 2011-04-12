@@ -17,9 +17,7 @@
  */
 
 #include <cxxtest/TestSuite.h>
-
 #include <string.h>
-
 #include "ckcore/types.hh"
 #include "ckcore/string.hh"
 

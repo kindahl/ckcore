@@ -29,38 +29,30 @@ namespace ckcore
 {
 #ifdef _WINDOWS
 #ifdef _UNICODE
-
     typedef wchar_t tchar;
     typedef std::wstring tstring;
     typedef std::wstringstream tstringstream;
-
 #ifndef ckT
-// We need a "second pass" below so that ckT( SOME_SYMBOL ) ,
-// where SOME_SYMBOL is #define'd to be a string,
-// also works fine.
-#define ckT_secondPass(quote) L ## quote
-#define ckT(quote) ckT_secondPass(quote)
+// We need a "second pass" below so that ckT(SOME_SYMBOL), where SOME_SYMBOL
+// is #define'd to be a string, also works fine.
+#  define ckT_secondPass(quote) L ## quote
+#  define ckT(quote) ckT_secondPass(quote)
 #endif
-
-#else  // #ifdef _UNICODE
-
+#else   // #ifdef _UNICODE
     typedef char tchar;
     typedef std::string tstring;
     typedef std::stringstream tstringstream;
-
 #ifndef ckT
-#define ckT(quote) quote
+#  define ckT(quote) quote
 #endif
-
 #endif  // #ifdef _UNICODE
-
     typedef __int64 tint64;
     typedef unsigned __int64 tuint64;
     typedef long tint32;
     typedef unsigned long tuint32;
     typedef short tint16;
     typedef unsigned short tuint16;
-
+    typedef void *thandle;
 #elif defined(_UNIX)
     typedef char tchar;
     typedef long long tint64;
@@ -71,20 +63,20 @@ namespace ckcore
     typedef unsigned short tuint16;
     typedef std::string tstring;
     typedef std::stringstream tstringstream;
+    typedef void *thandle;
 #ifndef ckT
-#define ckT(quote) quote
+#  define ckT(quote) quote
 #endif
-
 #else
-#error "Unknown platform."
+#  error "Unknown platform."
 #endif
 
 #ifndef __GNUC__
 #  define __attribute__(x)
 #endif
 
-// Note that __declspec(dllexport) is recognised on cygwin and mingw,
-// so we should not just let all __declspec() vanish, like we do with __attribute__.
+// Note that __declspec(dllexport) is recognised on cygwin and mingw, so we
+// should not just let all __declspec() vanish, like we do with __attribute__.
 #ifdef _MSC_VER
 #  define MSC_DECLSPEC_NORETURN __declspec(noreturn)
 #else

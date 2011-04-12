@@ -29,7 +29,9 @@ namespace ckcore
     namespace thread
     {
         bool create(tfunction func,void *param);
-        bool sleep(ckcore::tuint32 milliseconds);
+        bool sleep(tuint32 milliseconds);
+        tuint32 ideal_count();
+        thandle identifier();
 
         /**
          * @brief Thead mutex class.

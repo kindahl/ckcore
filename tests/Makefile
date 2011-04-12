@@ -9,7 +9,7 @@ clean:
 	rm -f bin/test bin/streambench test.cc
 
 test:
-	cxxtestgen.pl --error-printer -o test.cc cast.hh convert.hh directory.hh file.hh linereader.hh path.hh process.hh stream.hh string.hh
+	cxxtestgen.pl --error-printer -o test.cc cast.hh convert.hh directory.hh file.hh linereader.hh path.hh process.hh stream.hh string.hh thread.hh threadpool.hh
 	$(CXX) $(CXXFLAGS) test.cc -o bin/test
 
 streambench:

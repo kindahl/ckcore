@@ -95,6 +95,28 @@ namespace ckcore
         }
 
         /**
+         * Returns the ideal number of threads that the current system can
+         * execute in parallel.
+         * @return The ideal number of threads that the current system can
+         *         execute in parallel.
+         */
+        tuint32 ideal_count()
+        {
+            SYSTEM_INFO sys_info;
+            GetSystemInfo(&sys_info);
+            return sys_info.dwNumberOfProcessors;
+        }
+
+        /**
+         * Returns the current thread identifier.
+         * @return The current thread identifier.
+         */
+        thandle identifier()
+        {
+            return static_cast<thandle>(GetCurrentThreadId());
+        }
+
+        /**
          * Constructs a Mutex object.
          */
         Mutex::Mutex() : handle_(CreateMutex(NULL,FALSE,NULL)),locked_(false)
