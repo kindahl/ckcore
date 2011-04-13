@@ -17,13 +17,135 @@
  */
 
 #include "stdafx.hh"
+#include <iostream>
 #include <atlbase.h>
 #include <atlapp.h>
 #include <memory>
+#include "ckcore/locker.hh"
 #include "ckcore/thread.hh"
 
 namespace ckcore
 {
+    /**
+     * Constructs a new thread object.
+     */
+    Thread::Thread()
+        : thread_(NULL),running_(false)
+    {
+    }
+
+    /**
+     * Destructs the thread object and kills the thread if it's running.
+     */
+    Thread::~Thread()
+    {
+        kill();
+    }
+
+    /**
+     * The main thread entry point for new threads.
+     * @param [in] param Pointer to thread object.
+     * @return Always returns NULL.
+     */
+    unsigned long __stdcall Thread::native_thread(void *param)
+    {
+        Thread *thread = static_cast<Thread *>(param);
+
+        try
+        {
+            thread->run();
+        }
+        catch (...)
+        {
+        }
+
+        Locker<thread::Mutex> lock(thread->mutex_);
+        thread->thread_done_.signal_all();
+        thread->running_ = false;
+
+        return NULL;
+    }
+
+    /**
+     * Starts the thread.
+     * @return If the thread was successfully started true is returned,
+     *         otherwise false is returned.
+     */
+    bool Thread::start()
+    {
+        Locker<thread::Mutex> lock(mutex_);
+
+        if (running_)
+            return false;
+
+        // Create the thread.
+        unsigned long thread_id = 0;
+        thread_ = CreateThread(NULL,0,native_thread,this,0,&thread_id);
+        if (thread_ == NULL)
+            return false;
+
+        running_ = true;
+        return true;
+    }
+
+    /**
+     * Waits until the thread has finished.
+     * @param [in] timout Maximum time to wait in milliseconds.
+     * @return If no timeout ocurred true is returned, otherwise false is
+     *         returned.
+     */
+    bool Thread::wait(tuint32 timeout)
+    {
+        Locker<thread::Mutex> lock(mutex_);
+
+        // Make sure a thread is not waiting on itself.
+        if (thread_ == GetCurrentThread())
+            return false;
+
+        if (!running_)
+            return false;
+
+        return thread_done_.wait(mutex_,timeout);
+    }
+
+    /**
+     * Immediately kills the thread, the function does not return until the
+     * the thread has exited.
+     * @return If the thread was successfully killed true is returned, if not
+     *         false is returned.
+     */
+    bool Thread::kill()
+    {
+        Locker<thread::Mutex> lock(mutex_);
+
+        if (!running_)
+            return false;
+
+        if (TerminateThread(thread_,1) == FALSE)
+            return false;
+
+        // We might have to trigger thread shutdown manually.
+        if (running_)
+        {
+            thread_done_.signal_all();
+            running_ = false;
+        }
+
+        running_ = false;
+        return true;
+    }
+
+    /**
+     * Checks if the thread is currently running.
+     * @return If the thread is running true is returned, if not false is
+     *         returned.
+     */
+    bool Thread::running() const
+    {
+        Locker<thread::Mutex> lock(mutex_);
+        return running_;
+    }
+
     namespace thread
     {
         /**
@@ -157,6 +279,126 @@ namespace ckcore
                 return false;
 
             return ReleaseMutex(handle_) == TRUE;
+        }
+
+        /**
+         * Constructs a wait condition object.
+         */
+        WaitCondition::WaitCondition()
+            : broadcast_(false),waiters_(0),
+              sema_(NULL),waiters_done_(NULL)
+        {
+            InitializeCriticalSection(&critical_);
+
+            sema_ = CreateSemaphore(NULL,0,0x7fffffff,NULL);
+            waiters_done_ = CreateEvent(NULL,FALSE,FALSE,NULL);
+        }
+
+        /**
+         * Destructs the wait condition object.
+         */
+        WaitCondition::~WaitCondition()
+        {
+            if (waiters_done_ != NULL)
+            {
+                CloseHandle(waiters_done_);
+                waiters_done_ = NULL;
+            }
+
+            if (sema_ != NULL)
+            {
+                CloseHandle(sema_);
+                sema_ = NULL;
+            }
+
+            DeleteCriticalSection(&critical_);
+        }
+
+        /**
+         * Waits on the mutex.
+         * @param [in] mutex Mutex to wait on.
+         * @param [in] timeout Time out in milliseconds.
+         * @return If successfully waited in the event with no time out true
+         *         is returned, otherwise false is returned.
+         */
+        bool WaitCondition::wait(Mutex &mutex,tuint32 timeout)
+        {
+            EnterCriticalSection(&critical_);
+            waiters_++;
+            LeaveCriticalSection(&critical_);
+
+            // Release the mutex and wait on the semaphore which will be set
+            // through signal_one or signal_all.
+            if (SignalObjectAndWait(mutex.handle_,sema_,
+                                    timeout == std::numeric_limits<tuint32>::max() ? INFINITE : timeout,
+                                    FALSE) != WAIT_OBJECT_0)
+            {
+                EnterCriticalSection(&critical_);
+                waiters_--;
+                LeaveCriticalSection(&critical_);
+                return false;
+            }
+
+            EnterCriticalSection(&critical_);
+            waiters_--;
+            // The last waiter to receive a broadcast must notify the signaler.
+            bool last_waiter = broadcast_ && waiters_ == 0;
+            LeaveCriticalSection(&critical_);
+
+            // If we're the last waiter thread during this particular broadcast
+            // then let all the other threads proceed.
+            if (last_waiter)
+                SignalObjectAndWait(waiters_done_,mutex.handle_,INFINITE,FALSE);
+            else
+                WaitForSingleObject(mutex.handle_,INFINITE);    // The mutex must always be re-locked.
+
+            return true;
+        }
+
+        /**
+         * Signals one waiting thread to continue.
+         */
+        void WaitCondition::signal_one()
+        {
+            EnterCriticalSection(&critical_);
+            int have_waiters = waiters_ > 0;
+            LeaveCriticalSection(&critical_);
+
+            if (have_waiters)
+                ReleaseSemaphore(sema_,1,0);
+        }
+
+        /**
+         * Signals all waiting threads to continue.
+         */
+        void WaitCondition::signal_all()
+        {
+            EnterCriticalSection(&critical_);
+
+            if (waiters_ > 0)
+            {
+                // We are broadcasting, even if there is just one waiter...
+                // Record that we are broadcasting, which helps optimize
+                // <pthread_cond_wait> for the non-broadcast case.
+                broadcast_ = true;
+
+                // Wake up all the waiters atomically.
+                ReleaseSemaphore(sema_,waiters_,0);
+
+                LeaveCriticalSection(&critical_);
+
+                // Wait for all the awakened threads to acquire the counting
+                // semaphore. 
+                WaitForSingleObject(waiters_done_,INFINITE);
+
+                // This assignment is okay, even without the <waiters_count_lock_> held 
+                // because no other waiter threads can wake up to access it.
+                broadcast_ = false;
+            }
+            else
+            {
+                LeaveCriticalSection(&critical_);
+            }
         }
     };
 };

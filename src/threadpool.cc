@@ -148,8 +148,8 @@ namespace ckcore
      */
     tuint32 ThreadPool::active_threads() const
     {
-        return all_threads_.size() + res_threads_ -
-               ret_threads_.size() - idl_threads_;
+        return static_cast<tuint32>(all_threads_.size()) + res_threads_ -
+               static_cast<tuint32>(ret_threads_.size()) - idl_threads_;
     }
 
     /**
@@ -167,7 +167,7 @@ namespace ckcore
      */
     tuint32 ThreadPool::retired_threads() const
     {
-        return ret_threads_.size();
+        return static_cast<tuint32>(ret_threads_.size());
     }
 
     /**

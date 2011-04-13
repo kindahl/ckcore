@@ -292,7 +292,7 @@ public:
 
     void testThreadPoolReserve()
     {
-//#if 1
+#if 1
         ckcore::ThreadPool &tp = ckcore::ThreadPool::instance();
         tp.set_retire_timeout(ckcore::ThreadPool::THREAD_RETIRE_TIMEOUT);
 
@@ -345,5 +345,6 @@ public:
         {
             TS_ASSERT_EQUALS(deleted[i],1);
         }
+#endif
     }
 };

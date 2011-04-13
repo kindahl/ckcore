@@ -276,6 +276,9 @@ namespace ckcore
             return pthread_mutex_unlock(&mutex_) == 0;
         }
 
+        /**
+         * Constructs a wait condition object.
+         */
         WaitCondition::WaitCondition()
             : waiters_(0),wakeups_(0)
         {
@@ -283,6 +286,9 @@ namespace ckcore
             pthread_cond_init(&cond_,NULL);
         }
 
+        /**
+         * Destructs the wait condition object.
+         */
         WaitCondition::~WaitCondition()
         {
             pthread_cond_destroy(&cond_);
