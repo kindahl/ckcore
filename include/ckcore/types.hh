@@ -52,6 +52,8 @@ namespace ckcore
     typedef unsigned long tuint32;
     typedef short tint16;
     typedef unsigned short tuint16;
+    typedef char tint8;
+    typedef unsigned char tuint8;
     typedef void *thandle;
 #elif defined(_UNIX)
     typedef char tchar;
@@ -61,6 +63,8 @@ namespace ckcore
     typedef unsigned int tuint32;
     typedef short tint16;
     typedef unsigned short tuint16;
+    typedef char tint8;
+    typedef unsigned char tuint8;
     typedef std::string tstring;
     typedef std::stringstream tstringstream;
     typedef void *thandle;
