@@ -1,4 +1,5 @@
 #include <iostream>
+#include <assert.h>
 
 #ifdef _WINDOWS
 #include <string>
@@ -12,8 +13,6 @@
 #include <ckcore/path.hh>
 #include <ckcore/file.hh>
 #include <ckcore/string.hh>
-
-#include <assert.h>
 
 int main(int argc,const char *argv[])
 {
@@ -77,12 +76,12 @@ int main(int argc,const char *argv[])
                 break;
 
             default:
-                assert( false );
+                assert(false);
         }
 
         return 0;
     }
-    catch ( const std::exception & e )
+    catch (const std::exception & e)
     {
       return 1;
     }

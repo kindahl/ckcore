@@ -108,7 +108,7 @@ namespace ckcore
         else
         {
             // I cannot think of a good reason why closing a handle should fail.
-            ATLASSERT( false );
+            ATLASSERT(false);
         }
 
         return false;
@@ -210,7 +210,7 @@ namespace ckcore
     tint64 File::read(void *buffer,tint64 count)
     {
         // ReadFile() takes a DWORD (defined as unsigned long) as the byte count.
-        ATLASSERT( count >= 0 || count <= ULONG_MAX );
+        ATLASSERT(count >= 0 || count <= ULONG_MAX);
 
         if (file_handle_ == INVALID_HANDLE_VALUE)
             return -1;
@@ -233,7 +233,7 @@ namespace ckcore
     tint64 File::write(const void *buffer,tint64 count)
     {
         // WriteFile() takes a DWORD (defined as unsigned long) as the byte count.
-        ATLASSERT( count >= 0 || count <= ULONG_MAX );
+        ATLASSERT(count >= 0 || count <= ULONG_MAX);
 
         if (file_handle_ == INVALID_HANDLE_VALUE)
             return -1;
@@ -432,7 +432,7 @@ namespace ckcore
         FILETIME access_ftime,modify_ftime,create_ftime;
         bool result = GetFileTime(file_handle,&create_ftime,&access_ftime,
                                   &modify_ftime) == TRUE;
-        ATLVERIFY( 0 != CloseHandle(file_handle) );
+        ATLVERIFY(0 != CloseHandle(file_handle));
 
         if (!result)
             return false;
@@ -533,13 +533,13 @@ namespace ckcore
                 const DWORD lastError = GetLastError();
                 if ( lastError != ERROR_SUCCESS )
                 {
-                    ATLVERIFY( 0 != CloseHandle(file_handle) );
+                    ATLVERIFY(0 != CloseHandle(file_handle));
                     throw_from_given_last_error( lastError, NULL );
                 }
             }
             
             tint64 result = li.QuadPart;
-            ATLVERIFY( 0 != CloseHandle(file_handle) );
+            ATLVERIFY(0 != CloseHandle(file_handle));
             
             return result;
         }

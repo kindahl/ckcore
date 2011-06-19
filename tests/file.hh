@@ -22,9 +22,10 @@
 #include "ckcore/file.hh"
 #include "ckcore/process.hh"
 
-#ifndef TEST_SRC_DIR
-#define TEST_SRC_DIR        "."
+#ifdef TEST_SRC_DIR
+#undef TEST_SRC_DIR
 #endif
+#define TEST_SRC_DIR        "."
 
 #ifdef _WINDOWS
 #define FILETESTER      ckT("bin/filetester.exe")
@@ -121,10 +122,10 @@ public:
 
         const ckcore::tint32 out_data_size = sizeof( out_data );
 
-        ckcore::tint32 tot_write = 0;
+        ckcore::tint64 tot_write = 0;
         while (tot_write < out_data_size)
         {
-            ckcore::tint32 write = file.write(out_data + tot_write, out_data_size - tot_write);
+            ckcore::tint64 write = file.write(out_data + tot_write, out_data_size - tot_write);
             TS_ASSERT(write != -1);
 
             tot_write += write;
@@ -134,10 +135,10 @@ public:
         TS_ASSERT_THROWS_NOTHING( file.open2(ckcore::File::ckOPEN_READ) );
         char in_data[out_data_size];
 
-        ckcore::tint32 tot_read = 0;
+        ckcore::tint64 tot_read = 0;
         while (tot_read < out_data_size)
         {
-            ckcore::tint32 read = file.read(in_data,out_data_size - tot_read);
+            ckcore::tint64 read = file.read(in_data,out_data_size - tot_read);
             TS_ASSERT(read != -1);
 
             tot_read += read;

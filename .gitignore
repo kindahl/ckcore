@@ -9,10 +9,15 @@
 /tests/Debug/*
 /tests/Release/*
 /tests/*.vcproj.*.user
+/tests/*.vcxproj.user
 *.ncb
 *.suo
+*.sdf
+*.opensdf
 /src/windows/*.vcproj.*.user
+/src/windows/*.vcxproj.user
 /src/windows/test.cc
+/src/windows/ipch/*
 
 /aclocal.m4
 /autom4te.cache/*

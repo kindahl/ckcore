@@ -22,9 +22,10 @@
 #include "ckcore/types.hh"
 #include "ckcore/directory.hh"
 
-#ifndef TEST_SRC_DIR
-#define TEST_SRC_DIR        "."
+#ifdef TEST_SRC_DIR
+#undef TEST_SRC_DIR
 #endif
+#define TEST_SRC_DIR        "."
 
 class DirectoryTestSuite : public CxxTest::TestSuite
 {
