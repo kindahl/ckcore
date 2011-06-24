@@ -126,7 +126,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <PreBuildEvent>
       <Message>Generating test program.</Message>
-      <Command>perl -w "c:\program files\cxxtest\cxxtestgen.pl" --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh ../../tests/cast.hh ../../tests/thread.hh ../../tests/threadpool.hh</Command>
+      <Command>perl -w "c:\program files\cxxtest\cxxtestgen.pl" --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh ../../tests/process.hh ../../tests/cast.hh ../../tests/thread.hh ../../tests/threadpool.hh</Command>
     </PreBuildEvent>
     <CustomBuildStep>
       <Message>Performing Custom Build Step</Message>
@@ -182,7 +182,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <PreBuildEvent>
       <Message>Generating test program.</Message>
-      <Command>perl -w "c:\program files\cxxtest\cxxtestgen.pl" --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh ../../tests/cast.hh ../../tests/thread.hh ../../tests/threadpool.hh</Command>
+      <Command>perl -w "c:\program files\cxxtest\cxxtestgen.pl" --error-printer -o test.cc ../../tests/directory.hh ../../tests/file.hh ../../tests/path.hh ../../tests/stream.hh ../../tests/convert.hh ../../tests/string.hh ../../tests/linereader.hh ../../tests/process.hh ../../tests/cast.hh ../../tests/thread.hh ../../tests/threadpool.hh</Command>
     </PreBuildEvent>
     <Midl>
       <TargetEnvironment>X64</TargetEnvironment>
