@@ -398,7 +398,8 @@ namespace ckcore
         process_handle_ = pi.hProcess;
 
         // Close any unnecessary handles.
-        ATLVERIFY(0 != CloseHandle(pi.hThread));
+        if (pi.hThread)
+            ATLVERIFY(0 != CloseHandle(pi.hThread));
 
         ATLVERIFY(0 != CloseHandle(input_read));
         ATLVERIFY(0 != CloseHandle(output_write));
