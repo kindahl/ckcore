@@ -30,8 +30,9 @@ namespace ckcore
      * Constructs a new thread object.
      */
     Thread::Thread()
-        : thread_(NULL),running_(false)
+        : thread_(NULL),start_event_(NULL),running_(false)
     {
+        start_event_ = CreateEvent(NULL,false,false,NULL);
     }
 
     /**
@@ -40,6 +41,13 @@ namespace ckcore
     Thread::~Thread()
     {
         kill();
+
+        // Destroy start event.
+        if (start_event_ != NULL)
+        {
+            ATLVERIFY(0 != CloseHandle(start_event_));
+            start_event_ = NULL;
+        }
     }
 
     /**
@@ -50,6 +58,10 @@ namespace ckcore
     unsigned long __stdcall Thread::native_thread(void *param)
     {
         Thread *thread = static_cast<Thread *>(param);
+
+        // Now when we have the mutex we can notify the thread creator that we have
+        // started.
+        SetEvent(thread->start_event_);
 
         try
         {
@@ -83,6 +95,10 @@ namespace ckcore
         thread_ = CreateThread(NULL,0,native_thread,this,0,&thread_id);
         if (thread_ == NULL)
             return false;
+
+        // Wait for the thread to start before returning.
+        if (WaitForSingleObject(start_event_,INFINITE) == WAIT_FAILED)
+            Sleep(200);
 
         running_ = true;
         return true;
@@ -126,10 +142,7 @@ namespace ckcore
 
         // We might have to trigger thread shutdown manually.
         if (running_)
-        {
             thread_done_.signal_all();
-            running_ = false;
-        }
 
         running_ = false;
         return true;
