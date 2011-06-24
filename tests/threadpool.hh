@@ -161,7 +161,9 @@ public:
         TS_ASSERT_EQUALS(tp.idle_threads(),0);
         TS_ASSERT_EQUALS(tp.retired_threads(),0);
 
-        ckcore::thread::sleep(200);
+        // Wait for all tasks to finish.
+        while (tp.active_threads() > 0)
+            ckcore::thread::sleep(200);
 
         // Verify results.
         for (ckcore::tuint32 i = 0; i < ckcore::thread::ideal_count(); i++)
