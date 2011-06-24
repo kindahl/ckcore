@@ -90,6 +90,7 @@ namespace ckcore
     {
     private:
         HANDLE thread_;
+        HANDLE start_event_;
         bool running_;
         mutable thread::Mutex mutex_;
         thread::WaitCondition thread_done_;
@@ -101,7 +102,7 @@ namespace ckcore
 
     public:
         Thread();
-        ~Thread();
+        virtual ~Thread();
 
         bool start();
         bool wait(tuint32 timeout = std::numeric_limits<tuint32>::max());
