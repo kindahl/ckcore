@@ -23,9 +23,7 @@
 #include <atlbase.h>
 #include <atlapp.h>
 #endif
-
-#include <assert.h>
-
+#include "ckcore/assert.hh"
 #include "ckcore/string.hh"
 
 namespace ckcore
@@ -195,7 +193,7 @@ namespace ckcore
             }
 
             res.resize(char_cnt + 1);
-            ATLVERIFY(char_cnt == _vstprintf_p(&res[0],char_cnt + 1,fmt,args));
+            ckVERIFY(char_cnt == _vstprintf_p(&res[0],char_cnt + 1,fmt,args));
 
             // Remove the null terminator, std::string will add its own if
             // necessary.
@@ -249,7 +247,7 @@ namespace ckcore
          */
         wchar_t *ansi_to_utf16(const char *ansi,wchar_t *utf,int utf_len)
         {
-          assert( utf_len >= 0 ); // See size_t typecast below.
+            ckASSERT(utf_len >= 0);     // See size_t typecast below.
 #ifdef _WINDOWS
             int converted = MultiByteToWideChar(AreFileApisANSI() ? CP_ACP : CP_OEMCP,
                                                 MB_PRECOMPOSED,ansi,(int)strlen(ansi) + 1,
@@ -281,7 +279,7 @@ namespace ckcore
          */
         char *utf16_to_ansi(const wchar_t *utf,char *ansi,int ansi_len)
         {
-          assert( ansi_len >= 0 ); // See size_t typecast below.
+            ckASSERT(ansi_len >= 0);    // See size_t typecast below.
 #ifdef _WINDOWS
             int converted = WideCharToMultiByte(AreFileApisANSI() ? CP_ACP : CP_OEMCP,0,
                 utf,(int)lstrlenW(utf) + 1,ansi,ansi_len,NULL,NULL);

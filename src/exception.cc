@@ -16,19 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <ckcore/exception.hh>  // The include file for this module comes first.
-#include <assert.h>
 #include <stdarg.h>
 #include <string.h>  // strerror_r
-
 #ifdef _WINDOWS
 #include <comdef.h>
 #include <tchar.h>
-#include <atlbase.h>
-#include <atlapp.h>
-#endif  // #ifdef _WINDOWS
-
-#include <ckcore/string.hh>
+#endif
+#include "ckcore/assert.hh"
+#include "ckcore/exception.hh"
+#include "ckcore/string.hh"
 
 namespace ckcore
 {
@@ -205,11 +201,11 @@ namespace ckcore
             }
             catch (...)
             {
-                ATLVERIFY(NULL == LocalFree(buffer));
+                ckVERIFY(NULL == LocalFree(buffer));
                 throw;
             }
 
-            ATLVERIFY(NULL == LocalFree(buffer));
+            ckVERIFY(NULL == LocalFree(buffer));
         }
         else
         {

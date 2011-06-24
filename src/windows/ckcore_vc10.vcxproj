@@ -342,6 +342,7 @@
 </Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)cpuid64.obj;%(Outputs)</Outputs>
     </CustomBuild>
+    <None Include="..\..\include\ckcore\assert.hh" />
     <None Include="..\..\include\ckcore\buffer.hh" />
     <None Include="..\..\include\ckcore\bufferedstream.hh" />
     <None Include="..\..\include\ckcore\canexstream.hh" />

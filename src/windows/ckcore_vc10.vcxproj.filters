@@ -179,6 +179,9 @@
     <None Include="util.hh">
       <Filter>Header Files\windows</Filter>
     </None>
+    <None Include="..\..\include\ckcore\assert.hh">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="cpuid64.asm">

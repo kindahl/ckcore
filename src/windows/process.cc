@@ -17,10 +17,7 @@
  */
 
 #include "stdafx.hh"
-
-#include <atlbase.h>
-#include <atlapp.h>
-
+#include "ckcore/assert.hh"
 #include "ckcore/stream.hh"
 #include "ckcore/process.hh"
 
@@ -66,27 +63,27 @@ namespace ckcore
         // Destroy start event.
         if (start_event_ != NULL)
         {
-            ATLVERIFY(0 != CloseHandle(start_event_));
+            ckVERIFY(0 != CloseHandle(start_event_));
             start_event_ = NULL;
         }
 
         // Destroy stop event.
         if (stop_event_ != NULL)
         {
-            ATLVERIFY(0 != CloseHandle(stop_event_));
+            ckVERIFY(0 != CloseHandle(stop_event_));
             stop_event_ = NULL;
         }
 
         // Closes mutexes.
         if (mutex_exec_ != NULL)
         {
-            ATLVERIFY(0 != CloseHandle(mutex_exec_));
+            ckVERIFY(0 != CloseHandle(mutex_exec_));
             mutex_exec_ = NULL;
         }
 
         if (mutex_ != NULL)
         {
-            ATLVERIFY(0 != CloseHandle(mutex_));
+            ckVERIFY(0 != CloseHandle(mutex_));
             mutex_ = NULL;
         }
     }
@@ -105,7 +102,7 @@ namespace ckcore
             {
                 // If the thread does not respond within 5 seconds it will be
                 // forced to terminate.
-                ATLVERIFY(0 != SetEvent(stop_event_));
+                ckVERIFY(0 != SetEvent(stop_event_));
 
                 /*if (WaitForSingleObject(thread_handle_,5000) == WAIT_TIMEOUT)
                     TerminateThread(thread_handle_,-2);*/
@@ -113,12 +110,12 @@ namespace ckcore
                 //         user.
                 if (WaitForSingleObject(thread_handle_,INFINITE) != WAIT_OBJECT_0)
                 {
-                    ATLASSERT(false);
-                    ATLVERIFY(0 != TerminateThread(thread_handle_,-2));
+                    ckASSERT(false);
+                    ckVERIFY(0 != TerminateThread(thread_handle_,-2));
                 }
             }
 
-            ATLVERIFY(0 != CloseHandle(thread_handle_));
+            ckVERIFY(0 != CloseHandle(thread_handle_));
             thread_handle_ = NULL;
         }
 
@@ -136,13 +133,13 @@ namespace ckcore
         // wait for the child to terminate, we'll get a nice deadlock.
         if (pipe_stdin_ != NULL)
         {
-            ATLVERIFY(0 != CloseHandle(pipe_stdin_));
+            ckVERIFY(0 != CloseHandle(pipe_stdin_));
             pipe_stdin_ = NULL;
         }
 
         if (pipe_output_ != NULL)
         {
-            ATLVERIFY(0 != CloseHandle(pipe_output_));
+            ckVERIFY(0 != CloseHandle(pipe_output_));
             pipe_output_ = NULL;
         }
 
@@ -157,29 +154,29 @@ namespace ckcore
             // the hard disk or get into some other kind of trouble. The best thing
             // to do would be to warn the user and let him decide. This
             // is not implemented yet.
-            ATLVERIFY(WAIT_OBJECT_0 == WaitForSingleObject(process_handle_,INFINITE));
+            ckVERIFY(WAIT_OBJECT_0 == WaitForSingleObject(process_handle_,INFINITE));
 
             if (GetExitCodeProcess(process_handle_,&exit_code_) == FALSE)
             {
-                ATLASSERT(false);   // Actually, this should never fail.
+                ckASSERT(false);   // Actually, this should never fail.
                 exit_code_ = -1;
             }
 
-            ATLASSERT(exit_code_ != STILL_ACTIVE);
+            ckASSERT(exit_code_ != STILL_ACTIVE);
 
-            ATLVERIFY(0 != CloseHandle(process_handle_));
+            ckVERIFY(0 != CloseHandle(process_handle_));
             process_handle_ = NULL;
         }
 
         // Reset state.
-        ATLVERIFY(0 != ResetEvent(start_event_));
-        ATLVERIFY(0 != ResetEvent(stop_event_));
+        ckVERIFY(0 != ResetEvent(start_event_));
+        ckVERIFY(0 != ResetEvent(stop_event_));
 
         thread_id_ = 0;
         state_ = STATE_STOPPED;
 
         if (locked)
-            ATLVERIFY(0 != ReleaseMutex(mutex_));
+            ckVERIFY(0 != ReleaseMutex(mutex_));
     }
 
     /**
@@ -329,8 +326,8 @@ namespace ckcore
         if (!DuplicateHandle(GetCurrentProcess(),output_write,GetCurrentProcess(),
             &error_write,0,true,DUPLICATE_SAME_ACCESS))
         {
-            ATLVERIFY(0 != CloseHandle(output_read_temp));
-            ATLVERIFY(0 != CloseHandle(output_write));
+            ckVERIFY(0 != CloseHandle(output_read_temp));
+            ckVERIFY(0 != CloseHandle(output_write));
 
             return false;
         }
@@ -338,9 +335,9 @@ namespace ckcore
         // Create the child input pipe.
         if (!CreatePipe(&input_read,&input_write_temp,&sa,0))
         {
-            ATLVERIFY(0 != CloseHandle(output_read_temp));
-            ATLVERIFY(0 != CloseHandle(output_write));
-            ATLVERIFY(0 != CloseHandle(error_write));
+            ckVERIFY(0 != CloseHandle(output_read_temp));
+            ckVERIFY(0 != CloseHandle(output_write));
+            ckVERIFY(0 != CloseHandle(error_write));
 
             return false;
         }
@@ -351,11 +348,11 @@ namespace ckcore
         if (!DuplicateHandle(GetCurrentProcess(),output_read_temp,GetCurrentProcess(),
             &pipe_output_,0,false,DUPLICATE_SAME_ACCESS))
         {
-            ATLVERIFY(0 != CloseHandle(output_read_temp));
-            ATLVERIFY(0 != CloseHandle(output_write));
-            ATLVERIFY(0 != CloseHandle(error_write));
-            ATLVERIFY(0 != CloseHandle(input_write_temp));
-            ATLVERIFY(0 != CloseHandle(input_read));
+            ckVERIFY(0 != CloseHandle(output_read_temp));
+            ckVERIFY(0 != CloseHandle(output_write));
+            ckVERIFY(0 != CloseHandle(error_write));
+            ckVERIFY(0 != CloseHandle(input_write_temp));
+            ckVERIFY(0 != CloseHandle(input_read));
 
             return false;
         }
@@ -363,20 +360,20 @@ namespace ckcore
         if (!DuplicateHandle(GetCurrentProcess(),input_write_temp,GetCurrentProcess(),
             &pipe_stdin_,0,false,DUPLICATE_SAME_ACCESS))
         {
-            ATLVERIFY(0 != CloseHandle(output_read_temp));
-            ATLVERIFY(0 != CloseHandle(output_write));
-            ATLVERIFY(0 != CloseHandle(error_write));
-            ATLVERIFY(0 != CloseHandle(input_write_temp));
-            ATLVERIFY(0 != CloseHandle(input_read));
+            ckVERIFY(0 != CloseHandle(output_read_temp));
+            ckVERIFY(0 != CloseHandle(output_write));
+            ckVERIFY(0 != CloseHandle(error_write));
+            ckVERIFY(0 != CloseHandle(input_write_temp));
+            ckVERIFY(0 != CloseHandle(input_read));
 
-            ATLVERIFY(0 != CloseHandle(pipe_output_));
+            ckVERIFY(0 != CloseHandle(pipe_output_));
 
             return false;
         }
 
         // Now we can close the inherited pipes.
-        ATLVERIFY(0 != CloseHandle(output_read_temp));
-        ATLVERIFY(0 != CloseHandle(input_write_temp));
+        ckVERIFY(0 != CloseHandle(output_read_temp));
+        ckVERIFY(0 != CloseHandle(input_write_temp));
 
         // Create the process.
         PROCESS_INFORMATION pi;
@@ -399,16 +396,16 @@ namespace ckcore
 
         // Close any unnecessary handles.
         if (pi.hThread)
-            ATLVERIFY(0 != CloseHandle(pi.hThread));
+            ckVERIFY(0 != CloseHandle(pi.hThread));
 
-        ATLVERIFY(0 != CloseHandle(input_read));
-        ATLVERIFY(0 != CloseHandle(output_write));
-        ATLVERIFY(0 != CloseHandle(error_write));
+        ckVERIFY(0 != CloseHandle(input_read));
+        ckVERIFY(0 != CloseHandle(output_write));
+        ckVERIFY(0 != CloseHandle(error_write));
 
         if (!result)
         {
-            ATLVERIFY(0 != CloseHandle(pipe_stdin_));
-            ATLVERIFY(0 != CloseHandle(pipe_output_));
+            ckVERIFY(0 != CloseHandle(pipe_stdin_));
+            ckVERIFY(0 != CloseHandle(pipe_output_));
             pipe_stdin_ = NULL;
             pipe_output_ = NULL;
 

@@ -17,10 +17,8 @@
  */
 
 #include "stdafx.hh"
-#include <iostream>
-#include <atlbase.h>
-#include <atlapp.h>
 #include <memory>
+#include "ckcore/assert.hh"
 #include "ckcore/locker.hh"
 #include "ckcore/thread.hh"
 
@@ -45,7 +43,7 @@ namespace ckcore
         // Destroy start event.
         if (start_event_ != NULL)
         {
-            ATLVERIFY(0 != CloseHandle(start_event_));
+            ckVERIFY(0 != CloseHandle(start_event_));
             start_event_ = NULL;
         }
     }
@@ -263,7 +261,7 @@ namespace ckcore
         {
             if (handle_ != NULL)
             {
-                ATLVERIFY(0 != CloseHandle(handle_));
+                ckVERIFY(0 != CloseHandle(handle_));
                 handle_ = NULL;
             }
         }
