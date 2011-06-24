@@ -44,3 +44,11 @@
 #    define ckVERIFY(expr) (expr)
 #  endif
 #endif
+
+#ifndef ckDEBUG
+#  ifdef _DEBUG
+#    define ckDEBUG(expr) (expr)
+#  else
+#    define ckDEBUG(ignore) ((void)0)
+#  endif
+#endif
