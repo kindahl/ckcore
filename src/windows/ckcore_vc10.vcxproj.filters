@@ -84,6 +84,9 @@
     <ClCompile Include="util.cc">
       <Filter>Source Files\windows</Filter>
     </ClCompile>
+    <ClCompile Include="..\assert.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\ckcore\buffer.hh">

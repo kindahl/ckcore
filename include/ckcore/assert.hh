@@ -29,6 +29,14 @@
 #endif
 #include "ckcore/types.hh"
 
+#define ckDBG_PRINT_BUF_SIZE        1024
+
+namespace ckcore
+{
+    void dbg_printf(const char * format, ...);
+    void dbg_trace_printf(const char * file,int line,const char * format, ...);
+}
+
 #ifdef _WINDOWS
 #  ifndef ckASSERT
 #    define ckASSERT(expr) _ASSERTE(expr)
@@ -50,5 +58,21 @@
 #    define ckDEBUG(expr) (expr)
 #  else
 #    define ckDEBUG(ignore) ((void)0)
+#  endif
+#endif
+
+#ifndef ckTRACE
+#  ifdef _DEBUG
+#    define ckTRACE(format,...) dbg_trace_printf(__FILE__,__LINE__,format,__VA_ARGS__)
+#  else
+#    define ckTRACE(format,args...) ((void)0)
+#  endif
+#endif
+
+#ifndef ckTRACE_IF
+#  ifdef _DEBUG
+#    define ckTRACE_IF(cond,format,...) do { if (cond) { dbg_trace_printf(__FILE__,__LINE__,format,__VA_ARGS__); } } while (0)
+#  else
+#    define ckTRACE_IF(cond,format,args...) ((void)0)
 #  endif
 #endif
