@@ -1,18 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ckcore", "ckcore_vc08.vcproj", "{8C6E3FA3-12FB-4C9C-8E7F-43C0E19C78CD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ckcore", "src\windows\ckcore_vc08.vcproj", "{8C6E3FA3-12FB-4C9C-8E7F-43C0E19C78CD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test_vc08.vcproj", "{2C35640E-0BF9-4BAE-8A0E-3DE5A691D160}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "src\windows\test_vc08.vcproj", "{2C35640E-0BF9-4BAE-8A0E-3DE5A691D160}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5B9D921C-13EB-490F-AEEE-79640E3AB558} = {5B9D921C-13EB-490F-AEEE-79640E3AB558}
 		{07C4A19F-347B-4BD8-9BB6-A212E02FF32E} = {07C4A19F-347B-4BD8-9BB6-A212E02FF32E}
 		{8C6E3FA3-12FB-4C9C-8E7F-43C0E19C78CD} = {8C6E3FA3-12FB-4C9C-8E7F-43C0E19C78CD}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "filetester", "..\..\tests\filetester_vc08.vcproj", "{07C4A19F-347B-4BD8-9BB6-A212E02FF32E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "filetester", "tests\filetester_vc08.vcproj", "{07C4A19F-347B-4BD8-9BB6-A212E02FF32E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "smallclient", "..\..\tests\smallclient_vc08.vcproj", "{5B9D921C-13EB-490F-AEEE-79640E3AB558}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "smallclient", "tests\smallclient_vc08.vcproj", "{5B9D921C-13EB-490F-AEEE-79640E3AB558}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

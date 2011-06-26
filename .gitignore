@@ -18,6 +18,7 @@
 /src/windows/*.vcxproj.user
 /src/windows/test.cc
 /src/windows/ipch/*
+/ipch/*
 
 /aclocal.m4
 /autom4te.cache/*
