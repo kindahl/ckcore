@@ -25,7 +25,7 @@
 #if defined(_WINDOWS)
 #  include <crtdbg.h>
 #elif defined(_UNIX)
-#  #include <cassert>
+#  include <cassert>
 #endif
 #include "ckcore/types.hh"
 
@@ -37,11 +37,15 @@ namespace ckcore
     void dbg_trace_printf(const char * file,int line,const char * format, ...);
 }
 
-#ifdef _WINDOWS
-#  ifndef ckASSERT
-#    define ckASSERT(expr) _ASSERTE(expr)
+#ifndef ckASSERT
+#  ifdef _DEBUG
+#    ifdef _WINDOWS
+#      define ckASSERT(expr) _ASSERTE(expr)
+#    else
+#      define ckASSERT(expr) assert(expr)
+#    endif
 #  else
-#    define ckASSERT(expr) assert(expr)
+#    define ckASSERT(ignore) ((void)0)
 #  endif
 #endif
 

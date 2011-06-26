@@ -237,7 +237,7 @@ namespace ckcore
          */
         thandle identifier()
         {
-            return static_cast<thandle>(pthread_self());
+            return reinterpret_cast<thandle>(pthread_self());
         }
 
         /**

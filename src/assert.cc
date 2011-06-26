@@ -36,12 +36,15 @@ namespace ckcore
         va_start(args,format);
 
         char buffer[ckDBG_PRINT_BUF_SIZE];
+#ifdef _WINDOWS
         if(_vsnprintf(buffer,ckDBG_PRINT_BUF_SIZE - 1,format,args) < 0)
             buffer[ckDBG_PRINT_BUF_SIZE - 1] = '\0';
 
-#ifdef _WINDOWS
         OutputDebugStringA(buffer);
 #else
+        if(vsnprintf(buffer,ckDBG_PRINT_BUF_SIZE - 1,format,args) < 0)
+            buffer[ckDBG_PRINT_BUF_SIZE - 1] = '\0';
+
         std::cerr << buffer;
 #endif
 		va_end(args);
@@ -59,16 +62,19 @@ namespace ckcore
         std::stringstream full_fmt;
         full_fmt << "[" << file << ":" << line << "] " << format;
 
-       va_list args;
+        va_list args;
         va_start(args,format);
 
         char buffer[ckDBG_PRINT_BUF_SIZE];
+#ifdef _WINDOWS
         if(_vsnprintf(buffer,ckDBG_PRINT_BUF_SIZE - 1,full_fmt.str().c_str(),args) < 0)
             buffer[ckDBG_PRINT_BUF_SIZE - 1] = '\0';
 
-#ifdef _WINDOWS
         OutputDebugStringA(buffer);
 #else
+        if(vsnprintf(buffer,ckDBG_PRINT_BUF_SIZE - 1,full_fmt.str().c_str(),args) < 0)
+            buffer[ckDBG_PRINT_BUF_SIZE - 1] = '\0';
+
         std::cerr << buffer;
 #endif
 		va_end(args);
