@@ -276,7 +276,9 @@ namespace ckcore
             if (handle_ == NULL)
                 return false;
 
-            return WaitForSingleObject(handle_,INFINITE) == WAIT_OBJECT_0;
+            bool res = WaitForSingleObject(handle_,INFINITE) == WAIT_OBJECT_0;
+            ckTRACE_IF(!res,"waiting for thread mutex failed, last error %d\n",GetLastError());
+            return res;
         }
 
         /**
@@ -289,7 +291,20 @@ namespace ckcore
             if (handle_ == NULL)
                 return false;
 
-            return ReleaseMutex(handle_) == TRUE;
+            bool res = ReleaseMutex(handle_) != 0;
+            ckTRACE_IF(!res,"releasing thread mutex failed, last error %d\n",GetLastError());
+            return res;
+        }
+
+        /**
+         * Tries to lock the mutex and returns immediately if the mutex is
+         * locked by another thread.
+         * @return If the mutex was successfully locked true is returned, if
+         *         the mutex could not be locked the function returns false.
+         */
+        bool Mutex::try_lock()
+        {
+            return WaitForSingleObject(handle_,0) == WAIT_OBJECT_0;
         }
 
         /**
@@ -347,6 +362,8 @@ namespace ckcore
                 EnterCriticalSection(&critical_);
                 waiters_--;
                 LeaveCriticalSection(&critical_);
+
+                mutex.lock();
                 return false;
             }
 
@@ -361,7 +378,7 @@ namespace ckcore
             if (last_waiter)
                 SignalObjectAndWait(waiters_done_,mutex.handle_,INFINITE,FALSE);
             else
-                WaitForSingleObject(mutex.handle_,INFINITE);    // The mutex must always be re-locked.
+                mutex.lock();   // The mutex must always be re-locked. 
 
             return true;
         }

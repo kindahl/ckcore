@@ -277,6 +277,17 @@ namespace ckcore
         }
 
         /**
+         * Tries to lock the mutex and returns immediately if the mutex is
+         * locked by another thread.
+         * @return If the mutex was successfully locked true is returned, if
+         *         the mutex could not be locked the function returns false.
+         */
+        bool Mutex::try_lock()
+        {
+            return pthread_mutex_trylock(&mutex_) == 0;
+        }
+
+        /**
          * Constructs a wait condition object.
          */
         WaitCondition::WaitCondition()

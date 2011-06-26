@@ -84,6 +84,16 @@ namespace ckcore
             locked_ = lockable_.lock();
             return locked_;
         }
+
+        /**
+         * Tests if the locable object is currently locked.
+         * @return If the locable is locked true is returned, if not false is
+         *         returned.
+         */
+        bool locked()
+        {
+            return locked_;
+        }
     };
 }
 

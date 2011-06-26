@@ -40,7 +40,7 @@ namespace ckcore
          */
         enum
         {
-            THREAD_RETIRE_TIMEOUT = 20000   ///< How long an indle thread will wait for a new task before retiring.
+            THREAD_RETIRE_TIMEOUT = 20000   ///< How long an idle thread will wait for a new task before retiring.
         };
 
     private:

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <cassert>
+#include "ckcore/assert.hh"
 #include "ckcore/locker.hh"
 #include "ckcore/thread.hh"
 #include "ckcore/threadpool.hh"
@@ -45,7 +45,7 @@ namespace ckcore
             // Check if we have a task to execute.
             while (task_ != NULL)
             {
-                lock.unlock();
+                ckVERIFY(lock.unlock());
 
                 try
                 {
@@ -55,7 +55,7 @@ namespace ckcore
                 {
                 }
 
-                lock.relock();
+                ckVERIFY(lock.relock());
 
                 if (task_->auto_delete())
                     delete task_;
@@ -250,7 +250,8 @@ namespace ckcore
 
             pol_threads_++;
             
-            assert(thread->task_ == NULL);
+            ckASSERT(!thread->running());
+            ckASSERT(thread->task_ == NULL);
             thread->task_ = task;
             thread->start();
             return true;
@@ -326,7 +327,7 @@ namespace ckcore
             std::vector<InternalThread *> all_threads = all_threads_;
             all_threads_.clear();
 
-            lock.unlock();
+            ckVERIFY(lock.unlock());
 
             std::vector<InternalThread *>::iterator it_thread;
             for (it_thread = all_threads.begin(); it_thread != all_threads.end(); it_thread++)
@@ -336,7 +337,7 @@ namespace ckcore
                 delete thread;
             }
 
-            lock.relock();
+            ckVERIFY(lock.relock());
         }
 
         ret_threads_.clear();

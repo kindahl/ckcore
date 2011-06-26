@@ -65,7 +65,7 @@ namespace ckcore
 #  ifdef _DEBUG
 #    define ckTRACE(format,...) dbg_trace_printf(__FILE__,__LINE__,format,__VA_ARGS__)
 #  else
-#    define ckTRACE(format,args...) ((void)0)
+#    define ckTRACE(format,...) ((void)0)
 #  endif
 #endif
 
@@ -73,6 +73,6 @@ namespace ckcore
 #  ifdef _DEBUG
 #    define ckTRACE_IF(cond,format,...) do { if (cond) { dbg_trace_printf(__FILE__,__LINE__,format,__VA_ARGS__); } } while (0)
 #  else
-#    define ckTRACE_IF(cond,format,args...) ((void)0)
+#    define ckTRACE_IF(cond,format,...) ((void)0)
 #  endif
 #endif

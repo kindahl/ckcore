@@ -39,7 +39,7 @@ namespace ckcore
         int utf8_size = WideCharToMultiByte(CP_UTF8,0,err_msg,utf16_size,NULL,
                                             0,NULL,NULL);
 
-        assert(utf8_size != 0);
+        ckASSERT(utf8_size != 0);
 
         err_msg_.resize(utf8_size);
 
@@ -63,7 +63,7 @@ namespace ckcore
                                             utf16_size,NULL,
                                             0,NULL,NULL);
 
-        assert(utf8_size != 0);
+        ckASSERT(utf8_size != 0);
 
         err_msg_.resize(utf8_size);
 
@@ -96,7 +96,7 @@ namespace ckcore
         int utf16_size = MultiByteToWideChar(CP_UTF8,MB_ERR_INVALID_CHARS,
                                              err_msg_.c_str(),utf8_size,NULL,0);
 
-        assert(utf16_size != 0);
+        ckASSERT(utf16_size != 0);
 
         tstring result;
         result.resize(utf16_size + 1);
@@ -175,7 +175,7 @@ namespace ckcore
     static tstring build_last_error_msg(const DWORD last_err_code,const tchar * const pfx_fmt,va_list args)
     {
         // The caller should have checked whether there was a last error to collect.
-        assert(last_err_code != ERROR_SUCCESS);
+        ckASSERT(last_err_code != ERROR_SUCCESS);
 
         tstring msg;
 
