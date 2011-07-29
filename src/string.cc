@@ -175,6 +175,8 @@ namespace ckcore
                         va_list args)
         {
 #ifdef _WINDOWS
+            va_list args_copy = args;
+
             // There are here several ways to write this routine:
             // 1) Call vasprintf(), insert the result into the string, free()
             //    the result.
@@ -193,13 +195,16 @@ namespace ckcore
             }
 
             res.resize(char_cnt + 1);
-            ckVERIFY(char_cnt == _vstprintf_p(&res[0],char_cnt + 1,fmt,args));
+            ckVERIFY(char_cnt == _vstprintf_p(&res[0],char_cnt + 1,fmt,args_copy));
 
             // Remove the null terminator, std::string will add its own if
             // necessary.
             res.resize(char_cnt);
 
 #else  // #ifdef _WINDOWS
+            va_list args_copy;
+            va_copy(args_copy,args);
+
             const int char_cnt = vsnprintf(NULL,0,fmt,args);
             if (char_cnt == 0)
             {
@@ -208,7 +213,7 @@ namespace ckcore
             }
 
             res.resize(char_cnt + 1);
-            if (char_cnt != vsnprintf(&res[0],char_cnt + 1,fmt,args))
+            if (char_cnt != vsnprintf(&res[0],char_cnt + 1,fmt,args_copy))
                  assert(false);
 
             // Remove the null terminator, std::string will add its own if
