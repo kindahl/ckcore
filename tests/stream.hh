@@ -23,6 +23,7 @@
 #include "ckcore/filestream.hh"
 #include "ckcore/bufferedstream.hh"
 #include "ckcore/crcstream.hh"
+#include "ckcore/memorystream.hh"
 #include "ckcore/nullstream.hh"
 #include "ckcore/system.hh"
 #include "ckcore/progress.hh"
@@ -301,6 +302,51 @@ public:
         ckcore::stream::copy(is4,crc16ibm);
         TS_ASSERT_EQUALS(crc16ibm.checksum(),ckcore::tuint32(0x0000));
         crc16ibm.reset();
+    }
+
+    void testMemoryStream()
+    {
+        unsigned char in_data[] = { 0x00,0x11,0x22,0x33,0x44,0x55,0x66,0x77 };
+        ckcore::MemoryInStream is(in_data,8);
+        TS_ASSERT(!is.end());
+
+        unsigned char out_data[8];
+        memset(out_data,0,8);
+
+        // Test reading.
+        TS_ASSERT_EQUALS(is.read(out_data,0),0);
+        TS_ASSERT(!is.end());
+        TS_ASSERT_EQUALS(is.read(out_data,5),5);
+        TS_ASSERT(!is.end());
+        TS_ASSERT_SAME_DATA(out_data,in_data,5);
+
+        TS_ASSERT_EQUALS(is.read(out_data,100),3);
+        TS_ASSERT(is.end());
+        TS_ASSERT_SAME_DATA(out_data,in_data + 5,3);
+
+        TS_ASSERT_EQUALS(is.read(out_data,100),0);
+        TS_ASSERT(is.end());
+
+        // Test seeking.
+        TS_ASSERT(is.seek(100,ckcore::InStream::ckSTREAM_CURRENT));
+        TS_ASSERT(is.end());
+        TS_ASSERT(is.seek(4,ckcore::InStream::ckSTREAM_BEGIN));
+        TS_ASSERT(!is.end());
+
+        TS_ASSERT_EQUALS(is.read(out_data,4),4);
+        TS_ASSERT(is.end());
+        TS_ASSERT_SAME_DATA(out_data,in_data + 4,4);
+
+        // Test writing.
+        ckcore::MemoryOutStream os(1);
+        TS_ASSERT(os.data());
+        TS_ASSERT_EQUALS(os.count(),0);
+
+        os.write(in_data,8);
+        TS_ASSERT(os.data());
+        TS_ASSERT_EQUALS(os.count(),8);
+
+        TS_ASSERT_SAME_DATA(os.data(),in_data,8);
     }
 
     void testNullStream()
