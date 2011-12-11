@@ -95,7 +95,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.hh</PrecompiledHeaderFile>
-      <ProgramDataBaseFileName>..\..\lib\vc80.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>..\..\lib\$(TargetName)-vc$(PlatformToolsetVersion)</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
@@ -114,7 +114,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.hh</PrecompiledHeaderFile>
-      <ProgramDataBaseFileName>..\..\lib64\vc80.pdb</ProgramDataBaseFileName>
+      <ProgramDataBaseFileName>..\..\lib64\$(TargetName)-vc$(PlatformToolsetVersion)</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
@@ -129,6 +129,7 @@
       <PrecompiledHeaderFile>stdafx.hh</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>..\..\lib\$(TargetName)-vc$(PlatformToolsetVersion)</ProgramDataBaseFileName>
     </ClCompile>
     <Lib />
   </ItemDefinitionGroup>
@@ -144,6 +145,7 @@
       <PrecompiledHeaderFile>stdafx.hh</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>..\..\lib64\$(TargetName)-vc$(PlatformToolsetVersion)</ProgramDataBaseFileName>
     </ClCompile>
     <Lib />
   </ItemDefinitionGroup>
