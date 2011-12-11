@@ -21,7 +21,7 @@
 #ifdef _WINDOWS
 #include <windows.h>
 #include <atlbase.h>
-#include <atlapp.h>
+//#include <atlapp.h>	// Isn't included in VS2010 installation.
 #endif
 #include "ckcore/assert.hh"
 #include "ckcore/string.hh"

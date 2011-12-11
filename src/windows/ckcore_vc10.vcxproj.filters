@@ -87,6 +87,9 @@
     <ClCompile Include="..\assert.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\memorystream.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\include\ckcore\buffer.hh">
@@ -183,6 +186,9 @@
       <Filter>Header Files\windows</Filter>
     </None>
     <None Include="..\..\include\ckcore\assert.hh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="..\..\include\ckcore\memorystream.hh">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
