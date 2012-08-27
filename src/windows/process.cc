@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,9 +23,6 @@
 
 namespace ckcore
 {
-    /**
-     * Constructs a Process object.
-     */
     Process::Process() : invalid_inheritor_(false),
         pipe_stdin_(NULL),pipe_output_(NULL),
         process_handle_(NULL),thread_handle_(NULL),
@@ -48,9 +45,6 @@ namespace ckcore
         block_delims_.insert('\r');
     }
 
-    /**
-     * Destructs the Process object.
-     */
     Process::~Process()
     {
         // Make sure that the execution is completed before destroying this object.
@@ -88,9 +82,6 @@ namespace ckcore
         }
     }
 
-    /**
-     * Closes all internal pipes and resets the internal state of the object.
-     */
     void Process::close()
     {
         bool locked = WaitForSingleObject(mutex_,INFINITE) == WAIT_OBJECT_0;
@@ -179,11 +170,6 @@ namespace ckcore
             ckVERIFY(0 != ReleaseMutex(mutex_));
     }
 
-    /**
-     * Reads from the specified file descriptor to the standard output buffer.
-     * @return If successful true is returned, if unsuccessful false is
-     *         returned.
-     */
     bool Process::read_output(HANDLE handle)
     {
         char buffer[READ_BUFFER_SIZE];
@@ -244,10 +230,6 @@ namespace ckcore
         return false;
     }
 
-    /**
-     * The thread entry for listening on the process output pipes.
-     * @param [in] param A pointer to the Process object being executed.
-     */
     unsigned long WINAPI Process::listen(void *param)
     {
         Process *process = static_cast<Process *>(param);
@@ -293,12 +275,6 @@ namespace ckcore
         return 0;
     }
 
-    /**
-     * Creates a new process.
-     * @param [in] cmd_line The complete command line to execute.
-     * @return If successful true is returned, if unsuccessful false is
-     *         returned.
-     */
     bool Process::create(const tchar *cmd_line)
     {
         // Check if a process is already running.
@@ -429,11 +405,6 @@ namespace ckcore
         return true;
     }
 
-    /**
-     * Checks if a process is running.
-     * @return If a process is running true is returned, if not false is
-     *         returned.
-     */
     bool Process::running() const
     {
         bool locked = WaitForSingleObject(mutex_,INFINITE) == WAIT_OBJECT_0;
@@ -444,11 +415,6 @@ namespace ckcore
         return running;
     }
 
-    /**
-     * Wait until the running process completes.
-     * @return If successful and a process is running true is returned,
-     *         otherwise false is returned.
-     */
     bool Process::wait() const
     {
         bool locked = WaitForSingleObject(mutex_,INFINITE) == WAIT_OBJECT_0;
@@ -469,11 +435,6 @@ namespace ckcore
         return true;
     }
 
-    /**
-     * Kills the process.
-     * @return If successful and a process is running true is returned,
-     *         otherwise false is returned.
-     */
     bool Process::kill() const
     {
         bool locked = WaitForSingleObject(mutex_,INFINITE) == WAIT_OBJECT_0;
@@ -487,21 +448,11 @@ namespace ckcore
         return TerminateProcess(process_handle,0) == TRUE;
     }
 
-    /**
-     * Adds a new block delimiter to be used when splitting process output
-     * into blocks.
-     * @param [in] delim The delimiter to add.
-     */
     void Process::add_block_delim(char delim)
     {
         block_delims_.insert(delim);
     }
 
-    /**
-     * Removes a block delimiter from being used when splitting process output
-     * into blocks.
-     * @param [in] delim The delimiter to remove.
-     */
     void Process::remove_block_delim(char delim)
     {
         std::set<char>::iterator it = block_delims_.find(delim);
@@ -509,15 +460,6 @@ namespace ckcore
             block_delims_.erase(it);
     }
 
-    /**
-     * Writes raw data to the process standard input.
-     * @param [in] buffer Pointer to the beginning of the bufferi
-     *                    containing the data to be written.
-     * @param [in] count The number of bytes to write.
-     * @return If the operation failed -1 is returned, otherwise the
-     *         function returns the number of bytes written (this may be
-     *         zero).
-     */
     tint64 Process::write(const void *buffer,tuint32 count)
     {
         // Wait if the process has not been started.
@@ -530,11 +472,6 @@ namespace ckcore
         return written;
     }
 
-    /**
-     * Obtains the exit code of the process.
-     * @param [out] exit_code The process exit code.
-     * @return If successful true is returned, if not false is returned.
-     */
     bool Process::exit_code(ckcore::tuint32 &exit_code) const
     {
         if (running())

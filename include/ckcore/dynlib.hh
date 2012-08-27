@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,14 +45,50 @@ namespace ckcore
 #endif
 
     public:
+        /**
+         * Constructs an DynamicLibrary object.
+         * @param [in] path The path to the dynamic library.
+         */
         DynamicLibrary(const Path &path);
+
+        /**
+         * Destructs the DynamicLibrary object.
+         */
         ~DynamicLibrary();
 
+        /**
+         * Loads the dynamic library.
+         * @return If the dynamic library was successfully loaded true is returned,
+         *         otherwise false is returned.
+         */
         bool open();
+
+        /**
+         * Unloads the dynamic library.
+         * @return If the dynamic library was successfully unloaded true is
+         *         returned, otherwise false is returned.
+         */
         bool close();
+
+        /**
+         * Tests if the library is open.
+         * @return If the library has been opened true is returned, if not false is
+         *         returned.
+         */
         bool test();
+
+        /**
+         * Returns a pointer to the specified symbol in the memory. On Windows the
+         * symbol must be a procedure.
+         * @param [in] symbol_name The name of the symbol.
+         * @return The symbol memory address.
+         */
         void *symbol(const char *symbol_name) const;
 
+        /**
+         * Returns the library path.
+         * @return The library path.
+         */
         const Path &path() const;
     };
 }

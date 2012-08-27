@@ -50,5 +50,8 @@
     <None Include="..\..\tests\threadpool.hh">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="..\..\tests\linereader.hh">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

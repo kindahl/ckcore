@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,10 +36,24 @@ namespace ckcore
         tuint64 written_;
 
     public:
+        /**
+         * Constructs a NullStream object.
+         */
         NullStream();
 
+        /**
+         * Returns the number of bytes written to the stream.
+         * @return The number of bytes written.
+         */
         tuint64 written();
 
+        /**
+         * Counts the number of bytes to be written.
+         * @param [in] buffer Pointer to the beginning of the bufferi
+         *                    containing the data to be written (may be NULL).
+         * @param [in] count The number of bytes to write.
+         * @return The function returns count.
+         */
         tint64 write(const void *buffer,tuint32 count);
     };
 }

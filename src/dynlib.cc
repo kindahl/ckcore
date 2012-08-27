@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,26 +24,14 @@
 
 namespace ckcore
 {
-    /**
-     * Constructs an DynamicLibrary object.
-     * @param [in] path The path to the dynamic library.
-     */
     DynamicLibrary::DynamicLibrary(const Path &path) : path_(path),handle_(NULL)
     {
     }
 
-    /**
-     * Destructs the DynamicLibrary object.
-     */
     DynamicLibrary::~DynamicLibrary()
     {
     }
 
-    /**
-     * Loads the dynamic library.
-     * @return If the dynamic library was successfully loaded true is returned,
-     *         otherwise false is returned.
-     */
     bool DynamicLibrary::open()
     {
         if (handle_ != NULL)
@@ -57,11 +45,6 @@ namespace ckcore
         return handle_ != NULL;
     }
 
-    /**
-     * Unloads the dynamic library.
-     * @return If the dynamic library was successfully unloaded true is
-     *         returned, otherwise false is returned.
-     */
     bool DynamicLibrary::close()
     {
         if (handle_ == NULL)
@@ -78,22 +61,11 @@ namespace ckcore
         return true;
     }
 
-    /**
-     * Tests if the library is open.
-     * @return If the library has been opened true is returned, if not false is
-     *         returned.
-     */
     bool DynamicLibrary::test()
     {
         return handle_ != NULL;
     }
 
-    /**
-     * Returns a pointer to the specified symbol in the memory. On Windows the
-     * symbol must be a procedure.
-     * @param [in] symbol_name The name of the symbol.
-     * @return The symbol memory address.
-     */
     void *DynamicLibrary::symbol(const char *symbol_name) const
     {
         if (handle_ == NULL)
@@ -106,10 +78,6 @@ namespace ckcore
 #endif
     }
 
-    /**
-     * Returns the library path.
-     * @return The library path.
-     */
     const Path &DynamicLibrary::path() const
     {
         return path_;

@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -120,9 +120,6 @@ namespace ckcore
         }
     };
 
-    /**
-     * Constructs a Process object.
-     */
     Process::Process() : invalid_inheritor_(false),
         pid_(-1),state_(STATE_STOPPED),exit_code_(0),
         started_event_(false)
@@ -142,9 +139,6 @@ namespace ckcore
         block_delims_.insert('\r');
     }
 
-    /**
-     * Destructs the Process object.
-     */
     Process::~Process()
     {
         // Make sure that the execution is completed before destroying this object.
@@ -161,9 +155,6 @@ namespace ckcore
         pthread_cond_destroy(&started_cond_);
     }
 
-    /**
-     * Closes all internal pipes and resets the internal state of the object.
-     */
     void Process::close()
     {
         bool locked = pthread_mutex_lock(&mutex_) == 0;
@@ -206,11 +197,6 @@ namespace ckcore
             pthread_mutex_unlock(&mutex_);
     }
 
-    /**
-     * Reads from the specified file descriptor to the standard output buffer.
-     * @return If successful true is returned, if unsuccessful false is
-     *         returned.
-     */
     bool Process::read_stdout(int fd)
     {
         char buffer[READ_BUFFER_SIZE];
@@ -258,11 +244,6 @@ namespace ckcore
         return true;
     }
 
-    /**
-     * Reads from the specified file descriptor to the standard error buffer.
-     * @return If successful true is returned, if unsuccessful false is
-     *         returned.
-     */
     bool Process::read_stderr(int fd)
     {
         char buffer[READ_BUFFER_SIZE];
@@ -310,10 +291,6 @@ namespace ckcore
         return true;
     }
 
-    /**
-     * The thread entry for listening on the process output pipes.
-     * @param [in] param A pointer to the Process object being executed.
-     */
     void *Process::listen(void *param)
     {
         Process *process = static_cast<Process *>(param);
@@ -383,11 +360,6 @@ namespace ckcore
     return NULL;
     }
 
-    /**
-     * Parses the specified command line into a vector of command line arguments.
-     * @param [in] cmd_line The full command line to parse.
-     * @return Vector of discrete command line arguments.
-     */
     std::vector<tstring> Process::parse_cmd_line(const tchar *cmd_line) const
     {
         std::vector<tstring> res;
@@ -425,12 +397,6 @@ namespace ckcore
         return res;
     }
 
-    /**
-     * Creates a new process.
-     * @param [in] cmd_line The complete command line to execute.
-     * @return If successful true is returned, if unsuccessful false is
-     *         returned.
-     */
     bool Process::create(const tchar *cmd_line)
     {
         // Check if a process is already running.
@@ -525,11 +491,6 @@ namespace ckcore
         return true;
     }
 
-    /**
-     * Checks if a process is running.
-     * @return If a process is running true is returned, if not false is
-     *         returned.
-     */
     bool Process::running() const
     {
         bool locked = pthread_mutex_lock(const_cast<pthread_mutex_t *>(&mutex_)) == 0;
@@ -540,11 +501,6 @@ namespace ckcore
         return running;
     }
 
-    /**
-     * Wait until the running process completes.
-     * @return If successful and a process is running true is returned,
-     *         otherwise false is returned.
-     */
     bool Process::wait() const
     {
         // Make sure that the execution is completed before destroying this object.
@@ -555,11 +511,6 @@ namespace ckcore
         return true;
     }
 
-    /**
-     * Kills the process.
-     * @return If successful and a process is running true is returned,
-     *         otherwise false is returned.
-     */
     bool Process::kill() const
     {
         bool locked = pthread_mutex_lock(const_cast<pthread_mutex_t *>(&mutex_)) == 0;
@@ -573,21 +524,11 @@ namespace ckcore
         return ::kill(pid,SIGTERM) == 0;
     }
 
-    /**
-     * Adds a new block delimiter to be used when splitting process output
-     * into blocks.
-     * @param [in] delim The delimiter to add.
-     */
     void Process::add_block_delim(char delim)
     {
         block_delims_.insert(delim);
     }
 
-    /**
-     * Removes a block delimiter from being used when splitting process output
-     * into blocks.
-     * @param [in] delim The delimiter to remove.
-     */
     void Process::remove_block_delim(char delim)
     {
         std::set<char>::iterator it = block_delims_.find(delim);
@@ -595,15 +536,6 @@ namespace ckcore
             block_delims_.erase(it);
     }
 
-    /**
-     * Writes raw data to the process standard input.
-     * @param [in] buffer Pointer to the beginning of the bufferi
-     *                    containing the data to be written.
-     * @param [in] count The number of bytes to write.
-     * @return If the operation failed -1 is returned, otherwise the
-     *         function returns the number of bytes written (this may be
-     *         zero).
-     */
     tint64 Process::write(const void *buffer,tuint32 count)
     {
         if (pid_ == -1 || !running())
@@ -612,11 +544,6 @@ namespace ckcore
         return ::write(pipe_stdin_[FD_WRITE],buffer,count);
     }
 
-    /**
-     * Obtains the exit code of the process.
-     * @param [out] exit_code The process exit code.
-     * @return If successful true is returned, if not false is returned.
-     */
     bool Process::exit_code(ckcore::tuint32 &exit_code) const
     {
         if (running())

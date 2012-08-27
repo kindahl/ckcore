@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,10 +28,6 @@
 
 namespace ckcore
 {
-    /**
-     * Construct an Exception object.
-     * @param [in] err_msg The error message.
-     */
     Exception2::Exception2(const ckcore::tchar * const err_msg)
     {
 #if defined(_WINDOWS) && defined(_UNICODE)
@@ -51,10 +47,6 @@ namespace ckcore
 #endif
     }
 
-    /**
-     * Construct an Exception object.
-     * @param [in] err_msg The error message.
-     */
     Exception2::Exception2(const ckcore::tstring &err_msg)
     {
 #if defined(_WINDOWS) && defined(_UNICODE)
@@ -75,19 +67,11 @@ namespace ckcore
 #endif
     }
 
-    /**
-     * Returns the error message in UTF-8 format.
-     * @return The error message.
-     */
     const char *Exception2::what(void) const throw()
     {
        return err_msg_.c_str();
     }
 
-    /**
-     * Returns the error message in tstring format.
-     * @return The error message.
-     */
     tstring Exception2::message() const
     {
 #if defined(_WINDOWS) && defined(_UNICODE)
@@ -112,13 +96,6 @@ namespace ckcore
 #endif
     }
 
-    /**
-     * Returns the exception message of the given exception object. The
-     * function tests if the exception is an Exception2 and in that case
-     * returns its message.
-     * @param [in] e The exception object.
-     * @return The error message of the exception.
-     */
     ckcore::tstring get_except_msg(const std::exception &e)
     {
         const Exception2 *const ptr = dynamic_cast<const Exception2 *>(&e);
@@ -128,11 +105,6 @@ namespace ckcore
         return ckcore::string::ansi_to_auto<1024>(e.what());
     }
 
-    /**
-     * Rethrows the exception with a prefix message.
-     * @param [in] e The exception to rethrow.
-     * @param [in] szFormatStr The message format string.
-     */
     void rethrow_with_pfx(const std::exception &e,const ckcore::tchar * const fmt,...)
     {
         ckcore::tstring msg;

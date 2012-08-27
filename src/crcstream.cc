@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,9 +36,6 @@ namespace ckcore
         return result;
     }
 
-    /**
-     * Constructs a CrcStream object.
-     */
     CrcStream::CrcStream(CrcType type) : reflect_(true),order_(32),
         mask_(0xffffffff),initial_(0xffffffff),
         final_(0xffffffff),checksum_(0xffffffff)
@@ -94,32 +91,16 @@ namespace ckcore
         }
     }
 
-    /**
-     * Resets the internal CRC checksum.
-     */
     void CrcStream::reset()
     {
         checksum_ = initial_;
     }
 
-    /**
-     * Returns the internal checksum.
-     * @return The internal checksum.
-     */
     tuint32 CrcStream::checksum()
     {
-        //return ~checksum_ & mask_;
-        return (checksum_ ^ final_)/* & mask_*/;
+        return (checksum_ ^ final_);
     }
 
-    /**
-     * Updates the internal checksum according to the data in the specified
-     * buffer.
-     * @param [in] buffer Pointer to the beginning of a buffer containing the
-     *                    data to calculate the checksum of.
-     * @param [in] count The number of bytes in the buffer.
-     * @return The number of bytes processed (always the same as count).
-     */
     tint64 CrcStream::write(const void *buffer,tuint32 count)
     {
         for (unsigned long i = 0; i < count; i++)
@@ -136,14 +117,6 @@ namespace ckcore
                             ((const unsigned char *)buffer)[i]]) & mask_;
             }
         }
-
-        /*unsigned long n = count;
-        while (n != 0)
-        {
-            unsigned int c = n & 0377;
-            checksum_ = (checksum_ << 8) ^ table_[(checksum_ >> 24) ^ c];
-            n >>= 8;
-        }*/
 
         return count;
     }

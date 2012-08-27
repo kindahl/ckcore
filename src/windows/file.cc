@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,22 +26,11 @@ namespace ckcore
 #pragma warning(push )
 #pragma warning(disable : 4290) // C++ exception specification ignored except to...
 
-    /**
-     * Constructs a File object.
-     * @param [in] file_path The path to the file.
-     */
     File::File(const Path &file_path) : file_handle_(INVALID_HANDLE_VALUE),
         file_path_(file_path)
     {
     }
 
-    /**
-     * Opens the file in the requested mode.
-     * @param [in] file_mode Determines how the file should be opened. In write
-     *                       mode the file will be created if it does not
-     *                       exist.
-     * Errors are thrown as exceptions.
-     */
     void File::open2(FileMode file_mode) throw(std::exception)
     {
         // Check a file handle has already been opened, in that case try to close
@@ -84,11 +73,6 @@ namespace ckcore
         }
     }
 
-    /**
-     * Closes the currently opened file handle. If the file has not been opened
-     * a call this call will fail.
-     * @return If successfull true is returned, otherwise false.
-     */
     bool File::close()
     {
         if (file_handle_ == INVALID_HANDLE_VALUE)
@@ -108,25 +92,11 @@ namespace ckcore
         return false;
     }
 
-    /**
-     * Checks whether the file has been opened or not.
-     * @return If a file is open true is returned, otherwise false is returned.
-     */
     bool File::test() const
     {
         return file_handle_ != INVALID_HANDLE_VALUE;
     }
 
-    /**
-     * Repositions the file pointer to the specified offset accoding to the
-     * whence directive in the file.
-     * @param [in] distance The number of bytes that the file pointer should
-     *                      move.
-     * @param [in] whence Specifies what to use as base when calculating the
-     *                    final file pointer position.
-     * @return If successfull the resulting file pointer location is returned,
-     *         otherwise an exception is thrown.
-     */
     tint64 File::seek2(tint64 distance,FileWhence whence) throw(std::exception)
     {
         check_file_is_open();
@@ -165,11 +135,6 @@ namespace ckcore
         return li.QuadPart;
     }
 
-    /**
-     * Calculates the current file pointer position in the file.
-     * @return If successfull the current file pointer position, otherwise -1
-     *         is returned.
-     */
     tint64 File::tell2() const throw(std::exception)
     {
         check_file_is_open();
@@ -192,15 +157,6 @@ namespace ckcore
         return (tint64)li.QuadPart;
     }
 
-    /**
-     * Reads raw data from the current file.
-     * @param [out] buffer A pointer to the beginning of a buffer in which to
-     *                     put the data.
-     * @param [in] count The number of bytes to read from the file.
-     * @return If the operation failed -1 is returned, otherwise the function
-     *         returns the number of bytes read (this may be zero when the end
-     *         of the file has been reached).
-     */
     tint64 File::read(void *buffer,tint64 count)
     {
         // ReadFile() takes a DWORD (defined as unsigned long) as the byte count.
@@ -216,14 +172,6 @@ namespace ckcore
             return read;
     }
 
-    /**
-     * Writes raw data to the current file.
-     * @param [in] buffer A pointer to the beginning of a buffer from which to
-     *                    read data to be written to the file.
-     * @param [in] count The number of bytes to write to the file.
-     * @return If the operation failed -1 is returned, otherwise the function
-     *         returns the number of bytes written (this may be zero).
-     */
     tint64 File::write(const void *buffer,tint64 count)
     {
         // WriteFile() takes a DWORD (defined as unsigned long) as the byte count.
@@ -239,34 +187,17 @@ namespace ckcore
             return written;
     }
 
-    /**
-     * Checks whether the file exist or not.
-     * @return If the file exist true is returned, otherwise false.
-     */
     bool File::exist() const
     {
         return exist(file_path_);
     }
 
-    /**
-     * Removes the file from the file system. If other links exists to the file
-     * only this link will be deleted. If the file is opened it will be closed.
-     * @return If the file was successfully deleted true is returned, otherwise
-     *         false is returned.
-     */
     bool File::remove()
     {
         close();
         return remove(file_path_);
     }
 
-    /**
-     * Moves the file to use the new file path. If the new full path exist it
-     * will not be overwritten. If the file is open it will be closed.
-     * @param [in] new_file_path The new file path.
-     * @return If the file was sucessfully renamed true is returned, otherwise
-     *         false is returned.
-     */
     bool File::rename(const Path &new_file_path)
     {
         // If a file already exist abort so it will not be overwritten. 
@@ -285,14 +216,6 @@ namespace ckcore
         return false;
     }
 
-    /**
-     * Obtains time stamps on when the file was last accessed, last modified
-     * and created.
-     * @param [out] access_time Time of last access.
-     * @param [out] modify_time Time of last modification.
-     * @param [out] create_time Time of creation (last status change on Linux).
-     * @return If successfull true is returned, otherwise false.
-     */
     bool File::time(struct tm &access_time,struct tm &modify_time,
                     struct tm &create_time) const
     {
@@ -335,10 +258,6 @@ namespace ckcore
         return time(file_path_,access_time,modify_time,create_time);
     }
 
-    /**
-     * Calcualtes the size of the file.
-     * @return If successfull the size of the file, otherwise -1 is returned.
-     */
     tint64 File::size2() throw(std::exception)
     {
         // If the file is not open, use the static in this case optimized
@@ -363,11 +282,6 @@ namespace ckcore
         return li.QuadPart;
     }
 
-    /**
-     * Checks whether the specified file exist or not.
-     * @param [in] file_path The path to the file.
-     * @return If the file exist true is returned, otherwise false.
-     */
     bool File::exist(const Path &file_path)
     {
         unsigned long attr = GetFileAttributes(file_path.name().c_str());
@@ -375,26 +289,11 @@ namespace ckcore
         return (attr != -1) && ((attr & FILE_ATTRIBUTE_DIRECTORY) == 0);
     }
 
-    /**
-     * Removes the specified file from the file system. If other links exists
-     * to the file only the specified link will be deleted.
-     * @param [in] file_path The path to the file.
-     * @return If the file was successfully deleted true is returned, otherwise
-     *         false is returned.
-     */
     bool File::remove(const Path &file_path)
     {
         return DeleteFile(file_path.name().c_str()) != FALSE;
     }
 
-    /**
-     * Moves the old file to use the new file path. If the new full path exist
-     * it will not be overwritten.
-     * @param [in] old_file_path The path to the file that should be moved.
-     * @param [in] new_file_path The new path of the existing file.
-     * @return If the file was sucessfully renamed true is returned, otherwise
-     *         false is returned.
-     */
     bool File::rename(const Path &old_file_path,const Path &new_file_path)
     {
         if (exist(new_file_path))
@@ -404,15 +303,6 @@ namespace ckcore
                         new_file_path.name().c_str()) != FALSE;
     }
 
-    /**
-     * Obtains time stamps on when the specified file was last accessed, last
-     * modified and created.
-     * @param [in] file_path The path to the file.
-     * @param [out] access_time Time of last access.
-     * @param [out] modify_time Time of last modification.
-     * @param [out] create_time Time of creation (last status change on Linux).
-     * @return If successfull true is returned, otherwise false.
-     */
     bool File::time(const Path &file_path,struct tm &access_time,
                     struct tm &modify_time,struct tm &create_time)
     {
@@ -460,15 +350,6 @@ namespace ckcore
         return true;
     }
 
-    /**
-     * Checks if the active user has permission to open the specified file in a
-     * certain file mode.
-     * @param [in] file_path The path to the file.
-     * @param [in] file_mode The file mode to check for access permission.
-     * @return If the active user have permission to open the file in the
-     *         specified file mode true is returned, otherwise false is
-     *         returned.
-     */
     bool File::access(const Path &file_path,FileMode file_mode)
     {
         switch (file_mode)
@@ -485,11 +366,6 @@ namespace ckcore
         return false;
     }
 
-    /**
-     * Checks if the specified file is hidden or not.
-     * @return If successfull and if the file is hidden true is returned,
-     *         otherwise false is returned.
-     */
     bool File::hidden(const Path &file_path)
     {
         unsigned long attr = GetFileAttributes(file_path.name().c_str());
@@ -499,11 +375,6 @@ namespace ckcore
         return (attr & FILE_ATTRIBUTE_HIDDEN) != 0;
     }
 
-    /**
-     * Calcualtes the size of the specified file.
-     * @param [in] file_path The path to the file.
-     * @return If successfull the size of the file, otherwise -1 is returned.
-     */
     tint64 File::size2(const Path &file_path) throw(std::exception)
     {
         try
@@ -545,12 +416,6 @@ namespace ckcore
         }
     }
 
-    /**
-     * Creates a File object of a temporary file. The file path is generated
-     * to be placed in the systems default temporary directory.
-     * @param [in] prefix Prefix to use on temporary file name.
-     * @return File object of temp file.
-     */
     File File::temp(const tchar *prefix)
     {
         if (prefix == NULL)
@@ -568,14 +433,6 @@ namespace ckcore
         return File(tmp_name);
     }
 
-    /**
-     * Creates a File object of a temporary file. The file path is generated
-     * to be placed in the specified path.
-     * @param [in] file_path The path to where the temporary file should be
-     *                       stored.
-     * @param [in] prefix Prefix to use on temporary file name.
-     * @return File object of temp file.
-     */
     File File::temp(const Path &file_path,const tchar *prefix)
     {
         if (prefix == NULL)

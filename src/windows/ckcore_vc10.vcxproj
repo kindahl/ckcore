@@ -381,6 +381,7 @@
     <None Include="..\..\include\ckcore\stream.hh" />
     <None Include="..\..\include\ckcore\string.hh" />
     <None Include="..\..\include\ckcore\system.hh" />
+    <None Include="..\..\include\ckcore\task.hh" />
     <None Include="..\..\include\ckcore\thread.hh" />
     <None Include="..\..\include\ckcore\threadpool.hh" />
     <None Include="..\..\include\ckcore\types.hh" />

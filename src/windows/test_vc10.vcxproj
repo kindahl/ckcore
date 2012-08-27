@@ -213,6 +213,7 @@
     <None Include="..\..\tests\convert.hh" />
     <None Include="..\..\tests\directory.hh" />
     <None Include="..\..\tests\file.hh" />
+    <None Include="..\..\tests\linereader.hh" />
     <None Include="..\..\tests\path.hh" />
     <None Include="..\..\tests\process.hh" />
     <None Include="..\..\tests\stream.hh" />

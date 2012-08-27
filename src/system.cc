@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,11 +33,6 @@ namespace ckcore
 {
     namespace system
     {
-        /**
-         * Returns the number of milliseconds that has elapsed since the system
-         * was started.
-         * @return The number of milliseconds since the system was started.
-         */
         tuint64 time()
         {
 #ifdef _WINDOWS
@@ -49,12 +44,6 @@ namespace ckcore
 #endif
         }
 
-        /**
-         * Returns the number of clock cycles executed by the host processor
-         * since the system was started.
-         * @return The number of executed clock cycles since the system was
-         *         started.
-         */
         tuint64 ticks()
         {
 #ifdef _WINDOWS
@@ -194,12 +183,6 @@ namespace ckcore
             return 0;
         }
 
-        /**
-         * Determines the size of the specified cache. This function will only
-         * be able to obtain the cache sizes on AMD and Intel systems.
-         * @return If successfull the size of the cache is returned in bytes,
-         *         if unsuccessfull 0 is returned.
-         */
         unsigned long cache_size(CacheLevel level)
         {
             // Obtain processor vendor identifier.

@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,11 +67,30 @@ namespace ckcore
         tuint32 reflect(tuint32 crc,unsigned char length);
 
     public:
+        /**
+         * Constructs a CrcStream object.
+         */
         CrcStream(CrcType type);
 
+        /**
+         * Resets the internal CRC checksum.
+         */
         void reset();
+
+        /**
+         * Returns the internal checksum.
+         * @return The internal checksum.
+         */
         tuint32 checksum();
 
+        /**
+         * Updates the internal checksum according to the data in the specified
+         * buffer.
+         * @param [in] buffer Pointer to the beginning of a buffer containing the
+         *                    data to calculate the checksum of.
+         * @param [in] count The number of bytes in the buffer.
+         * @return The number of bytes processed (always the same as count).
+         */
         tint64 write(const void *buffer,tuint32 count);
     };
 }

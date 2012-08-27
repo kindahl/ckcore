@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,11 +25,6 @@
 
 namespace ckcore
 {
-    /**
-     * Formats and prints a string to the debug output system. On Windows this
-     * is the debugger display log and on other systems it's standard error.
-     * @param [in] format Message format.
-     */
     void dbg_printf(const char * format, ...)
     {
         va_list args;
@@ -50,13 +45,6 @@ namespace ckcore
 		va_end(args);
     }
 
-    /**
-     * Formats and prints a string to the debug output system. On Windows this
-     * is the debugger display log and on other systems it's standard error.
-     * @param [in] file Source file sending the message.
-     * @param [in] line Line in source file sending the message.
-     * @param [in] format Message format.
-     */
     void dbg_trace_printf(const char * file,int line,const char * format, ...)
     {
         std::stringstream full_fmt;

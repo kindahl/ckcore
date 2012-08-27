@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,11 +21,6 @@
 
 namespace ckcore
 {
-    /**
-     * Converts a SYSTEMTIME structure to a struct tm structure.
-     * @param [in] stime The input time.
-     * @param [out] time The output time.
-     */
     void SysTimeToTm(SYSTEMTIME &stime,struct tm &time)
     {
         time.tm_sec = stime.wSecond;

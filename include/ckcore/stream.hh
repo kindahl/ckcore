@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -104,9 +104,57 @@ namespace ckcore
 
     namespace stream
     {
+        /**
+         * Copies the contents of the input stream to the output stream. An
+         * internal buffer is used to optimize the process.
+         * @param [in] from The source stream.
+         * @param [in] to The target stream.
+         * @return If successfull true is returned, otherwise false is
+         *         returned.
+         */
         bool copy(InStream &from,OutStream &to);
+
+        /**
+         * Copies the contents of the input stream to the output stream. An
+         * internal buffer is used to optimize the process. Progress is
+         * reported through the Progress interface.
+         * @param [in] from The source stream.
+         * @param [in] to The target stream.
+         * @param [in] progress The progress interface to report progress to.
+         * @return If successfull true is returned, otherwise false is
+         *         returned. Cancelling the operation is considered a failure.
+         */
         bool copy(InStream &from,OutStream &to,Progress &progress);
+
+        /**
+         * Copies the contents of the input stream to the output stream. An
+         * internal buffer is used to optimize the process. Progress is
+         * reported through a Progresser object.
+         * @param [in] from The source stream.
+         * @param [in] to The target stream.
+         * @param [in] progresser A reference to the progresser object to use
+         *                        for reporting progress.
+         * @return If successfull true is returned, otherwise false is
+         *         returned. Cancelling the operation is considered a failure.
+         */
         bool copy(InStream &from,OutStream &to,Progresser &progresser);
+
+        /**
+         * Copies the contents of the input stream to the output stream. An
+         * internal buffer is used to optimize the process. Progress is
+         * reported through a Progresser object. If the available data in the
+         * input stream is less than requested the output stream will be padded
+         * to match the requested ammount. If more data is available in the
+         * input stream than what is requested the additional data will be ignored.
+         * @param [in] from The source stream.
+         * @param [in] to The target stream.
+         * @param [in] progresser A reference to the progresser object to use
+         *                        for reporting progress.
+         * @param [in] size The exact number of bytes to write to the output
+         *                  stream.
+         * @return If successfull true is returned, otherwise false is
+         *         returned. Cancelling the operation is considered a failure.
+         */
         bool copy(InStream &from,OutStream &to,Progresser &progresser,
                   tuint64 size);
     }

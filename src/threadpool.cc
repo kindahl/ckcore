@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,19 +23,11 @@
 
 namespace ckcore
 {
-    /**
-     * Constructs an internal thread object.
-     * @param [in] host The hosting thread pool object.
-     * @param [in] task The task to execute in the thread.
-     */
     ThreadPool::InternalThread::InternalThread(ThreadPool &host,Task *task)
         : host_(host),task_(task)
     {
     }
 
-    /**
-     * Executes the thread.
-     */
     void ThreadPool::InternalThread::run()
     {
         Locker<thread::Mutex> lock(host_.mutex_);
@@ -109,11 +101,6 @@ namespace ckcore
         }
     }
 
-    /**
-     * Constructs a thread pool object. The pool will configure itself to
-     * handle the ideal number of threads for the current system. That is the
-     * ideal number of threads the system can execute in parallel.
-     */
     ThreadPool::ThreadPool()
         : exiting_(false),
           max_threads_(thread::ideal_count()),pol_threads_(0),res_threads_(0),idl_threads_(0),
@@ -121,70 +108,39 @@ namespace ckcore
     {
     }
 
-    /**
-     * Destructs the thread pool object.
-     */
     ThreadPool::~ThreadPool()
     {
         // Wait for all tasks to complete.
         wait();
     }
 
-    /**
-     * Returns the single instance to the thread pool.
-     * @return The single instance to the thread pool.
-     */
     ThreadPool &ThreadPool::instance()
     {
         static ThreadPool instance;
         return instance;
     }
 
-    /**
-     * Returns the total number of active threads in the application. This is
-     * the number of threads used by the pool plus the number of reserved
-     * threads.
-     * @return The total number of active threads.
-     */
     tuint32 ThreadPool::active_threads() const
     {
         return static_cast<tuint32>(all_threads_.size()) + res_threads_ -
                static_cast<tuint32>(ret_threads_.size()) - idl_threads_;
     }
 
-    /**
-     * Returns the number of idle threads.
-     * @return The number of idle threads.
-     */
     tuint32 ThreadPool::idle_threads() const
     {
         return idl_threads_;
     }
 
-    /**
-     * Returns the number of retired threads.
-     * @return The number of retired threads.
-     */
     tuint32 ThreadPool::retired_threads() const
     {
         return static_cast<tuint32>(ret_threads_.size());
     }
 
-    /**
-     * Returns the number of queued tasks that are not yet assigned to a
-     * thread.
-     * @return The number of queued tasks.
-     */
     tuint32 ThreadPool::queued() const
     {
         return static_cast<tuint32>(queue_.size());
     }
 
-    /**
-     * Puts a task into the work queue.
-     * @param [in] task Task to enqueue.
-     * @param [in] priority Task priority.
-     */
     void ThreadPool::enqueue(Task *task,tuint32 priority)
     {
         queue_.push(std::make_pair(task,priority));
@@ -193,12 +149,6 @@ namespace ckcore
         task_ready_.signal_one();
     }
 
-    /**
-     * Spawn a new thread and start executing the task.
-     * @param [in] task The task to execute.
-     * @return If the task could not be spawned in a new thread false is
-     *         returned, otherwise true is returned.
-     */
     bool ThreadPool::spawn(Task *task)
     {
         InternalThread *thread = new InternalThread(*this,task);
@@ -209,23 +159,11 @@ namespace ckcore
         return thread->start();
     }
 
-    /**
-     * Check if we're currently serving more threads than we should. This may
-     * happen if threads are reserved while executing tasks.
-     * @return If we'we overworking true is returned, if not false is returned.
-     */
     bool ThreadPool::overworking() const
     {
         return active_threads() > max_threads_;
     }
 
-    /**
-     * Tries to start the specified task immediately. If that's not possible
-     * the function will fail.
-     * @param [in] task The task to execute.
-     * @return If the task was started true is returned, otherwise false is
-     *         returned.
-     */
     bool ThreadPool::try_start(Task *task)
     {
         // Check if we have any free thread so that the task can start
@@ -261,13 +199,6 @@ namespace ckcore
         return spawn(task);
     }
 
-    /**
-     * Tries to start the specified task immediately, if that's not possible
-     * it will be queued with the specified task priority.
-     * @param [in] task The task to execute.
-     * @param [in] priority The task priority.
-     * @return If successful true is returned, otherwise false is returned.
-     */
     bool ThreadPool::start(Task *task,tuint32 priority)
     {
         if (task == NULL)
@@ -281,15 +212,6 @@ namespace ckcore
         return true;
     }
 
-    /**
-     * Executes the specified task immediatly if there is a free thread
-     * available. If there is no free thread available so that the task can
-     * execute right away the function will fail and the task will not be
-     * queued.
-     * @param [in] task The task to execute.
-     * @return If the task was executed right away true is returned, if not
-     *         false is returned.
-     */
     bool ThreadPool::start_now(Task *task)
     {
         if (task == NULL)
@@ -303,11 +225,6 @@ namespace ckcore
         return try_start(task);
     }
 
-    /**
-     * Waits for all tasks to finish and shutdown all threads essentially
-     * restoing the thread pool. This does not reset the number of reserved
-     * threads.
-     */
     void ThreadPool::wait()
     {
         Locker<thread::Mutex> lock(mutex_);
@@ -348,10 +265,6 @@ namespace ckcore
         exiting_ = false;
     }
 
-    /**
-     * Reserve a number of threads for use outside the thread pool.
-     * @param [in] num_threads Number of threads to reserve.
-     */
     void ThreadPool::reserve(tuint32 num_threads)
     {
         Locker<thread::Mutex> lock(mutex_);
@@ -371,10 +284,6 @@ namespace ckcore
         }
     }
 
-    /**
-     * Sets the timeout before retiring idle threads.
-     * @param [in] timeout New timeout in milliseconds.
-     */
     void ThreadPool::set_retire_timeout(tuint32 timeout)
     {
         Locker<thread::Mutex> lock(mutex_);

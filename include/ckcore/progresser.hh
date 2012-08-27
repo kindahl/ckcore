@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,12 +40,32 @@ namespace ckcore
         tuint64 count_;
 
     public:
+        /**
+         * Constructs a Progresser object.
+         * @param [in] progress The progress interface to report the progress to.
+         * @param [in] total The total number of units to progress.
+         */
         Progresser(Progress &progress,tuint64 total);
 
+        /**
+         * Updates the progress depending on the number of units processed.
+         * @param [in] count The number of units processed..
+         */
         void update(tuint64 count);
+
+        /**
+         * Transmits a message to the progress interface. This message i
+         * intended to be displayed to the end user.
+         * @param [in] type The type of message.
+         * @param [in] format The message format.
+         */
         void notify(Progress::MessageType type,const tchar *format,...) __attribute__ ((format (printf, 3, 4)));
 
+        /**
+         * Checks wether the operation has been cancelled or not
+         * @return If the process has been cancelled true is returned, if no
+         *         cancelled false is returned.
+         */
         bool cancelled();
     };
 }
-

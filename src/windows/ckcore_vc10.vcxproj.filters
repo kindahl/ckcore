@@ -191,6 +191,9 @@
     <None Include="..\..\include\ckcore\memorystream.hh">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="..\..\include\ckcore\task.hh">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="cpuid64.asm">

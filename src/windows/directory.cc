@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,18 +23,11 @@
 
 namespace ckcore
 {
-    /**
-     * Constructs an Iterator object.
-     */
     Directory::Iterator::Iterator() : dir_handle_(INVALID_HANDLE_VALUE),
         at_end_(true)
     {
     }
 
-    /**
-     * Constructs an Iterator object.
-     * @param [in] dir A reference to the Directory object to iterate over.
-     */
     Directory::Iterator::Iterator(const Directory &dir) :
         dir_handle_(INVALID_HANDLE_VALUE),at_end_(false)
     {
@@ -85,11 +78,6 @@ namespace ckcore
         }
     }
 
-    /**
-     * Returns the name of the file or directory that the iterator currently
-     * points at.
-     * @return The name of the file or directory that the iterator points at.
-     */
     tstring Directory::Iterator::operator*() const
     {
         if (at_end_)
@@ -98,11 +86,6 @@ namespace ckcore
             return tstring(cur_ent_.cFileName);
     }
 
-    /**
-     * Moves the iterator to the next file or directory residing in the
-     * directory.
-     * @return An Iterator object pointing at the next file or directory.
-     */
     Directory::Iterator &Directory::Iterator::operator++()
     {
         if (!at_end_)
@@ -111,11 +94,6 @@ namespace ckcore
         return *this;
     }
 
-    /**
-     * Moves the iterator to the next file or directory residing in the
-     * directory.
-     * @return An Iterator object pointing at the next file or directory.
-     */
     Directory::Iterator &Directory::Iterator::operator++(int)
     {
         if (!at_end_)
@@ -124,11 +102,6 @@ namespace ckcore
         return *this;
     }
 
-    /**
-     * Tests the equivalence of this and another iterator.
-     * @param [in] it The iterator to use for comparison.
-     * @return If the iterators are equal true is returned, otherwise false.
-     */
     bool Directory::Iterator::operator==(const Iterator &it) const
     {
         if (at_end_ && it.at_end_)
@@ -141,27 +114,15 @@ namespace ckcore
         return !lstrcmp(cur_ent_.cFileName,it.cur_ent_.cFileName);
     }
 
-    /**
-     * Tests the non-equivalence of this and another iterator.
-     * @param [in] it The iterator to use for comparison.
-     * @return If the iterators are equal true is returned, otherwise false.
-     */
     bool Directory::Iterator::operator!=(const Iterator &it) const
     {
         return !(*this == it);
     }
 
-    /**
-     * Constructs a Directory object.
-     * @param [in] dir_path The path to the directory.
-     */
     Directory::Directory(const Path &dir_path) : dir_path_(dir_path)
     {
     }
 
-    /**
-     * Destructs the Directory object.
-     */
     Directory::~Directory()
     {
         // Since the Directory object owns the iterator handles, we need to
@@ -173,57 +134,31 @@ namespace ckcore
         dir_handles_.clear();
     }
 
-    /**
-     * Returns the full directory path name.
-     * @return The full directory path name.
-     */
     const tstring &Directory::name() const
     {
         return dir_path_.name();
     }
 
-    /**
-     * Creates an iterator pointing to the first file or directory in the
-     * current directory.
-     * @return An Iteator object pointing to the first file or directory.
-     */
     Directory::Iterator Directory::begin() const
     {
         return Directory::Iterator(*this);
     }
 
-    /**
-     * Creats an iterator poiting beyond the last file or directory in the
-     * directory in the current directory.
-     * @return An Iteator object pointing beyond the last file or directory.
-     */
     Directory::Iterator Directory::end() const
     {
         return Directory::Iterator();
     }
 
-    /**
-     * Creates the directory unless it already exist.
-     * @return If successfull true is returned, otherwise false.
-     */
     bool Directory::create() const
     {
         return create(dir_path_);
     }
 
-    /**
-     * Removes the directory if it exist.
-     * @return If successfull true is returned, otherwise false.
-     */
     bool Directory::remove() const
     {
         return RemoveDirectory(dir_path_.name().c_str()) != FALSE;
     }
 
-    /**
-     * Tests if the current directory exist.
-     * @return If the directory exist true is returned, otherwise false.
-     */
     bool Directory::exist() const
     {
         unsigned long attr = GetFileAttributes(dir_path_.name().c_str());
@@ -231,24 +166,12 @@ namespace ckcore
         return (attr != -1) && (attr & FILE_ATTRIBUTE_DIRECTORY);
     }
 
-    /**
-     * Obtains time stamps on when the current directory was last accessed,
-     * last modified and created.
-     * @param [out] accessckTime Time of last access.
-     * @param [out] modifyckTime Time of last modification.
-     * @param [out] createckTime Time of creation (last status change on Linux).
-     * @return If successfull true is returned, otherwise false.
-     */
     bool Directory::time(struct tm &accessckTime,struct tm &modifyckTime,
                          struct tm &createckTime) const
     {
         return time(dir_path_,accessckTime,modifyckTime,createckTime);
     }
 
-    /**
-     * Creates the specified directory unless it already exist.
-     * @return If successfull true is returned, otherwise false.
-     */
     bool Directory::create(const Path &dir_path)
     {
         tstring cur_path;
@@ -267,19 +190,11 @@ namespace ckcore
         return true;
     }
 
-    /**
-     * Removes the specified directory if it exist.
-     * @return If successfull true is returned, otherwise false.
-     */
     bool Directory::remove(const Path &dir_path)
     {
         return RemoveDirectory(dir_path.name().c_str()) != FALSE;
     }
 
-    /**
-     * Tests if the specified directory exist.
-     * @return If the directory exist true is returned, otherwise false.
-     */
     bool Directory::exist(const Path &dir_path)
     {
         unsigned long attr = GetFileAttributes(dir_path.name().c_str());
@@ -287,15 +202,6 @@ namespace ckcore
         return (attr != -1) && (attr & FILE_ATTRIBUTE_DIRECTORY);
     }
 
-    /**
-     * Obtains time stamps on when the specified directory was last accessed,
-     * last modified and created.
-     * @param [in] dir_path The path to the directory.
-     * @param [out] accessckTime Time of last access.
-     * @param [out] modifyckTime Time of last modification.
-     * @param [out] createckTime Time of creation (last status change on Linux).
-     * @return If successfull true is returned, otherwise false.
-     */
     bool Directory::time(const Path &dir_path,struct tm &accessckTime,
                          struct tm &modifyckTime,struct tm &createckTime)
     {
@@ -326,11 +232,6 @@ namespace ckcore
         return true;
     }
 
-    /**
-     * Creates a Directory object of a temporary directory. The directory path is
-     * generated to be placed in the systems default temporary directory.
-     * @return Directory object of temp directory.
-     */
     Directory Directory::temp()
     {
         tchar dir_name[246];

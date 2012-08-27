@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,17 +20,10 @@
 
 namespace ckcore
 {
-    /**
-     * Constructs an Interator object.
-     */
     Path::Iterator::Iterator() : at_end_(true),pos_start_(-1),pos_end_(0)
     {
     }
 
-    /**
-     * Constructs an Iterator object.
-     * @param [in] path A reference to the Path object to iterate over.
-     */
     Path::Iterator::Iterator(const Path &path) : at_end_(false),pos_start_(-1),
         pos_end_(0),path_(&path)
     {
@@ -69,11 +62,6 @@ namespace ckcore
             pos_end_ = delim;
     }
 
-    /**
-     * Returns the name of the file or directory that the iterator currently
-     * points at.
-     * @return The name of the file or directory that the iterator points at.
-     */
     tstring Path::Iterator::operator*() const
     {
         if (at_end_)
@@ -82,10 +70,6 @@ namespace ckcore
             return path_->path_name_.substr(pos_start_ + 1,pos_end_ - pos_start_ - 1);
     }
 
-    /**
-     * Moves the iterator to the next file or directory in the path name.
-     * @return An Iterator object pointing at the next file or directory name.
-     */
     Path::Iterator &Path::Iterator::operator++()
     {
         pos_start_ = pos_end_;
@@ -94,10 +78,6 @@ namespace ckcore
         return *this;
     }
 
-    /**
-     * Moves the iterator to the next file or directory in the path name.
-     * @return An Iterator object pointing at the next file or directory name.
-     */
     Path::Iterator &Path::Iterator::operator++(int)
     {
         pos_start_ = pos_end_;
@@ -106,12 +86,6 @@ namespace ckcore
         return *this;
     }
 
-    /**
-     * Tests the equivalence of this and another iterator.
-     * @param [in] it The iterator to use for comparison.
-     * @return If the iterators are equal true is returned, otherwise false is
-     *         returned.
-     */
     bool Path::Iterator::operator==(const Iterator &it) const
     {
         if (at_end_ && it.at_end_)
@@ -120,12 +94,6 @@ namespace ckcore
             return (**this) == *it;
     }
 
-    /**
-     * Tests the non-equivalence of this and another iterator.
-     * @param [in] it The iterator to use for comparison.
-     * @return If the iterators are not equal true is returned, otherwise
-     *         false is returned.
-     */
     bool Path::Iterator::operator!=(const Iterator &it) const
     {
         if (at_end_ && it.at_end_)
@@ -134,51 +102,28 @@ namespace ckcore
             return (**this) != *it;
     }
 
-    /**
-     * Constructs an empty Path object.
-     */
     Path::Path()
     {
     }
 
-    /**
-     * Constructs a Path object.
-     * @param [in] path_name The path name.
-     */
     Path::Path(const tchar *path_name) : path_name_(path_name)
     {
     }
 
-    /**
-     * Destructs the Path object.
-     */
     Path::~Path()
     {
     }
 
-    /**
-     * Creates an iterator pointing at the beginning of the path name.
-     * @return An Iterator object pointing at the beginning of the path name.
-     */
     Path::Iterator Path::begin() const
     {
         return Path::Iterator(*this);
     }
 
-    /**
-     * Creates and iterator pointing at the end of the path name.
-     * @return An Iterator object pointing at the end of the path name.
-     */
     Path::Iterator Path::end() const
     {
         return Path::Iterator();
     }
 
-    /**
-     * Checks if the path name is valid, that it does not contain any invalid
-     * characters.
-     * @return If the path name is valid true is returned, otherwise false.
-     */
     bool Path::valid() const
     {
 #ifdef _WINDOWS
@@ -204,19 +149,11 @@ namespace ckcore
         return true;
     }
 
-    /**
-     * Returns the full path name.
-     * @return The full path name.
-     */
     const tstring &Path::name() const
     {
         return path_name_;
     }
 
-    /**
-     * Returns anything before and including the first path delimiter.
-     * @return The path root name.
-     */
     tstring Path::root_name() const
     {
 #ifdef _WINDOWS
@@ -230,11 +167,6 @@ namespace ckcore
             return tstring();
     }
 
-    /**
-     * Calculates the dir name of the path name. The dir name will contain a
-     * trailing path delimiter.
-     * @return A string containing the dir name of the path name.
-     */
     tstring Path::dir_name() const
     {
         tstring::size_type end = path_name_.size() - 1;
@@ -253,10 +185,6 @@ namespace ckcore
             return path_name_.substr(0,delim + 1);
     }
 
-    /**
-     * Calculates the base name of the path name.
-     * @return A string containing the base name of the path name.
-     */
     tstring Path::base_name() const
     {
         tstring::size_type end = path_name_.size() - 1;
@@ -276,11 +204,6 @@ namespace ckcore
             return path_name_.substr(delim + 1,end - delim);
     }
 
-    /**
-     * Calculates the name of the file extension (if any). The separating dot
-     * character is not included in the returned extension name.
-     * @return A string containing the extension name.
-     */
     tstring Path::ext_name() const
     {
         tstring base_name = Path::base_name();
@@ -291,12 +214,6 @@ namespace ckcore
             return base_name.substr(delim + 1);
     }
 
-    /**
-     * Tests the equivalence of this and another path.
-     * @param [in] p The path to use for comparison.
-     * @return If the two Path objects are equal true is returned, otherwise
-     *         false.
-     */
     bool Path::operator==(const Path &p) const
     {
         Iterator it1 = begin();
@@ -313,33 +230,17 @@ namespace ckcore
         return it1 == end() && it2 == p.end();
     }
 
-    /**
-     * Tests the non-equivalence of this and another path.
-     * @param [in] p The path to use for comparison.
-     * @return If the two Path objects are not equal true is returned,
-     *         otherwise false.
-     */
     bool Path::operator!=(const Path &p) const
     {
         return !(*this == p);
     }
 
-    /**
-     * Assigns this path the value of another path.
-     * @param [in] p The source path.
-     * @return This path.
-     */
     Path &Path::operator=(const Path &p)
     {
         path_name_ = p.path_name_;
         return *this;
     }
 
-    /**
-     * Concatinates this and another path.
-     * @param [in] p The second path to use for concatination.
-     * @return A new Path object containing the two paths concatinated.
-     */
     Path Path::operator+(const Path &p) const
     {
         if (path_name_.size() < 1)
@@ -366,11 +267,6 @@ namespace ckcore
         return Path(new_path_name.c_str());
     }
 
-    /**
-     * Append a path to this path.
-     * @param [in] p The path to append.
-     * @return This path.
-     */
     Path &Path::operator+=(const Path &p)
     {
         size_t end = path_name_.size() - 1;

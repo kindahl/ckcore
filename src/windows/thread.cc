@@ -1,6 +1,6 @@
 /*
  * The ckCore library provides core software functionality.
- * Copyright (C) 2006-2011 Christian Kindahl
+ * Copyright (C) 2006-2012 Christian Kindahl
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,18 +24,12 @@
 
 namespace ckcore
 {
-    /**
-     * Constructs a new thread object.
-     */
     Thread::Thread()
         : thread_(NULL),start_event_(NULL),running_(false)
     {
         start_event_ = CreateEvent(NULL,false,false,NULL);
     }
 
-    /**
-     * Destructs the thread object and kills the thread if it's running.
-     */
     Thread::~Thread()
     {
         kill();
@@ -48,11 +42,6 @@ namespace ckcore
         }
     }
 
-    /**
-     * The main thread entry point for new threads.
-     * @param [in] param Pointer to thread object.
-     * @return Always returns NULL.
-     */
     unsigned long __stdcall Thread::native_thread(void *param)
     {
         Thread *thread = static_cast<Thread *>(param);
@@ -76,11 +65,6 @@ namespace ckcore
         return NULL;
     }
 
-    /**
-     * Starts the thread.
-     * @return If the thread was successfully started true is returned,
-     *         otherwise false is returned.
-     */
     bool Thread::start()
     {
         Locker<thread::Mutex> lock(mutex_);
@@ -102,12 +86,6 @@ namespace ckcore
         return true;
     }
 
-    /**
-     * Waits until the thread has finished.
-     * @param [in] timout Maximum time to wait in milliseconds.
-     * @return If no timeout ocurred true is returned, otherwise false is
-     *         returned.
-     */
     bool Thread::wait(tuint32 timeout)
     {
         Locker<thread::Mutex> lock(mutex_);
@@ -122,12 +100,6 @@ namespace ckcore
         return thread_done_.wait(mutex_,timeout);
     }
 
-    /**
-     * Immediately kills the thread, the function does not return until the
-     * the thread has exited.
-     * @return If the thread was successfully killed true is returned, if not
-     *         false is returned.
-     */
     bool Thread::kill()
     {
         Locker<thread::Mutex> lock(mutex_);
@@ -146,11 +118,6 @@ namespace ckcore
         return true;
     }
 
-    /**
-     * Checks if the thread is currently running.
-     * @return If the thread is running true is returned, if not false is
-     *         returned.
-     */
     bool Thread::running() const
     {
         Locker<thread::Mutex> lock(mutex_);
@@ -188,13 +155,6 @@ namespace ckcore
             return 0;
         }
 
-        /**
-         * Creates and starts the execution of a new thread.
-         * @param [in] func The thread function entry point.
-         * @param [in] param Optional thread parameter.
-         * @return If the thread was successfully created true is returned, if
-         *         not false is returned.
-         */
         bool create(tfunction func,void *param)
         {
             // Setup the parameters to pass to the native thread.
@@ -213,24 +173,12 @@ namespace ckcore
             return true;
         }
 
-        /**
-         * Sleeps the current thread for a specified amount of milliseconds.
-         * @param [in] milliseconds The number of milliseconds to sleep the
-         *                          thread.
-         * @return If successful true is returned, if not false is returned.
-         */
         bool sleep(ckcore::tuint32 milliseconds)
         {
             Sleep(milliseconds);
             return true;
         }
 
-        /**
-         * Returns the ideal number of threads that the current system can
-         * execute in parallel.
-         * @return The ideal number of threads that the current system can
-         *         execute in parallel.
-         */
         tuint32 ideal_count()
         {
             SYSTEM_INFO sys_info;
@@ -238,25 +186,15 @@ namespace ckcore
             return sys_info.dwNumberOfProcessors;
         }
 
-        /**
-         * Returns the current thread identifier.
-         * @return The current thread identifier.
-         */
         thandle identifier()
         {
             return (thandle)static_cast<tuint64>(GetCurrentThreadId());
         }
 
-        /**
-         * Constructs a Mutex object.
-         */
         Mutex::Mutex() : handle_(CreateMutex(NULL,FALSE,NULL))
         {
         }
 
-        /**
-         * Destructs the Mutex object.
-         */
         Mutex::~Mutex()
         {
             if (handle_ != NULL)
@@ -266,11 +204,6 @@ namespace ckcore
             }
         }
 
-        /**
-         * Locks the mutex.
-         * @return If successful true is returned, if unsuccessful false is
-         *         returned.
-         */
         bool Mutex::lock()
         {
             if (handle_ == NULL)
@@ -281,11 +214,6 @@ namespace ckcore
             return res;
         }
 
-        /**
-         * Unlocks the mutex.
-         * @return If successful true is returned, if unsuccessful false is
-         *         returned.
-         */
         bool Mutex::unlock()
         {
             if (handle_ == NULL)
@@ -296,20 +224,11 @@ namespace ckcore
             return res;
         }
 
-        /**
-         * Tries to lock the mutex and returns immediately if the mutex is
-         * locked by another thread.
-         * @return If the mutex was successfully locked true is returned, if
-         *         the mutex could not be locked the function returns false.
-         */
         bool Mutex::try_lock()
         {
             return WaitForSingleObject(handle_,0) == WAIT_OBJECT_0;
         }
 
-        /**
-         * Constructs a wait condition object.
-         */
         WaitCondition::WaitCondition()
             : broadcast_(false),waiters_(0),
               sema_(NULL),waiters_done_(NULL)
@@ -320,9 +239,6 @@ namespace ckcore
             waiters_done_ = CreateEvent(NULL,FALSE,FALSE,NULL);
         }
 
-        /**
-         * Destructs the wait condition object.
-         */
         WaitCondition::~WaitCondition()
         {
             if (waiters_done_ != NULL)
@@ -340,13 +256,6 @@ namespace ckcore
             DeleteCriticalSection(&critical_);
         }
 
-        /**
-         * Waits on the mutex.
-         * @param [in] mutex Mutex to wait on.
-         * @param [in] timeout Time out in milliseconds.
-         * @return If successfully waited in the event with no time out true
-         *         is returned, otherwise false is returned.
-         */
         bool WaitCondition::wait(Mutex &mutex,tuint32 timeout)
         {
             EnterCriticalSection(&critical_);
@@ -383,9 +292,6 @@ namespace ckcore
             return true;
         }
 
-        /**
-         * Signals one waiting thread to continue.
-         */
         void WaitCondition::signal_one()
         {
             EnterCriticalSection(&critical_);
@@ -396,9 +302,6 @@ namespace ckcore
                 ReleaseSemaphore(sema_,1,0);
         }
 
-        /**
-         * Signals all waiting threads to continue.
-         */
         void WaitCondition::signal_all()
         {
             EnterCriticalSection(&critical_);
